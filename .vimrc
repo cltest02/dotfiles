@@ -26,7 +26,7 @@ set noeol
 set backupdir=~/.vim/backups
 set directory=~/.vim/swaps
 if exists("&undodir")
-	set undodir=~/.vim/undo
+  set undodir=~/.vim/undo
 endif
 
 " Respect modeline in files
@@ -47,7 +47,7 @@ set shiftwidth=2
 set expandtab
 " Show “invisible” characters
 set lcs=tab:▸\ ,trail:·,eol:¬,nbsp:_
-set list
+" set list
 " Highlight searches
 set hlsearch
 " Ignore case of searches
@@ -74,8 +74,8 @@ set title
 set showcmd
 " Use relative line numbers
 "if exists("&relativenumber")
-"	set relativenumber
-"	au BufReadPost * set relativenumber
+" set relativenumber
+" au BufReadPost * set relativenumber
 "endif
 " Start scrolling three lines before the horizontal window border
 "set scrolloff=3
@@ -87,11 +87,11 @@ set showcmd
 
 " Strip trailing whitespace (,ss)
 function! StripWhitespace()
-	let save_cursor = getpos(".")
-	let old_query = getreg('/')
-	:%s/\s\+$//e
-	call setpos('.', save_cursor)
-	call setreg('/', old_query)
+  let save_cursor = getpos(".")
+  let old_query = getreg('/')
+  :%s/\s\+$//e
+  call setpos('.', save_cursor)
+  call setreg('/', old_query)
 endfunction
 noremap <leader>ss :call StripWhitespace()<CR>
 " Save a file as root (,W)
@@ -99,8 +99,8 @@ noremap <leader>W :w !sudo tee % > /dev/null<CR>
 
 " Automatic commands
 if has("autocmd")
-	" Enable file type detection
-	filetype on
-	" Treat .json files as .js
-	autocmd BufNewFile,BufRead *.json setfiletype json syntax=javascript
+  " Enable file type detection
+  filetype on
+  " Treat .json files as .js
+  autocmd BufNewFile,BufRead *.json setfiletype json syntax=javascript
 endif

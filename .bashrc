@@ -5,12 +5,7 @@
 
 # try to load global-bashrc
 if [ -f /etc/bashrc ]; then
-	. /etc/bashrc
-fi
-
-# try to import aliases
-if [ -f ~/.bash_aliases ]; then
-	. ~/.bash_aliases
+  . /etc/bashrc
 fi
 
 # enable programmable completion features (you don't need to enable
@@ -22,14 +17,14 @@ fi
 
 # settings for chroot
 if [ -z "$debian_chroot" -a -r /etc/debian_chroot ]; then
-	debian_chroot=$(cat /etc/debian_chroot)
+  debian_chroot=$(cat /etc/debian_chroot)
 fi
 
 # load the shell dotfiles, and then some:
 # * ~/.path can be used to extend `$PATH`.
 # * ~/.extra can be used for other settings you don’t want to commit.
-for file in ~/.{path,bash_prompt,exports,aliases,functions,extra}; do
-	[ -r "$file" ] && [ -f "$file" ] && source "$file"
+for file in ~/.{path,bash_prompt,exports,aliases,bash_aliases,functions,extra}; do
+  [ -r "$file" ] && [ -f "$file" ] && source "$file"
 done
 unset file
 
@@ -40,36 +35,8 @@ for option in autocd globstar; do
   shopt -s "$option" 2> /dev/null
 done
 
-# enable tab completion for `g` by marking it as an alias for `git`
-if type _git &> /dev/null && [ -f /etc/bash_completion.d/git-completion.bash ]; then
-  complete -o default -o nospace -F _git g
-fi
-
 # add tab completion for SSH hostnames based on ~/.ssh/config, ignoring wildcards
 [ -e "$HOME/.ssh/config" ] && complete -o "default" -o "nospace" -W "$(grep "^Host" ~/.ssh/config | grep -v "[?*]" | cut -d " " -f2 | tr ' ' '\n')" scp sftp ssh
-
-
-############# EXPORT ######################################
-
-# grep with colors
-export GREP_OPTIONS='--color=auto'¬
-
-# prevent less from clearing the screen while still showing colors.¬
-export LESS=-XR¬
-
-
-# add `~/bin` to the `$PATH`
-export PATH="$HOME/bin:$PATH"
-
-# add the date to the historylog
-export HISTTIMEFORMAT="%F %T "
-
-# set the size of the historylog
-export HISTSIZE=3000
-
-# ignore duplicates commands in the historylog
-HISTCONTROL=$HISTCONTROL${HISTCONTROL+:}ignoredups
-export HISTCONTROL=ignoredups
 
 ############################################################
 

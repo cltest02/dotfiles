@@ -1,12 +1,19 @@
 # Make vim the default editor
 export EDITOR="vim"
 
+# add `~/bin` to the `$PATH`¬
+export PATH="$HOME/bin:$PATH"
+
 # Larger bash history (allow 32³ entries; default is 500)
 export HISTSIZE=32768
 export HISTFILESIZE=$HISTSIZE
+# ignore duplicates commands in the historylog¬
+HISTCONTROL=$HISTCONTROL${HISTCONTROL+:}ignoredups
 export HISTCONTROL=ignoredups
 # Make some commands not show up in history
 export HISTIGNORE="ls:cd:cd -:pwd:exit:date:* --help"
+# add the date to the historylog¬
+export HISTTIMEFORMAT="%F %T "
 
 # Prefer US English and use UTF-8
 #export LANG="en_EN.UTF-8"
