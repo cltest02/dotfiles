@@ -1,5 +1,51 @@
+# create a compressed backup + date
+packen()
+{
+  tar czvf "$1-$(date +%y%m%d-%H%M%S).tar.gz" "$1"
+}
+
+# extract of compressed-files
+extract()
+{
+  if [ -f $1 ] ; then
+    case $1 in
+             *.tar.bz2)   tar xvjf $1     ;;
+             *.tar.gz)    tar xvzf $1     ;;
+             *.bz2)       bunzip2 $1      ;;
+             *.rar)       unrar x $1      ;;
+             *.gz)        gunzip $1       ;;
+             *.tar)       tar xvf $1      ;;
+             *.tbz2)      tar xvjf $1     ;;
+             *.tgz)       tar xvzf $1     ;;
+             *.zip)       unzip $1        ;;
+             *.Z)         uncompress $1   ;;
+             *.7z)        7z x $1         ;;
+             *)           echo "'$1' cannot be extracted via >extract<" ;;
+         esac
+  else
+    echo "'$1' is not a valid file"
+  fi
+}
+
+# establish ssh connection + write a logfile
+logssh() 
+{
+  ssh $1 | tee sshlog
+}
+
+# WARNING: change multiple files at once
+replace()
+{
+  if [ $3 ]; then
+    find $1 -type f -exec sed -i 's/$2/$3/g' {} \;
+  else
+    echo "Missing argument"
+  fi
+}
+
 # Simple calculator
-function calc() {
+calc() 
+{
 	local result=""
 	result="$(printf "scale=10;$*\n" | bc --mathlib | tr -d '\\\n')"
 	#                       └─ default (when `--mathlib` is used) is 20
@@ -17,17 +63,19 @@ function calc() {
 }
 
 # Create a new directory and enter it
-function mkd() {
+mkd() {
 	mkdir -p "$@" && cd "$@"
 }
 
 # Change working directory to the top-most Finder window location
-function cdf() { # short for `cdfinder`
+cdf() # short for `cdfinder`
+{
 	cd "$(osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)')"
 }
 
 # Create a .tar.gz archive, using `zopfli`, `pigz` or `gzip` for compression
-function targz() {
+targz() 
+{
 	local tmpFile="${@%/}.tar"
 	tar -cvf "${tmpFile}" --exclude=".DS_Store" "${@}" || return 1
 
@@ -55,7 +103,8 @@ function targz() {
 }
 
 # Determine size of a file or total size of a directory
-function fs() {
+fs() 
+{
 	if du -b /dev/null > /dev/null 2>&1; then
 		local arg=-sbh
 	else
@@ -68,16 +117,76 @@ function fs() {
 	fi
 }
 
+# displays all files in the current directory (recursively)
+ff() 
+{
+  find . -type f -iname '*'$*'*' -ls
+}
+
+# find text in files
+fstr()
+{
+  OPTIND=1
+  local case=""
+  local usage="fstr: find string in files.
+  Usage: fstr [-i] \"pattern\" [\"filename pattern\"] "
+
+  while getopts :it opt
+  do
+        case "$opt" in
+        i) case="-i " ;;
+        *) echo "$usage"; return;;
+        esac
+  done
+
+  shift $(( $OPTIND - 1 ))
+  if [ "$#" -lt 1 ]; then
+    echo "$usage"
+    return
+  fi
+
+  find . -type f -name "${2:-*}" -print0 | \
+  xargs -0 egrep --color=always -sn ${case} "$1" 2>&- | more
+}
+
+# creating a backup of a file (with date)
+file_backup()
+{
+  for FILE ; do
+    [[ -e "$1" ]] && cp "$1" "${1}_$(date +%Y-%m-%d_%H-%M-%S)" || echo "\"$1\" not found." >&2
+  done
+}
+
+# output information to a file
+file_information() 
+{
+  if [ $1 ]; then
+    if [ -z $1 ]; then 
+      echo "$1: not found"
+      return
+    fi
+
+    echo $1
+    ls -l $1
+    file $1
+    ldd $1
+  else
+    echo "Missing argument"
+  fi
+}
+
 # Use Git’s colored diff when available
 hash git &>/dev/null
 if [ $? -eq 0 ]; then
-	function diff() {
+	function diff() 
+  {
 		git diff --no-index --color-words "$@"
 	}
 fi
 
 # Create a data URL from a file
-function dataurl() {
+dataurl()
+{
 	local mimeType=$(file -b --mime-type "$1")
 	if [[ $mimeType == text/* ]]; then
 		mimeType="${mimeType};charset=utf-8"
@@ -86,7 +195,8 @@ function dataurl() {
 }
 
 # Create a git.io short URL
-function gitio() {
+gitio()
+{
 	if [ -z "${1}" -o -z "${2}" ]; then
 		echo "Usage: \`gitio slug url\`"
 		return 1
@@ -95,7 +205,8 @@ function gitio() {
 }
 
 # Start an HTTP server from a directory, optionally specifying the port
-function server() {
+server()
+{
 	local port="${1:-8000}"
 	sleep 1 && open "http://localhost:${port}/" &
 	# Set the default Content-Type to `text/plain` instead of `application/octet-stream`
@@ -105,7 +216,8 @@ function server() {
 
 # Start a PHP server from a directory, optionally specifying the port
 # (Requires PHP 5.4.0+.)
-function phpserver() {
+phpserver()
+{
 	local port="${1:-4000}"
 	local ip=$(ipconfig getifaddr en1)
 	sleep 1 && open "http://${ip}:${port}/" &
@@ -113,7 +225,8 @@ function phpserver() {
 }
 
 # Compare original and gzipped file size
-function gz() {
+gz()
+{
 	local origsize=$(wc -c < "$1")
 	local gzipsize=$(gzip -c "$1" | wc -c)
 	local ratio=$(echo "$gzipsize * 100/ $origsize" | bc -l)
@@ -123,7 +236,8 @@ function gz() {
 
 # Syntax-highlight JSON strings or files
 # Usage: `json '{"foo":42}'` or `echo '{"foo":42}' | json`
-function json() {
+json()
+{
 	if [ -t 0 ]; then # argument
 		python -mjson.tool <<< "$*" | pygmentize -l javascript
 	else # pipe
@@ -132,12 +246,14 @@ function json() {
 }
 
 # All the dig info
-function digga() {
+digga()
+{
 	dig +nocmd "$1" any +multiline +noall +answer
 }
 
 # Escape UTF-8 characters into their 3-byte format
-function escape() {
+escape() 
+{
 	printf "\\\x%s" $(printf "$@" | xxd -p -c1 -u)
 	# print a newline unless we’re piping the output to another program
 	if [ -t 1 ]; then
@@ -146,7 +262,8 @@ function escape() {
 }
 
 # Decode \x{ABCD}-style Unicode escape sequences
-function unidecode() {
+unidecode() 
+{
 	perl -e "binmode(STDOUT, ':utf8'); print \"$@\""
 	# print a newline unless we’re piping the output to another program
 	if [ -t 1 ]; then
@@ -155,7 +272,8 @@ function unidecode() {
 }
 
 # Get a character’s Unicode code point
-function codepoint() {
+codepoint() 
+{
 	perl -e "use utf8; print sprintf('U+%04X', ord(\"$@\"))"
 	# print a newline unless we’re piping the output to another program
 	if [ -t 1 ]; then
@@ -165,7 +283,8 @@ function codepoint() {
 
 # Show all the names (CNs and SANs) listed in the SSL certificate
 # for a given domain
-function getcertnames() {
+getcertnames()
+{
 	if [ -z "${1}" ]; then
 		echo "ERROR: No domain specified."
 		return 1
@@ -200,7 +319,8 @@ function getcertnames() {
 # Add note to Notes.app (OS X 10.8)
 # Usage: `note 'title' 'body'` or `echo 'body' | note`
 # Title is optional
-function note() {
+note() 
+{
 	local title
 	local body
 	if [ -t 0 ]; then
@@ -222,7 +342,8 @@ EOF
 
 # Add reminder to Reminders.app (OS X 10.8)
 # Usage: `remind 'foo'` or `echo 'foo' | remind`
-function remind() {
+remind() 
+{
 	local text
 	if [ -t 0 ]; then
 		text="$1" # argument
@@ -239,7 +360,8 @@ EOF
 }
 
 # Manually remove a downloaded app or file from the quarantine
-function unquarantine() {
+unquarantine() 
+{
 	for attribute in com.apple.metadata:kMDItemDownloadedDate com.apple.metadata:kMDItemWhereFroms com.apple.quarantine; do
 		xattr -r -d "$attribute" "$@"
 	done
@@ -247,13 +369,15 @@ function unquarantine() {
 
 # Install Grunt plugins and add them as `devDependencies` to `package.json`
 # Usage: `gi contrib-watch contrib-uglify zopfli`
-function gi() {
+gi() 
+{
 	npm install --save-dev ${*/#/grunt-}
 }
 
 # `m` with no arguments opens the current directory in TextMate, otherwise
 # opens the given location
-function m() {
+m() 
+{
 	if [ $# -eq 0 ]; then
 		mate .
 	else
@@ -263,7 +387,8 @@ function m() {
 
 # `s` with no arguments opens the current directory in Sublime Text, otherwise
 # opens the given location
-function s() {
+s() 
+{
 	if [ $# -eq 0 ]; then
 		subl .
 	else
@@ -273,7 +398,8 @@ function s() {
 
 # `a` with no arguments opens the current directory in Atom Editor, otherwise
 # opens the given location
-function a() {
+a() 
+{
 	if [ $# -eq 0 ]; then
 		atom .
 	else
@@ -283,7 +409,8 @@ function a() {
 
 # `v` with no arguments opens the current directory in Vim, otherwise opens the
 # given location
-function v() {
+v() 
+{
 	if [ $# -eq 0 ]; then
 		vim .
 	else
@@ -293,7 +420,8 @@ function v() {
 
 # `o` with no arguments opens current directory, otherwise opens the given
 # location
-function o() {
+o() 
+{
 	if [ $# -eq 0 ]; then
 		open .
 	else
@@ -303,7 +431,8 @@ function o() {
 
 # `np` with an optional argument `patch`/`minor`/`major`/`<version>`
 # defaults to `patch`
-function np() {
+np() 
+{
 	git pull --rebase && \
 	rm -rf node_modules && \
 	npm install && \
@@ -318,6 +447,7 @@ function np() {
 # the `.git` directory, listing directories first. The output gets piped into
 # `less` with options to preserve color and line numbers, unless the output is
 # small enough for one screen.
-function tre() {
+tre() 
+{
 	tree -aC -I '.git|node_modules|bower_components' --dirsfirst "$@" | less -FRNX
 }

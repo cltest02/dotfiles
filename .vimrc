@@ -35,14 +35,16 @@ set modelines=4
 " Enable per-directory .vimrc files and disable unsafe commands in them
 set exrc
 set secure
-" Enable line numbers
-set number
+" disable line numbers
+set nonumber
 " Enable syntax highlighting
 syntax on
 " Highlight current line
 set cursorline
-" Make tabs as wide as two spaces
+" Make tabs as wide as two spaces -> you can also use :retab
 set tabstop=2
+set shiftwidth=2
+set expandtab
 " Show “invisible” characters
 set lcs=tab:▸\ ,trail:·,eol:¬,nbsp:_
 set list
@@ -55,7 +57,7 @@ set incsearch
 " Always show status line
 set laststatus=2
 " Enable mouse in all modes
-set mouse=a
+" set mouse=a
 " Disable error bells
 set noerrorbells
 " Don’t reset cursor to start of line when moving around.
@@ -71,12 +73,17 @@ set title
 " Show the (partial) command as it’s being typed
 set showcmd
 " Use relative line numbers
-if exists("&relativenumber")
-	set relativenumber
-	au BufReadPost * set relativenumber
-endif
+"if exists("&relativenumber")
+"	set relativenumber
+"	au BufReadPost * set relativenumber
+"endif
 " Start scrolling three lines before the horizontal window border
-set scrolloff=3
+"set scrolloff=3
+
+" copy between different vim sessions
+:nmap _Y :!echo “”> ~/.vim/tmp<CR><CR>:w! ~/.vim/tmp<CR>
+:vmap _Y :w! ~/.vim/tmp<CR>
+:nmap _P :r ~/.vim/tmp<CR>
 
 " Strip trailing whitespace (,ss)
 function! StripWhitespace()
