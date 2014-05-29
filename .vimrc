@@ -75,6 +75,7 @@ endif
 " Respect modeline in files
 set modeline
 set modelines=4
+set ls=2
 
 " Enable per-directory .vimrc files and disable unsafe commands in them
 set exrc
@@ -87,6 +88,7 @@ set nonumber
 " Also switch on highlighting the last used search pattern.
 if &t_Co > 2 || has("gui_running")
   syntax on
+  set t_Co=256
   set hlsearch
 endif
 
@@ -109,19 +111,19 @@ set ignorecase
 set incsearch
 
 " Enable mouse in all modes
-set mouse=a
+"set mouse=a
 
 " Hide the mouse while typing.
 set mousehide
 
 " Enable the popup menu.
-set mousem=popup
+"set mousem=popup
 
 " Split vertically to the right.
-set splitright
+"set splitright
 
 " Split horizontally below.
-set splitbelow
+"set splitbelow
 
 " Disable error bells
 set noerrorbells
@@ -133,7 +135,7 @@ set nostartofline
 set ruler
 
 " Don’t show the intro message when starting Vim
-set shortmess=atI
+"set shortmess=atI
 
 " Show the current mode
 set showmode
