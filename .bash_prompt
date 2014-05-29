@@ -34,11 +34,11 @@ shell_colored() {
   local BLACK="\[\033[0;30m\]"
   local WHITE="\[\033[1;37m\]"
 
-  local UC=$GREEN                 # user's color
+  local UC=$LIGHT_GREEN           # user's color
   [ $UID -eq "0" ] && UC=$RED     # root's color
 
   # set colors for the bash-prompt
-  export PS1="\n${debian_chroot:+($debian_chroot)}$LIGHT_GREEN\u$LIGHT_BLUE@$LIGHT_GREEN\h$LIGHT_GRAY:$LIGHT_BLUE\w$LIGHT_RED->\$(__git_branch)$R\$(__git_dirty)$NO_COLOUR "
+  export PS1="\n${debian_chroot:+($debian_chroot)}$UC\u$LIGHT_BLUE@$LIGHT_GREEN\h$UC:$LIGHT_BLUE\w$LIGHT_RED->\$(__git_branch)$R\$(__git_dirty)$NO_COLOUR "
   export PS2="\[$ORANGE\]→ \[$RESET\]"
 }
 
