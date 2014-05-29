@@ -1,5 +1,8 @@
-# if not running interactively, don't do anything
-[ -z "$PS1" ] && return
+# If not running interactively: exit immediately.
+# Note that 'return' works because the file is sourced, not executed.
+if [[ $- != *i* ]] || [ -z "$PS1" ]; then
+  return 0
+fi
 
 ############# INCLUDE ####################################
 

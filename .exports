@@ -1,8 +1,14 @@
 # Make vim the default editor
+export PAGER="less"
 export EDITOR="vim"
+export VISUAL=$EDITOR
 
-# add `~/bin` to the `$PATH`¬
-export PATH="$HOME/bin:$PATH"
+# PATH addons
+[ -d "$HOME/bin" ] && PATH="$HOME/bin:$PATH"
+if [ "$UID" != 0 ]; then
+    PATH="$PATH:/usr/local/bin:/usr/sbin:/sbin:/usr/local/sbin"
+fi
+export PATH
 
 # Larger bash history (allow 32³ entries; default is 500)
 export HISTSIZE=32768
