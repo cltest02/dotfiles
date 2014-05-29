@@ -85,6 +85,22 @@ alias whois="whois -h whois-servers.net"
 alias sniff="sudo ngrep -d 'en1' -t '^(GET|POST) ' 'tcp and port 80'"
 alias httpdump="sudo tcpdump -i en1 -n -s 0 -w - | grep -a -o -E \"Host\: .*|GET \/.*\""
 
+# Colorize these commands if possible
+if which grc &>/dev/null; then
+    alias .cl='grc -es --colour=auto'
+    alias configure='.cl ./configure'
+    alias diff='.cl diff'
+    alias make='.cl make'
+    alias gcc='.cl gcc'
+    alias g++='.cl g++'
+    #alias as='.cl as'
+    #alias gas='.cl gas'
+    alias ld='.cl ld'
+    alias netstat='.cl netstat'
+    alias ping='.cl ping -c 10'
+    alias traceroute='.cl traceroute'
+fi
+
 # Canonical hex dump; some systems have this symlinked
 command -v hd > /dev/null || alias hd="hexdump -C"
 

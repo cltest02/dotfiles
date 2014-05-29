@@ -33,7 +33,7 @@ extract()
 # battery_life : Echo the percentage of battery life remaining
 battery_life ()
 {
-  life=$(acpi -b | cut -d , -f 2)
+  local life=$(acpi -b | cut -d , -f 2)
   # NOTE: the trailing % is stripped
   echo ${life%\%}
 }
@@ -42,7 +42,8 @@ battery_life ()
 # battery_color: Change console font based on battery life
 battery_color ()
 {
-  num=$(battery_life)
+  local num=$(battery_life)
+  local color=""
 
   if [ $num -gt 25 ]; then
     # 26-100% remaining : GREEN
@@ -114,6 +115,9 @@ cdf() # short for `cdfinder`
 targz() 
 {
   local tmpFile="${@%/}.tar"
+  local size=0
+  local cmd=""
+
   tar -cvf "${tmpFile}" --exclude=".DS_Store" "${@}" || return 1
 
   size=$(
@@ -121,7 +125,6 @@ targz()
     stat -c"%s" "${tmpFile}" 2> /dev/null # GNU `stat`
   )
 
-  local cmd=""
   if (( size < 52428800 )) && hash zopfli 2> /dev/null; then
     # the .tar file is smaller than 50 MB and Zopfli is available; use it
     cmd="zopfli"
@@ -219,23 +222,15 @@ file_information()
 }
 
 # -------------------------------------------------------------------
-# diff-for-git -> Use Git’s colored diff when available
-hash git &>/dev/null
-if [ $? -eq 0 ]; then
-  function diff() 
-  {
-    git diff --no-index --color-words "$@"
-  }
-fi
-
-# -------------------------------------------------------------------
 # dataurl: Create a data URL from a file
 dataurl()
 {
   local mimeType=$(file -b --mime-type "$1")
+
   if [[ $mimeType == text/* ]]; then
     mimeType="${mimeType};charset=utf-8"
   fi
+
   echo "data:${mimeType};base64,$(openssl base64 -in "$1" | tr -d '\n')"
 }
 

@@ -12,6 +12,9 @@ sudo updatedb
 
 sudo apt-get install bash bash-completion
 
+# more colors
+sudo apt-get install grc
+
 # sudo apt-get install wget / curl
 sudo apt-get install wget curl
 

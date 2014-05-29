@@ -34,7 +34,7 @@ unset file
 # enable some Bash 4 features when possible:
 # * `autocd`, e.g. `**/qux` will enter `./foo/bar/baz/qux`
 # * Recursive globbing, e.g. `echo **/*.txt`
-for option in autocd globstar; do
+for option in autocd globstar cmdhist dotglob extglob cdable_vars; do
   shopt -s "$option" 2> /dev/null
 done
 
@@ -43,17 +43,19 @@ done
 
 ############################################################
 
-# rezize the windows-size if needed
-shopt -s checkwinsize
-
-# case-insensitive globbing (used in pathname expansion)
-shopt -s nocaseglob
-
 # append to the Bash history file, rather than overwriting it
 shopt -s histappend
 
-# autocorrect typos in path names when using `cd`
-shopt -s cdspell
+if [ "$UID" != 0 ]; then
+  # rezize the windows-size if needed
+  shopt -s checkwinsize
+
+  # case-insensitive globbing (used in pathname expansion)
+  shopt -s nocaseglob
+
+  # autocorrect typos in path names when using `cd`
+  shopt -s cdspell
+fi
 
 # try to use less for non-text-files
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"

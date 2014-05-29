@@ -26,13 +26,15 @@ export HISTTIMEFORMAT="%F %T "
 #export LC_ALL="en_EN.UTF-8"
 
 # Highlight section titles in manual pages
-export LESS="-MWi -x4 --shift 5"
+export LESS="-eirMX -x4 --shift 5"
 export LESSHISTFILE="-"     # no less history file
 if [ "$UID" != 0 ]; then
     export LESSCHARSET="utf-8"
+
     if [ -z "$LESSOPEN" ]; then
       [ -x "`which lesspipe`" ] && eval "$(lesspipe)"
     fi
+
     # Yep, 'less' can colorize manpages
     export LESS_TERMCAP_mb=$'\E[01;31m'
     export LESS_TERMCAP_md=$'\E[01;31m'
