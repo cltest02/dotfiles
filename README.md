@@ -7,7 +7,7 @@
 You can clone the repository wherever you want. (I like to keep it in `~/Projects/dotfiles`, with `~/dotfiles` as a symlink.) The bootstrapper script will pull in the latest version and copy the files to your home folder.
 
 ```bash
-git clone https://github.com/voku/dotfiles.git && cd dotfiles && source bootstrap.sh
+cd ~ && git clone https://github.com/voku/dotfiles.git && cd dotfiles && source bootstrap.sh
 ```
 
 To update, `cd` into your local `dotfiles` repository and then:
@@ -49,7 +49,7 @@ You could also use `~/.extra` to override settings, functions and aliases from m
 When setting up a new Debian, you may want to install some extra packages:
 
 ```bash
-bash ~/.firstInstall.sh
+bash ~/dotfiles/.firstInstall.sh
 ```
 
 ## Feedback

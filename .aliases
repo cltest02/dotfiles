@@ -36,6 +36,8 @@ if [ "$TERM" != "dumb" ]; then
   alias ls="ls -Fh --color=auto"
   # displays all files and directories in detail
   alias la="ls -laFh --color=auto"
+  # displays all files and directories in detail with newest-files at bottom
+  alias lr="ls -latr --color=auto"
   # displays files and directories in detail
   alias ll="ls -lFh --color=auto --group-directories-first"
   # shows the most recently modified files at the bottom of
