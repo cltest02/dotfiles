@@ -10,6 +10,13 @@ filetype plugin on
 " Enable filetype-specific indenting
 filetype indent on
 
+" pasting text unmodified from other applications
+set paste
+
+" Try to detect file formats.
+" Unix for new files and autodetect for the rest.
+set fileformats=unix,dos,mac
+
 " Free cursor
 set whichwrap=b,s,h,l,<,>,[,]
 
@@ -24,6 +31,9 @@ set clipboard=unnamed
 
 " Enhance command-line completion
 set wildmenu
+
+" Type of wildmenu.
+set wildmode=longest:full,list:full
 
 " Allow cursor keys in insert mode
 set esckeys
@@ -91,18 +101,27 @@ set expandtab
 
 " Show “invisible” characters
 set lcs=tab:▸\ ,trail:·,eol:¬,nbsp:_
-set hlsearch
 
 " Ignore case of searches
 set ignorecase
-" Highlight dynamically as pattern is typed
+
+" Incremental searching
 set incsearch
 
-" Always show status line
-set laststatus=2
-
 " Enable mouse in all modes
-" set mouse=a
+set mouse=a
+
+" Hide the mouse while typing.
+set mousehide
+
+" Enable the popup menu.
+set mousem=popup
+
+" Split vertically to the right.
+set splitright
+
+" Split horizontally below.
+set splitbelow
 
 " Disable error bells
 set noerrorbells
