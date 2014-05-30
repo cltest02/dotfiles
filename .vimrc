@@ -1,5 +1,24 @@
-" Use the Molokai theme (originally created for TextMate by Wimer Hazenberg)
-colorscheme molokai
+" IMPORTANT: Uncomment one of the following lines to force
+" using 256 colors (or 88 colors) if your terminal supports it,
+" but does not automatically use 256 colors by default.
+"set t_Co=256
+
+" Switch syntax highlighting on, when the terminal has colors
+if &t_Co > 2 || has("gui_running")
+  " Enable coloring for dark background terminals.
+  set background=dark
+  " Use the Molokai theme (originally created for TextMate by Wimer Hazenberg)
+  colorscheme molokai
+  " Turn on color syntax highlighting
+  syntax on
+  syn sync fromstart
+  " set to 256 colors
+  set t_Co=256
+  " Also switch on highlighting the last used search pattern.
+  set hlsearch
+  " Highlight current line
+  set cursorline
+endif
 
 " Enable filetype detection
 filetype on
@@ -20,7 +39,7 @@ set fileformats=unix,dos,mac
 " Free cursor
 set whichwrap=b,s,h,l,<,>,[,]
 
-" Status line
+" Make the status line always visible.
 set laststatus=2
 
 " Make Vim more useful
@@ -58,8 +77,12 @@ set binary
 set noeol
 
 " Keep 50 lines of command line history
-set viminfo='20,\"50
-set history=50
+set history=100
+
+if v:version >= 500
+  " Try reducing the number of lines stored in a register
+  set viminfo='500,f1,:100,/100
+endif
 
 " Keep a backup-file
 set backup
@@ -72,10 +95,11 @@ if exists("&undodir")
   set undodir=~/.vim/undo
 endif
 
-" Respect modeline in files
+" Look for embedded modelines at the top of the file.
 set modeline
-set modelines=4
-set ls=2
+
+" Only look at this number of lines for modeline
+set modelines=10
 
 " Enable per-directory .vimrc files and disable unsafe commands in them
 set exrc
@@ -84,28 +108,34 @@ set secure
 " disable line numbers
 set nonumber
 
-" Switch syntax highlighting on, when the terminal has colors
-" Also switch on highlighting the last used search pattern.
-if &t_Co > 2 || has("gui_running")
-  syntax on
-  set t_Co=256
-  set hlsearch
-endif
+" don't automatically wrap on load
+set nowrap
 
-" Highlight current line
-set cursorline
+" don't automatically wrap text when typing
+set fo-=t
 
 " Make tabs as wide as two spaces -> you can also use :retab
 set tabstop=2
+
+" Number of spaces to use for each step of indent.
 set shiftwidth=2
 set softtabstop=2
+
+" Expand tabs to spaces.
 set expandtab
+
+" Insert spaces for tabs according to shiftwidth.
+set smarttab
 
 " Show “invisible” characters
 set lcs=tab:▸\ ,trail:·,eol:¬,nbsp:_
 
 " Ignore case of searches
 set ignorecase
+
+" Use intelligent case while searching.
+" If search string contains an upper case letter, disable ignorecase.
+set smartcase
 
 " Incremental searching
 set incsearch
@@ -114,16 +144,16 @@ set incsearch
 "set mouse=a
 
 " Hide the mouse while typing.
-set mousehide
+"set mousehide
 
 " Enable the popup menu.
 "set mousem=popup
 
 " Split vertically to the right.
-"set splitright
+set splitright
 
 " Split horizontally below.
-"set splitbelow
+set splitbelow
 
 " Disable error bells
 set noerrorbells
@@ -134,28 +164,47 @@ set nostartofline
 " Show the cursor position
 set ruler
 
-" Don’t show the intro message when starting Vim
-"set shortmess=atI
+" Disable the splash screen (and some various tweaks for messages).
+set shortmess=aTItoO
 
-" Show the current mode
+" Status line definition.
+set statusline=[%n]\ %<%f%m%r\ %w\ %y\ \ <%{&fileformat}>%=[%o]\ %l,%c%V\/%L\ \ %P
+
+" Show current mode in the status line.
 set showmode
+
+" Show the (partial) command as it’s being typed
+set showcmd
 
 " Show the filename in the window titlebar
 set title
 
-" Show the current match
+" When closing a block, show the matching bracket.
 set showmatch
 
-" Show the (partial) command as it’s being typed
-set showcmd
+" Include angle brackets in matching.
+set matchpairs+=<:>
+
+" Do not redraw the screen while macros are running.
+set lazyredraw
+
+" Save files before performing certain actions.
+"set autowrite
 
 " Use relative line numbers
 "if exists("&relativenumber")
 " set relativenumber
 " au BufReadPost * set relativenumber
 "endif
+
+" Start scrolling at this number of lines from the bottom.
+"set scrolloff=2
+
 " Start scrolling three lines before the horizontal window border
 "set scrolloff=3
+
+" Start scrolling horizontally at this number of columns.
+"set sidescrolloff=5
 
 " copy between different vim sessions
 :nmap _Y :!echo “”> ~/.vim/tmp<CR><CR>:w! ~/.vim/tmp<CR>
