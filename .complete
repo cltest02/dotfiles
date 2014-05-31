@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# autocomplete for ssh - user@host
+# info: http://www.commandlinefu.com/commands/view/2759/ssh-autocomplete
+complete -W "$(echo `cat ~/.bash_history | egrep '^ssh ' | sort | uniq | sed 's/^ssh //'`;)" ssh
+
+# add tab completion for SSH hostnames based on ~/.ssh/config, ignoring wildcards
+[ -e "~/.ssh/config" ] && complete -o "default" -o "nospace" -W "$(grep "^Host" ~/.ssh/config | grep -v "[?*]" | cut -d " " -f2 | tr ' ' '\n')" scp sftp ssh
+

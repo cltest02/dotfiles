@@ -26,7 +26,7 @@ fi
 # load the shell dotfiles, and then some:
 # * ~/.path can be used to extend `$PATH`.
 # * ~/.extra can be used for other settings you don’t want to commit.
-for file in ~/.{path,bash_prompt,exports,aliases,bash_aliases,functions,extra}; do
+for file in ~/.{path,exports,aliases,bash_aliases,bash_prompt,complete,functions,extra}; do
   [ -r "$file" ] && [ -f "$file" ] && source "$file"
 done
 unset file
@@ -37,9 +37,6 @@ unset file
 for option in autocd globstar cmdhist dotglob extglob cdable_vars; do
   shopt -s "$option" 2> /dev/null
 done
-
-# add tab completion for SSH hostnames based on ~/.ssh/config, ignoring wildcards
-[ -e "$HOME/.ssh/config" ] && complete -o "default" -o "nospace" -W "$(grep "^Host" ~/.ssh/config | grep -v "[?*]" | cut -d " " -f2 | tr ' ' '\n')" scp sftp ssh
 
 ############################################################
 
