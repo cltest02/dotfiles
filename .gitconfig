@@ -35,6 +35,16 @@
   dm = "!git branch --merged | grep -v '\\*' | xargs -n 1 git branch -d"
   # last commit
   last = log -1 HEAD
+  # reset to head
+  unstage = reset HEAD --
+  # WARNING: hard reset
+  hard = reset --hard
+  # shortcuts
+  co = checkout
+  br = branch
+  ci = commit
+  cam = commit -a -m
+  su = status
 
 [apply]
   # Detect whitespace errors when applying a patch
@@ -93,4 +103,7 @@
   insteadOf = "gist:"
 
 [push]
-  default = matching
+  default = simple
+
+[credential]
+  helper = cache

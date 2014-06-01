@@ -60,3 +60,15 @@ if [ "$UID" = 0 ]; then
     GREP_OPTIONS=""
 fi
 export LS_OPTIONS GREP_OPTIONS
+
+# java - example
+#export JAVA_HOME=/usr/lib/jvm/java-7-oracle
+#export JDK_HOME=$JAVA_HOME
+#export JRE_HOME=$JAVA_HOME
+#export PATH=$JAVA_HOME/bin:$PATH
+
+# android - example
+#export ANDROID_SDK_ROOT=/opt/android-sdk-linux/
+#export ANDROID_NDK=/opt/android-ndk/
+#export ANDROID_HOME=$ANDROID_SDK_ROOT
+#export PATH=$ANDROID_SDK_ROOT/tools/:$ANDROID_SDK_ROOT/platform-tools/:$PATH

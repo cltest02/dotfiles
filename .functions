@@ -30,6 +30,18 @@ extract()
 }
 
 # -------------------------------------------------------------------
+# stripspace: strip unnecessary whitespace from file
+function stripspace() {
+    if [ $# -eq 0 ]; then
+        echo "Usage: stripspace FILE"
+    else
+        local tempfile=mktemp
+        git stripspace < "$1" > tempfile
+        mv tempfile "$1"
+    fi
+}
+
+# -------------------------------------------------------------------
 # battery_life : Echo the percentage of battery life remaining
 battery_life ()
 {

@@ -20,6 +20,9 @@ if &t_Co > 2 || has("gui_running")
   set cursorline
 endif
 
+" set the shell
+set shell=bash
+
 " Enable filetype detection
 filetype on
 
@@ -210,6 +213,9 @@ set lazyredraw
 :nmap _Y :!echo “”> ~/.vim/tmp<CR><CR>:w! ~/.vim/tmp<CR>
 :vmap _Y :w! ~/.vim/tmp<CR>
 :nmap _P :r ~/.vim/tmp<CR>
+
+" Stop opening man pages
+:nmap K <nop>
 
 " Strip trailing whitespace (,ss)
 function! StripWhitespace()

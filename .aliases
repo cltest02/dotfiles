@@ -15,8 +15,11 @@ alias g="git"
 alias h="history"
 alias j="jobs"
 
+# use vim
+alias vi="vim"
+
 # displays a directory tree
-alias tree='tree -Csu'
+alias tree="tree -Csu"
 
 # optimize "ls"-command
 if [ "$TERM" != "dumb" ]; then
@@ -31,13 +34,13 @@ if [ "$TERM" != "dumb" ]; then
   # use colors for grep
   alias grep="grep --color=auto"
   # list all files colorized in long format
-  alias l="ls -lF --color=auto"
+  alias l="ls -lhF --color=auto"
   # use colors
-  alias ls="ls -Fh --color=auto"
+  alias ls="ls -F --color=auto"
   # displays all files and directories in detail
   alias la="ls -laFh --color=auto"
   # displays all files and directories in detail with newest-files at bottom
-  alias lr="ls -latr --color=auto"
+  alias lr="ls -laFhtr --color=auto"
   # displays files and directories in detail
   alias ll="ls -lFh --color=auto --group-directories-first"
   # shows the most recently modified files at the bottom of

@@ -4,6 +4,9 @@ elif infocmp xterm-256color >/dev/null 2>&1; then
   export TERM=xterm-256color
 fi
 
+# set the title (user@host:dir)
+PROMPT_COMMAND='color_prompt=yes; echo -ne "\033]0;${USER}@${HOSTNAME}: ${PWD/$HOME/~}\007"'
+
 function __git_dirty()
 {
   git diff --quiet HEAD &>/dev/null 
@@ -43,14 +46,4 @@ shell_colored() {
 }
 
 shell_colored
-
-# set the title for xterm (user@host:dir)
-case "$TERM" in
-  xterm*|rxvt*)
-    PROMPT_COMMAND='color_prompt=yes; echo -ne "\033]0;${USER}@${HOSTNAME}: ${PWD/$HOME/~}\007"'
-  ;;
-
-  *)
-  ;;
-esac
 

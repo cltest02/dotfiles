@@ -7,8 +7,8 @@ sudo apt-get install build-essential
 
 # install GNU core utilities
 sudo apt-get install coreutils
-# install some other useful utilities like
-sudo apt-get install moreutils
+# install some other useful utilities
+sudo apt-get install moreutils rsync
 # install GNU `find`, `locate`, `updatedb`, and `xargs`, `g`-prefixed
 sudo apt-get install findutils
 sudo updatedb
@@ -24,11 +24,20 @@ sudo apt-get install grc
 # install wget / curl
 sudo apt-get install wget curl
 
+# install java
+#su -
+#echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu precise main" | tee /etc/apt/sources.list.d/webupd8team-java.list
+#echo "deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu precise main" | tee -a /etc/apt/sources.list.d/webupd8team-java.list
+#apt-key adv --keyserver keyserver.ubuntu.com --recv-keys EEA14886
+#apt-get update
+#apt-get install oracle-java7-installer
+#exit
+
 # install node.js
 # Debian
 curl https://www.npmjs.org/install.sh | sudo sh
 # Ubuntu / Debian - sid
-#sudo apt-get install nodejs
+sudo apt-get install nodejs
 
 # install more recent versions of some OS X tools
 sudo apt-get install vim
