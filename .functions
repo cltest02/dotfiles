@@ -79,7 +79,7 @@ logssh()
 }
 
 # -------------------------------------------------------------------
-# WARNING -> replace: change multiple files at once
+# WARNING -> replace: changes multiple files at once
 replace()
 {
   if [ $3 ]; then

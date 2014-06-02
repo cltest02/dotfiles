@@ -18,6 +18,9 @@ alias j="jobs"
 # use vim
 alias vi="vim"
 
+# mkdir: always create parent-dirs, if needed
+alias mkdir="mkdir -p"
+
 # displays a directory tree
 alias tree="tree -Csu"
 
@@ -151,8 +154,11 @@ done
 # make Grunt print stack traces by default
 command -v grunt > /dev/null && alias grunt="grunt --stack"
 
+# show the memory usage
+alias memory_usage='ps -e -orss=,args= | sort -b -k1,1n | pr -TW$COLUMNS'
+
 # shows the corresponding process to ...
-alias 'psx'='ps auxwf | grep'
+alias psx='ps auxwf | grep '
 
 # shows the process structure to clearly
 alias pst='pstree -Alpha'
@@ -168,6 +174,8 @@ alias llport='netstat -nape --inet'
 
 # shows the disk usage of a directory legibly
 alias du='du -kh'
+
+alias du_overview='du -h | grep "^[0-9,]*[MG]" | sort -hr | less'
 
 # shows the complete disk usage to legibly
 alias df='df -kTh'
