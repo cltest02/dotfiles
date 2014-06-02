@@ -18,6 +18,11 @@ alias j="jobs"
 # use vim
 alias vi="vim"
 
+# the load-avg
+alias loadavg="cat /proc/loadavg"
+
+alias partitions="cat /proc/partitions"
+
 # mkdir: always create parent-dirs, if needed
 alias mkdir="mkdir -p"
 

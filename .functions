@@ -30,8 +30,27 @@ extract()
 }
 
 # -------------------------------------------------------------------
+# os-info: show some info about your system
+os-info() {
+  lsb_release -a
+  uname -a
+
+  if [ -z /etc/lsb-release ]; then
+    cat /etc/lsb-release;
+  fi;
+
+  if [ -z /etc/issue ]; then
+    cat /etc/issue;
+  fi;
+
+  if [ -z /proc/version ]; then
+    cat /proc/version;
+  fi;
+}
+
+# -------------------------------------------------------------------
 # stripspace: strip unnecessary whitespace from file
-function stripspace() {
+stripspace() {
     if [ $# -eq 0 ]; then
         echo "Usage: stripspace FILE"
     else

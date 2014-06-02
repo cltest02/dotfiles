@@ -5,15 +5,14 @@ git pull origin master
 function doIt() {
 	rsync --exclude ".git/" --exclude ".DS_Store" --exclude "bootstrap.sh" \
         --exclude "README.md" --exclude ".firstInstall.sh" \
-        --exclude "LICENSE-MIT.txt" -avh --no-perms . ~
+        --exclude "LICENSE-MIT.txt" -avhi --no-perms . ~
 	source ~/.bash_profile
 }
 
 function dryRun() {
-	rsync -ni \
-        --exclude ".git/" --exclude ".DS_Store" --exclude "bootstrap.sh" \
+	rsync --exclude ".git/" --exclude ".DS_Store" --exclude "bootstrap.sh" \
         --exclude "README.md" --exclude ".firstInstall.sh" \
-        --exclude "LICENSE-MIT.txt" -avh --no-perms . ~
+        --exclude "LICENSE-MIT.txt" -avhni --no-perms . ~
 	source ~/.bash_profile
 }
 

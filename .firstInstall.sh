@@ -1,3 +1,6 @@
+# background for your desktop
+#gsettings set org.gnome.desktop.background draw-background false && gsettings set org.gnome.desktop.background picture-uri file:///home/$USER/dotfiles/cli-commands.png && gsettings set org.gnome.desktop.background draw-background true
+
 # update
 sudo apt-get update
 sudo apt-get upgrade
