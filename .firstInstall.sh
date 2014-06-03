@@ -45,18 +45,24 @@ sudo updatedb
 
 sudo aptitude install bash bash-completion
 
-# add extra fonts (also "non-free"-fonts)
+# add extra fonts
+# 
+# also "non-free"-fonts -> 
+#   so you need "multiverse" || "non-free" sources in your "source.list"
 sudo aptitude install ttf-freefont \
                       ttf-mscorefonts-installer \
                       ttf-bitstream-vera \
                       ttf-dejavu \
                       ttf-liberation \
+                      ttf-linux-libertine \
+                      ttf-larabie-deco \
+                      ttf-larabie-straight \
+                      ttf-larabie-uncommon \
                       ttf-droid \
                       msttcorefonts
 
 sudo dpkg-reconfigure fontconfig 
 sudo fc-cache -fv
-
 
 # trace everything
 sudo aptitude install strace
