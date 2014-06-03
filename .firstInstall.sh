@@ -5,6 +5,7 @@
 sudo apt-get update
 sudo apt-get upgrade
 
+# do not delete main--system-dirs (e.g.: "/", "/bin/, /boot/, ...)
 sudo apt-get install safe-rm
 
 # default for many other things
