@@ -13,6 +13,19 @@ lman()
 }
 
 # -------------------------------------------------------------------
+# testConnection: check-funktion - ob eine Internet-Verbindung besteht
+testConnection() {
+  local TMPFILE=$(mktemp -t)
+  local TESTCONNECTION=`wget --tries=3 --timeout=10 www.google.com -O ${TMPFILE} &>/dev/null 2>&1`
+
+  if [ ${?} != 0 ]; then
+    echo "problem - can't get google.com"
+  else
+    echo "ok"
+  fi
+}
+
+# -------------------------------------------------------------------
 # cleanTheSystem: purge old config, kernel, trash etc.
 #
 # WARNING: take a look on what the package-manager will do
