@@ -27,6 +27,7 @@ sudo aptitude install zip \
                       rar \
                       unrar \
                       tar \
+                      pigz \
                       p7zip \
                       p7zip-full \
                       p7zip-rar \
@@ -88,16 +89,13 @@ curl https://www.npmjs.org/install.sh | sudo sh
 # Ubuntu / Debian - sid
 sudo aptitude install nodejs
 
-# install more recent versions of some OS X tools
+# install usefull tools
 sudo aptitude install vim
-
 sudo aptitude install git
 sudo aptitude install ruby-full
 sudo aptitude install imagemagick
 sudo aptitude install lynx
 sudo aptitude install nmap
-sudo aptitude install p7zip
-sudo aptitude install pigz
 sudo aptitude install pv
 sudo aptitude install rename
 sudo aptitude install sqlmap
@@ -106,17 +104,21 @@ sudo aptitude install ucspi-tcp
 sudo aptitude install webkit2png
 sudo aptitude install xpdf
 
-sudo gem install sass
-sudo gem install compass
-sudo gem install autoprefixer-rails
+#
+# only for webworker
+#
 
-sudo npm install -g bower
-sudo npm install -g grunt-cli
-sudo npm install -g grunt-init
+#sudo gem install sass
+#sudo gem install compass
+#sudo gem install autoprefixer-rails
 
-#sudo aptitude install apache2 libapache2-mod-php5 php5-mysql php5-curl php5-gd php5-intl php-pear php5-imagick php5-imap php5-mcrypt php5-memcache php5-ming php5-ps php5-pspell php5-recode php5-snmp php5-sqlite php5-tidy php5-xmlrpc php5-xsl php5-xdebug
+#sudo npm install -g bower
+#sudo npm install -g grunt-cli
+#sudo npm install -g grunt-init
+#sudo npm install -g yo
 
-# curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/bin
+#sudo aptitude install apache2 libapache2-mod-php5 php5-mysql php5-curl php5-gd php5-intl php-pear php5-imagick php5-imap php5-mcrypt php5-memcache php5-ming php5-ps php5-pspell php5-recode php5-snmp php5-sqlite php5-tidy php5-xmlrpc php5-xsl php5-xdebug php5-apcu
+#curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/bin
 
 # clean downloaded and already installed packages
 sudo aptitude clean
