@@ -13,6 +13,40 @@ lman()
 }
 
 # -------------------------------------------------------------------
+# cleanTheSystem: purge old config, kernel, trash etc.
+#
+# WARNING: take a look on what the package-manager will do
+cleanTheSystem()
+{
+  local OLDCONF=$(dpkg -l | grep "^rc"|awk '{print $2}')
+  local CURKERNEL=$(uname -r | sed 's/-*[a-z]//g' | sed 's/-386//g' | sed 's/-164//g')
+  local LINUXPKG="linux-(image|headers|ubuntu-modules|restricted-modules)"
+  local METALINUXPKG="linux-(image|headers|restricted-modules)-(generic|i386|amd64|server|common|rt|xen)"
+  local OLDKERNELS=$(dpkg -l | awk '{print $2}' | grep -E $LINUXPKG | grep -vE $METALINUXPKG | grep -v $CURKERNEL)
+  local GELB="\033[1;33m"
+  local ROT="\033[0;31m"
+  local FARBLOS="\033[0m"
+
+  echo -e $GELB"clear ".deb"-cache ..."$FARBLOS
+  sudo aptitude autoclean
+
+  echo -e $GELB"remove not needed packages ..."$FARBLOS
+  sudo apt-get autoremove
+
+  echo -e $GELB"remove old config-files..."$FARBLOS
+  sudo aptitude purge $OLDCONF
+
+  echo -e $GELB"remove old kernels ..."$FARBLOS
+  sudo aptitude purge $OLDKERNELS
+
+  echo -e $GELB"clean trash ..."$FARBLOS
+  sudo rm -rf /home/*/.local/share/Trash/*/** &> /dev/null
+  sudo rm -rf /root/.local/share/Trash/*/** &> /dev/null
+
+  echo -e $GELB"... everything is clean!!!"$FARBLOS
+}
+
+# -------------------------------------------------------------------
 # packen: create a compressed backup + date
 packen()
 {

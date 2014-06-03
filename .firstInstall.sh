@@ -21,8 +21,8 @@ sudo updatedb
 
 sudo apt-get install bash bash-completion
 
-# add extra fonts - non-free
-sudo apt-get install ttf-mscorefonts-installer
+# add extra fonts (also "non-free"-fonts)
+sudo apt-get install ttf-freefont ttf-mscorefonts-installer ttf-bitstream-vera ttf-dejavu ttf-liberation
 
 # trace everything
 sudo apt-get install strace
