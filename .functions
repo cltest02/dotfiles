@@ -1,6 +1,18 @@
 #!/bin/bash
 
 # -------------------------------------------------------------------
+# box: a function to create a box of '=' characters around a given string
+box() 
+{ 
+  local t="$1xxxx"
+  local c=${2:-#}
+ 
+  echo ${t//?/$c}
+  echo "$c $1 $c" 
+  echo ${t//?/$c} 
+}
+
+# -------------------------------------------------------------------
 # lman: Open the manual page for the last command you executed.
 lman() 
 {

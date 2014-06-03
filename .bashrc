@@ -43,4 +43,10 @@ if [ -f /etc/bashrc ]; then
   . /etc/bashrc
 fi
 
+# TODO:
+# add top-commands from http://www.commandlinefu.com/commands/browse/sort-by-votes
+#
+# INFO:
+# follow -> https://twitter.com/climagic ;)
+
 source ~/.bash_profile;
