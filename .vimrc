@@ -7,17 +7,29 @@
 if &t_Co > 2 || has("gui_running")
   " Enable coloring for dark background terminals.
   set background=dark
+
   " Use the Molokai theme (originally created for TextMate by Wimer Hazenberg)
   colorscheme molokai
+
   " Turn on color syntax highlighting
-  syntax on
+  if exists("+syntax")
+    syntax on
+  endif
+
   syn sync fromstart
+
   " set to 256 colors
   set t_Co=256
+
   " Also switch on highlighting the last used search pattern.
-  set hlsearch
+  if exists("+hlsearch")
+    set hlsearch
+  endif
+
   " Highlight current line
-  set cursorline
+  if exists("+cursorline")
+    set cursorline
+  endif
 endif
 
 " set the shell
@@ -48,11 +60,18 @@ set laststatus=2
 " Make Vim more useful
 set nocompatible
 
+" auto update files when editted outsite of vim
+" set autoread
+
 " Use the OS clipboard by default (on versions compiled with `+clipboard`)
-set clipboard=unnamed
+if exists("+clipboard")
+  set clipboard=unnamed
+endif
 
 " Enhance command-line completion
-set wildmenu
+if exists("+wildmenu")
+  set wildmenu
+endif
 
 " Type of wildmenu.
 set wildmode=longest:full,list:full
@@ -70,6 +89,7 @@ set ttyfast
 set gdefault
 
 " Use UTF-8 without BOM
+set termencoding=utf-8 nobomb
 set encoding=utf-8 nobomb
 
 " Change mapleader
@@ -89,12 +109,14 @@ endif
 
 " Keep a backup-file
 set backup
-set writebackup
+if exists("+writebackup")
+  set writebackup
+endif
 
 " Centralize backups, swapfiles and undo history
 set backupdir=~/.vim/backups
 set directory=~/.vim/swaps
-if exists("&undodir")
+if exists("+undodir")
   set undodir=~/.vim/undo
 endif
 
@@ -128,7 +150,13 @@ set softtabstop=2
 set expandtab
 
 " Insert spaces for tabs according to shiftwidth.
-set smarttab
+if exists("+smarttab")
+  set smarttab
+endif
+
+if exists("+smartindent")
+  set smartindent
+endif
 
 " Show “invisible” characters
 set lcs=tab:▸\ ,trail:·,eol:¬,nbsp:_
@@ -141,13 +169,17 @@ set ignorecase
 set smartcase
 
 " Incremental searching
-set incsearch
+if exists("+incsearch")
+  set incsearch
+endif
 
 " toggle for "paste" & "nopaste"
 set pastetoggle=<F2>
 
 " Enable mouse in all modes
-"set mouse=a
+"if exists("+mouse")
+"  set mouse=a
+"endif
 
 " Hide the mouse while typing.
 "set mousehide
@@ -168,7 +200,9 @@ set noerrorbells
 set nostartofline
 
 " Show the cursor position
-set ruler
+if exists("+ruler")
+  set ruler
+endif
 
 " Disable the splash screen (and some various tweaks for messages).
 set shortmess=aTItoO
@@ -180,10 +214,14 @@ set statusline=[%n]\ %<%f%m%r\ %w\ %y\ \ <%{&fileformat}>%=[%o]\ %l,%c%V\/%L\ \ 
 set showmode
 
 " Show the (partial) command as it’s being typed
-set showcmd
+if exists("+showcmd")
+  set showcmd
+endif
 
 " Show the filename in the window titlebar
-set title
+if exists("+title")
+  set title
+endif
 
 " When closing a block, show the matching bracket.
 set showmatch
@@ -198,7 +236,7 @@ set lazyredraw
 "set autowrite
 
 " Use relative line numbers
-"if exists("&relativenumber")
+"if exists("+relativenumber")
 " set relativenumber
 " au BufReadPost * set relativenumber
 "endif
