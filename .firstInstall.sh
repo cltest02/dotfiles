@@ -5,104 +5,93 @@ if [ \! -f `whereis aptitude | cut -f 2 -d ' '` ] ; then
   sudo apt-get install aptitude
 fi
 
-# update
+# update && upgrade 
 sudo aptitude update
 sudo aptitude upgrade
 
-# read-write NTFS driver for Linux
-sudo aptitude install ntfs-3g
+sudo aptitude install \
+  `# read-write NTFS driver for Linux` \
+  ntfs-3g \
+  `# do not delete main-system-dirs` \
+  safe-rm \
+  `# default for many other things` \
+  build-essential \
+  mktemp \
+  dialog \
+  `# unzip, unrar etc.` \
+  cabextract \
+  zip \
+  unzip \
+  rar \
+  unrar \
+  tar \
+  pigz \
+  p7zip \
+  p7zip-full \
+  p7zip-rar \
+  unace \
+  bzip2 \
+  gzip \
+  xz-utils \
+  `# GNU core utilities` \
+  coreutils  \
+  findutils  \
+  colordiff \
+  moreutils \
+  tree \
+  rsync \
+  vim \
+  `# GNU bash` \
+  bash \
+  bash-completion \
+  `# more colors in the shell` \
+  grc \
+  `# fonts also "non-free"-fonts` \
+  `# -- you need "multiverse" || "non-free" sources in your "source.list" -- ` \
+  ttf-freefont \
+  ttf-mscorefonts-installer \
+  ttf-bitstream-vera \
+  ttf-dejavu \
+  ttf-liberation \
+  ttf-linux-libertine \
+  ttf-larabie-deco \
+  ttf-larabie-straight \
+  ttf-larabie-uncommon \
+  msttcorefonts \
+  `# trace everything` \
+  strace \
+  `# get files from web` \
+  wget \
+  curl \
+  `# usefull tools` \
+  nodejs \
+  git \
+  ruby-full \
+  imagemagick \
+  lynx \
+  nmap \
+  pv \
+  rename \
+  ucspi-tcp \
+  xpdf \
 
-# do not delete main--system-dirs (e.g.: "/", "/bin/, /boot/, ...)
-sudo aptitude install safe-rm
-
-# default for many other things
-sudo aptitude install build-essential \
-                      mktemp \
-                      dialog \
-                      cabextract
-
-# unzip, unrar etc.
-sudo aptitude install zip \
-                      unzip \
-                      rar \
-                      unrar \
-                      tar \
-                      pigz \
-                      p7zip \
-                      p7zip-full \
-                      p7zip-rar \
-                      unace \
-                      bzip2 \
-                      gzip \
-                      xz-utils
-
-# install GNU core utilities
-sudo aptitude install coreutils colordiff
-# install some other useful utilities
-sudo aptitude install moreutils rsync
-# install GNU `find`, `locate`, `updatedb`, and `xargs`, `g`-prefixed
-sudo aptitude install findutils
-sudo updatedb
-
-sudo aptitude install bash bash-completion
-
-# add extra fonts
-# 
-# also "non-free"-fonts -> 
-#   so you need "multiverse" || "non-free" sources in your "source.list"
-sudo aptitude install ttf-freefont \
-                      ttf-mscorefonts-installer \
-                      ttf-bitstream-vera \
-                      ttf-dejavu \
-                      ttf-liberation \
-                      ttf-linux-libertine \
-                      ttf-larabie-deco \
-                      ttf-larabie-straight \
-                      ttf-larabie-uncommon \
-                      ttf-droid \
-                      msttcorefonts
-
-sudo dpkg-reconfigure fontconfig 
-sudo fc-cache -fv
-
-# trace everything
-sudo aptitude install strace
-
-# more colors
-sudo aptitude install grc
-
-# install wget / curl
-sudo aptitude install wget curl
-
+#
 # install java
+#
+
 #su -
-#echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu precise main" | tee /etc/apt/sources.list.d/webupd8team-java.list
-#echo "deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu precise main" | tee -a /etc/apt/sources.list.d/webupd8team-java.list
+#echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu precise main" | tee /etc/apt/sources.list.d
+#echo "deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu precise main" | tee -a /etc/apt/sources
 #apt-key adv --keyserver keyserver.ubuntu.com --recv-keys EEA14886
 #aptitude update
 #aptitude install oracle-java7-installer
 #exit
 
-# install node.js
-# Debian
-curl https://www.npmjs.org/install.sh | sudo sh
-# Ubuntu / Debian - sid
-sudo aptitude install nodejs
+# 
+# install node.js without deb-files e.g. for Debian - stable
+#
 
-# install usefull tools
-sudo aptitude install vim
-sudo aptitude install git
-sudo aptitude install ruby-full
-sudo aptitude install imagemagick
-sudo aptitude install lynx
-sudo aptitude install nmap
-sudo aptitude install pv
-sudo aptitude install rename
-sudo aptitude install sqlmap
-sudo aptitude install tree
-sudo aptitude install ucspi-tcp
-sudo aptitude install webkit2png
-sudo aptitude install xpdf
+#curl https://www.npmjs.org/install.sh | sudo sh
 
 #
 # only for webworker
@@ -122,3 +111,10 @@ sudo aptitude install xpdf
 
 # clean downloaded and already installed packages
 sudo aptitude clean
+
+# update-fonts
+sudo dpkg-reconfigure fontconfig                                                                       
+sudo fc-cache -fv
+
+# update-locate-db
+sudo updatedb
