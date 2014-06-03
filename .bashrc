@@ -1,3 +1,8 @@
+# TAKE A LOOK AT THIS SOURCES
+#
+# - http://www.commandlinefu.com/commands/browse/sort-by-votes
+# - https://twitter.com/climagic  
+
 # This might seem backwards when you look at the "Bash startup files" reference
 # <http://www.gnu.org/software/bash/manual/bashref.html#Bash-Startup-Files> or
 # the "INVOCATION" section in the man page. However, my workflow typically is:
@@ -42,11 +47,5 @@ fi
 if [ -f /etc/bashrc ]; then
   . /etc/bashrc
 fi
-
-# TODO:
-# add top-commands from http://www.commandlinefu.com/commands/browse/sort-by-votes
-#
-# INFO:
-# follow -> https://twitter.com/climagic ;)
 
 source ~/.bash_profile;
