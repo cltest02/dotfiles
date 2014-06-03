@@ -5,11 +5,13 @@
 sudo apt-get update
 sudo apt-get upgrade
 
+sudo apt-get install safe-rm
+
 # default for many other things
 sudo apt-get install build-essential
 
 # install GNU core utilities
-sudo apt-get install coreutils
+sudo apt-get install coreutils colordiff
 # install some other useful utilities
 sudo apt-get install moreutils rsync
 # install GNU `find`, `locate`, `updatedb`, and `xargs`, `g`-prefixed

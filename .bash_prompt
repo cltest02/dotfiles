@@ -1,3 +1,10 @@
+#!/bin/bash
+
+# settings for chroot
+if [ -z "$debian_chroot" -a -r /etc/debian_chroot ]; then
+  debian_chroot=$(cat /etc/debian_chroot)
+fi
+
 if [[ $COLORTERM = gnome-* && $TERM = xterm ]] && infocmp gnome-256color >/dev/null 2>&1; then
   export TERM=gnome-256color
 elif infocmp xterm-256color >/dev/null 2>&1; then
@@ -46,4 +53,4 @@ shell_colored() {
 }
 
 shell_colored
-
+unset shell_colored

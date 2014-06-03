@@ -1,5 +1,21 @@
 #!/bin/bash
 
+# Enable programmable completion features (you don't need to enable
+# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+# sources /etc/bash.bashrc).
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
+fi
+
+[ -d ~/.bash/completion ] && for file in ~/.bash/completion/*; do
+  [ -f "$file" ] && source "$file"
+done
+unset file
+
 # autocomplete for ssh - user@host
 # info: http://www.commandlinefu.com/commands/view/2759/ssh-autocomplete
 complete -W "$(echo `cat ~/.bash_history | egrep '^ssh ' | sort | uniq | sed 's/^ssh //'`;)" ssh
@@ -7,3 +23,5 @@ complete -W "$(echo `cat ~/.bash_history | egrep '^ssh ' | sort | uniq | sed 's/
 # add tab completion for SSH hostnames based on ~/.ssh/config, ignoring wildcards
 [ -e "~/.ssh/config" ] && complete -o "default" -o "nospace" -W "$(grep "^Host" ~/.ssh/config | grep -v "[?*]" | cut -d " " -f2 | tr ' ' '\n')" scp sftp ssh
 
+# try to use tab auto-completion for Grunt
+#[ -x /usr/bin/grunt ] && eval "$(grunt --completion=bash)"

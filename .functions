@@ -1,3 +1,17 @@
+#!/bin/bash
+
+# -------------------------------------------------------------------
+# lman: Open the manual page for the last command you executed.
+lman() 
+{
+  set -- $(fc -nl -1)
+  while [ $# -gt 0 -a '(' "sudo" = "$1" -o "-" = "${1:0:1}" ')' ]; do
+    shift
+  done
+  cmd="$(basename "$1")"
+  man "$cmd" || help "$cmd"
+}
+
 # -------------------------------------------------------------------
 # packen: create a compressed backup + date
 packen()
@@ -11,19 +25,19 @@ extract()
 {
   if [ -f $1 ] ; then
     case $1 in
-             *.tar.bz2)   tar xvjf $1     ;;
-             *.tar.gz)    tar xvzf $1     ;;
-             *.bz2)       bunzip2 $1      ;;
-             *.rar)       unrar x $1      ;;
-             *.gz)        gunzip $1       ;;
-             *.tar)       tar xvf $1      ;;
-             *.tbz2)      tar xvjf $1     ;;
-             *.tgz)       tar xvzf $1     ;;
-             *.zip)       unzip $1        ;;
-             *.Z)         uncompress $1   ;;
-             *.7z)        7z x $1         ;;
-             *)           echo "'$1' cannot be extracted via >extract<" ;;
-         esac
+      *.tar.bz2)   tar xvjf $1     ;;
+      *.tar.gz)    tar xvzf $1     ;;
+      *.bz2)       bunzip2 $1      ;;
+      *.rar)       unrar x $1      ;;
+      *.gz)        gunzip $1       ;;
+      *.tar)       tar xvf $1      ;;
+      *.tbz2)      tar xvjf $1     ;;
+      *.tgz)       tar xvzf $1     ;;
+      *.zip)       unzip $1        ;;
+      *.Z)         uncompress $1   ;;
+      *.7z)        7z x $1         ;;
+      *)           echo "'$1' cannot be extracted via >extract<" ;;
+    esac
   else
     echo "'$1' is not a valid file"
   fi
@@ -50,14 +64,15 @@ os-info() {
 
 # -------------------------------------------------------------------
 # stripspace: strip unnecessary whitespace from file
-stripspace() {
-    if [ $# -eq 0 ]; then
-        echo "Usage: stripspace FILE"
-    else
-        local tempfile=mktemp
-        git stripspace < "$1" > tempfile
-        mv tempfile "$1"
-    fi
+stripspace() 
+{
+  if [ $# -eq 0 ]; then
+    echo "Usage: stripspace FILE"
+  else
+    local tempfile=mktemp
+    git stripspace < "$1" > tempfile
+    mv tempfile "$1"
+  fi
 }
 
 # -------------------------------------------------------------------
@@ -130,13 +145,15 @@ calc()
 
 # -------------------------------------------------------------------
 # mkd: Create a new directory and enter it
-mkd() {
+mkd()
+{
   mkdir -p "$@" && cd "$@"
 }
 
 # -------------------------------------------------------------------
 # cdf: Change working directory to the top-most Finder window location
-cdf() # short for `cdfinder`
+# info: short for `cdfinder`
+cdf()
 {
   cd "$(osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)')"
 }
@@ -273,6 +290,7 @@ gitio()
     echo "Usage: \`gitio slug url\`"
     return 1
   fi
+
   curl -i http://git.io/ -F "url=${2}" -F "code=${1}"
 }
 

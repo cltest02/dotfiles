@@ -143,6 +143,9 @@ set smartcase
 " Incremental searching
 set incsearch
 
+" toggle for "paste" & "nopaste"
+set pastetoggle=<F2>
+
 " Enable mouse in all modes
 "set mouse=a
 

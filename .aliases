@@ -1,3 +1,29 @@
+#!/bin/bash
+
+# Enable simple aliases to be sudo'ed. ("sudone"?)
+# http://www.gnu.org/software/bash/manual/bashref.html#Aliases says: "If the
+# last character of the alias value is a space or tab character, then the next
+# command word following the alias is also checked for alias expansion."
+alias sudo='sudo '
+
+# Confirm before overwriting
+# -----------------------------------------------------------------------------
+# I know it is bad practice to override the default commands, but this is for
+# my own safety. If you really want the original "instakill" versions, you can
+# use "command rm", "\rm", or "/bin/rm" inside your own commands, aliases, or
+# shell functions. Note that separate scripts are not affected by the aliases
+# defined here.
+#alias cp='cp -i'
+#alias mv='mv -i'
+#alias ln='ln -i'
+
+alias rm='rm -I'                    # 'rm -i' prompts for every file  
+
+# safety features
+alias chown='chown --preserve-root'  
+alias chmod='chmod --preserve-root'  
+alias chgrp='chgrp --preserve-root'  
+
 # Easier navigation: .., ..., ...., ....., ~ and -
 alias ..="cd .."
 alias ...="cd ../.."
@@ -28,6 +54,16 @@ alias mkdir="mkdir -p"
 
 # displays a directory tree
 alias tree="tree -Csu"
+
+# Clipboard access. I created these aliases to have the same command on
+# Cygwin, Linux and OS X.
+if command -v pbpaste >/dev/null; then
+  alias getclip="pbpaste"
+  alias putclip="pbcopy"
+elif command -v xclip >/dev/null; then
+  alias getclip="xclip --out"
+  alias putclip="xclip --in"
+fi
 
 # optimize "ls"-command
 if [ "$TERM" != "dumb" ]; then
@@ -61,9 +97,6 @@ if [ "$TERM" != "dumb" ]; then
   alias vdir="ls --color=auto --format=long"
 fi
 
-# enable aliases to be sudo’ed
-alias sudo='sudo '
-
 # Gzip-enabled `curl`
 alias gurl='curl --compressed'
 
@@ -78,9 +111,6 @@ alias timer='echo "Timer started. Stop with Ctrl-D." && date && time cat && date
 
 # create a dir with date from today
 alias mkdd='mkdir $(date +%Y%m%d)'
-
-# workaround for old aptitude version & big sources.list
-alias aptitude_update='export LANG=C ; sudo aptitude update ; export LANG=de_DE.UTF-8' 
 
 # get / check for updates
 alias updates='sudo apt-get update'
@@ -97,6 +127,15 @@ alias whois="whois -h whois-servers.net"
 # View HTTP traffic
 alias sniff="sudo ngrep -d 'en1' -t '^(GET|POST) ' 'tcp and port 80'"
 alias httpdump="sudo tcpdump -i en1 -n -s 0 -w - | grep -a -o -E \"Host\: .*|GET \/.*\""
+
+# Use "colordiff" or "highlight" to colour diffs.
+if command -v colordiff > /dev/null; then
+  alias difflight='colordiff | less -XFIRd'
+elif command -v highlight > /dev/null; then
+  alias difflight='highlight --dark-red ^-.* | highlight --dark-green ^+.* | highlight --yellow ^Only.* | highlight --yellow ^Files.*differ$ | less -XFIRd'
+else
+  alias difflight='less -XFIRd'
+fi
 
 # Colorize these commands if possible
 if which grc &>/dev/null; then

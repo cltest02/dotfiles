@@ -1,7 +1,12 @@
+#!/bin/bash
+
 # Make vim the default editor
 export PAGER="less"
 export EDITOR="vim"
 export VISUAL=$EDITOR
+
+# Make the "sudo" prompt more useful, without requiring access to "visudo".
+export SUDO_PROMPT='[sudo] password for %u on %h: ';
 
 # PATH addons
 [ -d "$HOME/bin" ] && PATH="$HOME/bin:$PATH"
@@ -13,20 +18,51 @@ export PATH
 # Larger bash history (allow 32³ entries; default is 500)
 export HISTSIZE=32768
 export HISTFILESIZE=$HISTSIZE
+
 # ignore duplicates commands in the historylog¬
 HISTCONTROL=$HISTCONTROL${HISTCONTROL+:}ignoredups
 export HISTCONTROL=ignoredups
+
 # Make some commands not show up in history
 export HISTIGNORE='&:clear:pwd:exit:date:[bf]g:exit:[ t\]*:* --help'
+
 # add the date to the historylog¬
-export HISTTIMEFORMAT="%F %T "
+# Keep track of the time the commands were executed.
+# The xterm colour escapes require special care when piping; e.g. "| less -R".
+export HISTTIMEFORMAT="${FG_BLUE}${FONT_BOLD}%Y/%m/%d %H:%M:%S${FONT_RESET}  ";
 
 # Prefer US English and use UTF-8
 #export LANG="en_EN.UTF-8"
 #export LC_ALL="en_EN.UTF-8"
 
+# Make less the default pager, and specify some useful defaults.
+less_options=(
+  # If the entire text fits on one screen, just show it and quit. (Be more
+  # like "cat" and less like "more".)
+  --quit-if-one-screen
+
+  # Do not clear the screen first.
+  --no-init
+
+  # Like "smartcase" in Vim: ignore case unless the search pattern is mixed.
+  --ignore-case
+
+  # Do not automatically wrap long lines.
+  --chop-long-lines
+
+  # Allow ANSI colour escapes, but no other escapes.
+  --RAW-CONTROL-CHARS
+
+  # Do not ring the bell when trying to scroll past the end of the buffer.
+  --quiet
+
+  # Do not complain when we are on a dumb terminal.
+  --dumb
+);
+export LESS="-eirMX -x4 --shift 5 ${less_options[*]}";
+unset less_options;
+
 # Highlight section titles in manual pages
-export LESS="-eirMX -x4 --shift 5"
 export LESSHISTFILE="-"     # no less history file
 if [ "$UID" != 0 ]; then
     export LESSCHARSET="utf-8"

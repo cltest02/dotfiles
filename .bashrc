@@ -1,63 +1,46 @@
-# If not running interactively: exit immediately.
+# This might seem backwards when you look at the "Bash startup files" reference
+# <http://www.gnu.org/software/bash/manual/bashref.html#Bash-Startup-Files> or
+# the "INVOCATION" section in the man page. However, my workflow typically is:
+#
+# * Open a terminal with four shells in tabs
+# * Edit code in Vim, and shell out using ":sh"
+#
+# The initial four shells are login shells, so they source ~/.bash_profile.
+# The shells spawned by Vim are not login shells, but they /are/ interactive.
+# They look for .bashrc, but not .bash_profile. Because they are interactive,
+# PS1 is set, so I know it is OK to run all the shell initialisation code.
+#
+# If I were to put the contents of ~/.bash_profile in ~/.bashrc and make the
+# former source the latter, I would have to wrap the entire contents of the
+# latter in a huge "if [ -n "$PS1" ]; then ... fi" block. That does not really
+# help readability, does it?
+#
+# (Of course, I could also do "[ -z "$PS1" ] && return;" in ~/.bashrc and still
+# source it from ~/.bash_profile, but way back when I started my .bash_profile
+# customisations, I did not know about login vs. non-login shells, nor did I
+# know you could do "return" in a sourced file. If I were to change things now,
+# I would lose my blame history, which seems too high a price to pay.)
+#
+# The difference between a login shell and an interactive non-login shell is
+# moot for me, so I consider all interactive shells to be equal and wanting
+# the same treatment.
+#
+# If you're wondering what a non-interactive shell might be, i.e. when PS1
+# might not be set, try this:
+#
+#     ssh localhost 'echo "PS1: >$PS1<"'
+#
+
+# If not running interactively: exit immediately.                               
 # Note that 'return' works because the file is sourced, not executed.
+
 if [[ $- != *i* ]] || [ -z "$PS1" ]; then
   return 0
 fi
-
-############# INCLUDE ####################################
 
 # try to load global-bashrc
 if [ -f /etc/bashrc ]; then
   . /etc/bashrc
 fi
 
-# Enable programmable completion features (you don't need to enable
-# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
-# sources /etc/bash.bashrc).
-if ! shopt -oq posix; then
-  if [ -f /usr/share/bash-completion/bash_completion ]; then
-    . /usr/share/bash-completion/bash_completion
-  elif [ -f /etc/bash_completion ]; then
-    . /etc/bash_completion
-  fi
-fi
-
-# settings for chroot
-if [ -z "$debian_chroot" -a -r /etc/debian_chroot ]; then
-  debian_chroot=$(cat /etc/debian_chroot)
-fi
-
-# load the shell dotfiles, and then some:
-# * ~/.path can be used to extend `$PATH`.
-# * ~/.extra can be used for other settings you don’t want to commit.
-for file in ~/.{path,exports,aliases,bash_aliases,bash_prompt,complete,functions,extra}; do
-  [ -r "$file" ] && [ -f "$file" ] && source "$file"
-done
-unset file
-
-# enable some Bash 4 features when possible:
-# * `autocd`, e.g. `**/qux` will enter `./foo/bar/baz/qux`
-# * Recursive globbing, e.g. `echo **/*.txt`
-for option in autocd globstar cmdhist dotglob extglob cdable_vars; do
-  shopt -s "$option" 2> /dev/null
-done
-
-############################################################
-
-# append to the Bash history file, rather than overwriting it
-shopt -s histappend
-
-if [ "$UID" != 0 ]; then
-  # rezize the windows-size if needed
-  shopt -s checkwinsize
-
-  # case-insensitive globbing (used in pathname expansion)
-  shopt -s nocaseglob
-
-  # autocorrect typos in path names when using `cd`
-  shopt -s cdspell
-fi
-
-# try to use less for non-text-files
-[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
-
+source ~/.bash_profile;
