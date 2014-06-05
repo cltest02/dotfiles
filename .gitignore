@@ -1,3 +1,7 @@
+# user settings
+.extra
+.path
+
 # Ctags file
 tags
 

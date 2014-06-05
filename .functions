@@ -12,6 +12,15 @@ box()
   echo ${t//?/$c} 
 }
 
+# optiImages: optimized images in the current dir + sub-dirs
+#
+# INFO: use "grunt-contrib-imagemin" for websites!
+optiImages()
+{
+  find . -iname '*.png' -exec optipng -o7 {} \;
+  find . -iname '*.jpg' -exec jpegoptim --force {} \;
+}
+
 # -------------------------------------------------------------------
 # lman: Open the manual page for the last command you executed.
 lman() 

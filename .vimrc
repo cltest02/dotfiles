@@ -3,15 +3,15 @@
 " but does not automatically use 256 colors by default.
 "set t_Co=256
 
-" Switch syntax highlighting on, when the terminal has colors
+" switch syntax highlighting on, when the terminal has colors
 if &t_Co > 2 || has("gui_running")
   " Enable coloring for dark background terminals.
   set background=dark
 
-  " Use the Molokai theme (originally created for TextMate by Wimer Hazenberg)
+  " use the Molokai theme (originally created for TextMate by Wimer Hazenberg)
   colorscheme molokai
 
-  " Turn on color syntax highlighting
+  " turn on color syntax highlighting
   if exists("+syntax")
     syntax on
   endif
@@ -26,7 +26,7 @@ if &t_Co > 2 || has("gui_running")
     set hlsearch
   endif
 
-  " Highlight current line
+  " highlight current line
   if exists("+cursorline")
     set cursorline
   endif
@@ -35,13 +35,13 @@ endif
 " set the shell
 set shell=bash
 
-" Enable filetype detection
+" enable filetype detection
 filetype on
 
-" Enable filetype-specific plugins
+" enable filetype-specific plugins
 filetype plugin on
 
-" Enable filetype-specific indenting
+" enable filetype-specific indenting
 filetype indent on
 
 " pasting text unmodified from other applications
@@ -51,82 +51,82 @@ set paste
 " Unix for new files and autodetect for the rest.
 set fileformats=unix,dos,mac
 
-" Free cursor
+" free cursor
 set whichwrap=b,s,h,l,<,>,[,]
 
-" Make the status line always visible.
+" make the status line always visible
 set laststatus=2
 
-" Make Vim more useful
+" make Vim more useful
 set nocompatible
 
-" auto update files when editted outsite of vim
+" automatically re-read files when editted outsite of vim
 " set autoread
 
-" Use the OS clipboard by default (on versions compiled with `+clipboard`)
+" use the OS clipboard by default (on versions compiled with `+clipboard`)
 if exists("+clipboard")
   set clipboard=unnamed
 endif
 
-" Enhance command-line completion
+" enhance command-line completion
 if exists("+wildmenu")
   set wildmenu
 endif
 
-" Type of wildmenu.
+" type of wildmenu
 set wildmode=longest:full,list:full
 
-" Allow cursor keys in insert mode
+" allow cursor keys in insert mode
 set esckeys
 
-" Allow backspace in insert mode
+" allow backspace in insert mode
 set backspace=indent,eol,start
 
-" Optimize for fast terminal connections
+" optimize for fast terminal connections
 set ttyfast
 
-" Add the g flag to search/replace by default
+" add the g flag to search/replace by default
 set gdefault
 
-" Use UTF-8 without BOM
+" use UTF-8 without BOM
 set termencoding=utf-8 nobomb
 set encoding=utf-8 nobomb
 
-" Change mapleader
+" change mapleader
 let mapleader=","
 
-" Don’t add empty newlines at the end of files
+" don’t add empty newlines at the end of files
 set binary
 set noeol
 
-" Keep 50 lines of command line history
+" keep X lines of command-line history
 set history=100
 
 if v:version >= 500
-  " Try reducing the number of lines stored in a register
+  " try reducing the number of lines stored in a register
   set viminfo='500,f1,:100,/100
 endif
 
-" Keep a backup-file
+" keep a backup-file
 set backup
 if exists("+writebackup")
   set writebackup
 endif
 
-" Centralize backups, swapfiles and undo history
+" centralize backups, swapfiles and undo history
 set backupdir=~/.vim/backups
 set directory=~/.vim/swaps
 if exists("+undodir")
   set undodir=~/.vim/undo
 endif
 
-" Look for embedded modelines at the top of the file.
+" look for embedded modelines at the top of the file
 set modeline
 
-" Only look at this number of lines for modeline
+" only look at this number of lines for modeline
 set modelines=10
 
-" Enable per-directory .vimrc files and disable unsafe commands in them
+" enable per-directory .vimrc files and disable unsafe commands in them
 set exrc
 set secure
 
@@ -139,17 +139,17 @@ set nowrap
 " don't automatically wrap text when typing
 set fo-=t
 
-" Make tabs as wide as two spaces -> you can also use :retab
+" make tabs as wide as two spaces -> you can also use :retab
 set tabstop=2
 
-" Number of spaces to use for each step of indent.
+" number of spaces to use for each step of indent
 set shiftwidth=2
 set softtabstop=2
 
-" Expand tabs to spaces.
+" expand tabs to spaces
 set expandtab
 
-" Insert spaces for tabs according to shiftwidth.
+" insert spaces for tabs according to shiftwidth
 if exists("+smarttab")
   set smarttab
 endif
@@ -158,17 +158,17 @@ if exists("+smartindent")
   set smartindent
 endif
 
-" Show “invisible” characters
+" show “invisible” characters
 set lcs=tab:▸\ ,trail:·,eol:¬,nbsp:_
 
-" Ignore case of searches
+" ignore case of searches
 set ignorecase
 
 " Use intelligent case while searching.
 " If search string contains an upper case letter, disable ignorecase.
 set smartcase
 
-" Incremental searching
+" incremental searching
 if exists("+incsearch")
   set incsearch
 endif
@@ -176,30 +176,30 @@ endif
 " toggle for "paste" & "nopaste"
 set pastetoggle=<F2>
 
-" Enable mouse in all modes
+" enable mouse in all modes
 "if exists("+mouse")
 "  set mouse=a
 "endif
 
-" Hide the mouse while typing.
+" hide the mouse while typing
 "set mousehide
 
-" Enable the popup menu.
+" enable the popup menu
 "set mousem=popup
 
-" Split vertically to the right.
+" split vertically to the right
 set splitright
 
-" Split horizontally below.
+" split horizontally below
 set splitbelow
 
-" Disable error bells
+" disable error bells
 set noerrorbells
 
-" Don’t reset cursor to start of line when moving around.
+" don’t reset cursor to start of line when moving around
 set nostartofline
 
-" Show the cursor position
+" show the cursor position
 if exists("+ruler")
   set ruler
 endif
@@ -207,18 +207,18 @@ endif
 " Disable the splash screen (and some various tweaks for messages).
 set shortmess=aTItoO
 
-" Status line definition.
+" status line definition
 set statusline=[%n]\ %<%f%m%r\ %w\ %y\ \ <%{&fileformat}>%=[%o]\ %l,%c%V\/%L\ \ %P
 
 " Show current mode in the status line.
 set showmode
 
-" Show the (partial) command as it’s being typed
+" Show the (partial) command as it’s being typed.
 if exists("+showcmd")
   set showcmd
 endif
 
-" Show the filename in the window titlebar
+" Show the filename in the window titlebar.
 if exists("+title")
   set title
 endif
@@ -235,7 +235,7 @@ set lazyredraw
 " Save files before performing certain actions.
 "set autowrite
 
-" Use relative line numbers
+" use relative line numbers
 "if exists("+relativenumber")
 " set relativenumber
 " au BufReadPost * set relativenumber
@@ -244,7 +244,7 @@ set lazyredraw
 " Start scrolling at this number of lines from the bottom.
 "set scrolloff=2
 
-" Start scrolling three lines before the horizontal window border
+" Start scrolling three lines before the horizontal window border.
 "set scrolloff=3
 
 " Start scrolling horizontally at this number of columns.
@@ -255,10 +255,10 @@ set lazyredraw
 :vmap _Y :w! ~/.vim/tmp<CR>
 :nmap _P :r ~/.vim/tmp<CR>
 
-" Stop opening man pages
+" stop opening man pages
 :nmap K <nop>
 
-" Strip trailing whitespace (,ss)
+" strip trailing whitespace (,ss)
 function! StripWhitespace()
   let save_cursor = getpos(".")
   let old_query = getreg('/')
@@ -267,13 +267,13 @@ function! StripWhitespace()
   call setreg('/', old_query)
 endfunction
 noremap <leader>ss :call StripWhitespace()<CR>
-" Save a file as root (,W)
+" save a file as root (,W)
 noremap <leader>W :w !sudo tee % > /dev/null<CR>
 
-" Automatic commands
+" automatic commands
 if has("autocmd")
-  " Enable file type detection
+  " enable file type detection
   filetype on
-  " Treat .json files as .js
+  " treat .json files as .js
   autocmd BufNewFile,BufRead *.json setfiletype json syntax=javascript
 endif

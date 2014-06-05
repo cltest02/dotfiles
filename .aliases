@@ -52,6 +52,9 @@ alias partitions="cat /proc/partitions"
 # mkdir: always create parent-dirs, if needed
 alias mkdir="mkdir -p"
 
+# speedtest: get a 100MB file via wget
+alias speedtest="wget -O /dev/null http://speedtest.wdc01.softlayer.com/downloads/test100.zip"
+
 # displays a directory tree
 alias tree="tree -Csu"
 
@@ -105,6 +108,9 @@ alias week='date +%V'
 
 # show the timestamp in the ISO 8601 format
 alias timestamp_iso_8601='date "+%Y%m%dT%H%M%S"'
+
+#show a clean date: YYYY-MM-DD
+alias date_clean='date "+%Y-%m-%d"'
 
 # stopwatch
 alias timer='echo "Timer started. Stop with Ctrl-D." && date && time cat && date'

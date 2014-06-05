@@ -33,6 +33,13 @@ sudo aptitude install \
   bzip2 \
   gzip \
   xz-utils \
+  `# optimize image-size` \
+  gifsicle \
+  svgo \
+  optipng \
+  pngcrush \
+  jpegoptim \
+  libjpeg-progs \
   `# GNU core utilities` \
   coreutils  \
   findutils  \
@@ -41,6 +48,7 @@ sudo aptitude install \
   tree \
   rsync \
   vim \
+  csstidy \
   `# GNU bash` \
   bash \
   bash-completion \
@@ -63,9 +71,12 @@ sudo aptitude install \
   `# get files from web` \
   wget \
   curl \
+  `# repo-tools`\
+  git \
+  subversion \
+  mercurial \
   `# usefull tools` \
   nodejs \
-  git \
   ruby-full \
   imagemagick \
   lynx \

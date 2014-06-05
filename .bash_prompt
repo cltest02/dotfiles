@@ -14,15 +14,30 @@ fi
 # set the title (user@host:dir)
 PROMPT_COMMAND='color_prompt=yes; echo -ne "\033]0;${USER}@${HOSTNAME}: ${PWD/$HOME/~}\007"'
 
-function __git_dirty()
+__git_dirty()
 {
   git diff --quiet HEAD &>/dev/null 
   [ $? == 1 ] && echo "!" 
 }
 
-function __git_branch()
+__git_branch()
 {
-  __git_ps1 "[%s]"
+  __git_ps1 " (git → %s)"
+}
+
+__svn_branch()
+{
+  __svn_url | sed -e 's#^'"$(__svn_repository_root)"'##g' | awk '{print " (svn → "$1")" }'
+}
+
+__svn_url()
+{
+  svn info 2>/dev/null | sed -ne 's#^URL: ##p'
+}
+
+__svn_repository_root()
+{
+  svn info 2>/dev/null | sed -ne 's#^Repository Root: ##p'
 }
 
 shell_colored() {
@@ -48,7 +63,7 @@ shell_colored() {
   [ $UID -eq "0" ] && UC=$RED     # root's color
 
   # set colors for the bash-prompt
-  export PS1="\n${debian_chroot:+($debian_chroot)}$UC\u$LIGHT_BLUE@$LIGHT_GREEN\h$UC:$LIGHT_BLUE\w$LIGHT_RED->\$(__git_branch)$R\$(__git_dirty)$NO_COLOUR "
+  export PS1="\n${debian_chroot:+($debian_chroot)}$UC\u$LIGHT_BLUE@$LIGHT_GREEN\h$UC:$LIGHT_BLUE\w$LIGHT_RED→\$(__git_branch)\$(__svn_branch)$R\$(__git_dirty)$NO_COLOUR "
   export PS2="\[$ORANGE\]→ \[$RESET\]"
 }
 
