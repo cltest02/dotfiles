@@ -409,7 +409,8 @@ gz()
 
 # -------------------------------------------------------------------
 # json: Syntax-highlight JSON strings or files
-# Usage -> `json '{"foo":42}'` or `echo '{"foo":42}' | json`
+#
+# usage -> `json '{"foo":42}'` or `echo '{"foo":42}' | json`
 json()
 {
   if [ -t 0 ]; then # argument
@@ -497,6 +498,7 @@ getcertnames()
 
 # -------------------------------------------------------------------
 # note: add a note to the ~/notes.txt file
+#
 # usage -> `note 'title' 'body'` or `echo 'body' | note`
 note() 
 {
@@ -514,8 +516,19 @@ note()
 }
 
 # -------------------------------------------------------------------
+# httpDebug: download a web page and show info on what took time
+#
+# usage -> httpDebug http://github.com
+httpDebug()
+{
+  curl $@ -o /dev/null -w "dns: %{time_namelookup} connect: %{time_connect} pretransfer: %{time_pretransfer} starttransfer: %{time_starttransfer} total: %{time_total}\n"
+}
+ 
+
+# -------------------------------------------------------------------
 # gi: Install Grunt plugins and add them as `devDependencies` to `package.json`
-# Usage -> `gi contrib-watch contrib-uglify zopfli`
+#
+# usage -> `gi contrib-watch contrib-uglify zopfli`
 gi() 
 {
   npm install --save-dev ${*/#/grunt-}
