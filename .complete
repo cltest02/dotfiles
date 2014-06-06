@@ -1,4 +1,3 @@
-#!/bin/bash
 
 # Enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
@@ -25,3 +24,4 @@ complete -W "$(echo `cat ~/.bash_history | egrep '^ssh ' | sort | uniq | sed 's/
 
 # try to use tab auto-completion for Grunt
 #[ -x /usr/bin/grunt ] && eval "$(grunt --completion=bash)"
+

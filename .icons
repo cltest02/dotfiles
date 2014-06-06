@@ -1,0 +1,4 @@
+#!/bin/bash
+
+export ICON_FOR_FALSE="✗"
+export ICON_FOR_TRUE="✓"
