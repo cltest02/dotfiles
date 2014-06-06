@@ -40,11 +40,12 @@ sudo aptitude install \
   pngcrush \
   jpegoptim \
   libjpeg-progs \
-  `# GNU core utilities` \
+  `# utilities` \
   coreutils  \
   findutils  \
   colordiff \
   moreutils \
+  atop \
   tree \
   rsync \
   vim \
@@ -52,6 +53,8 @@ sudo aptitude install \
   `# GNU bash` \
   bash \
   bash-completion \
+  `# command line clipboard` \
+  xclip \
   `# more colors in the shell` \
   grc \
   `# fonts also "non-free"-fonts` \

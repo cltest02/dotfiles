@@ -6,6 +6,9 @@
 # command word following the alias is also checked for alias expansion."
 alias sudo='sudo '
 
+# use vim
+alias vi="vim"
+
 # Confirm before overwriting
 # -----------------------------------------------------------------------------
 # I know it is bad practice to override the default commands, but this is for
@@ -41,34 +44,7 @@ alias g="git"
 alias h="history"
 alias j="jobs"
 
-# use vim
-alias vi="vim"
-
-# the load-avg
-alias loadavg="cat /proc/loadavg"
-
-alias partitions="cat /proc/partitions"
-
-# mkdir: always create parent-dirs, if needed
-alias mkdir="mkdir -p"
-
-# speedtest: get a 100MB file via wget
-alias speedtest="wget -O /dev/null http://speedtest.wdc01.softlayer.com/downloads/test100.zip"
-
-# displays a directory tree
-alias tree="tree -Csu"
-
-# Clipboard access. I created these aliases to have the same command on
-# Cygwin, Linux and OS X.
-if command -v pbpaste >/dev/null; then
-  alias getclip="pbpaste"
-  alias putclip="pbcopy"
-elif command -v xclip >/dev/null; then
-  alias getclip="xclip --out"
-  alias putclip="xclip --in"
-fi
-
-# optimize "ls"-command
+# command with color
 if [ "$TERM" != "dumb" ]; then
 
   # dircolors
@@ -78,16 +54,48 @@ if [ "$TERM" != "dumb" ]; then
     eval "`dircolors -b`"
   fi
 
-  # use colors for grep
-  alias grep="grep --color=auto"
+  # Use "colordiff" or "highlight" to colour diffs.
+  if command -v colordiff > /dev/null; then
+    alias difflight='colordiff | less -XFIRd'
+  elif command -v highlight > /dev/null; then
+    alias difflight='highlight --dark-red ^-.* | highlight --dark-green ^+.* | highlight --yellow ^Only.* | highlight --yellow ^Files.*differ$ | less -XFIRd'
+  else
+    alias difflight='less -XFIRd'
+  fi
+
+  # colorize these commands if possible
+  if which grc &>/dev/null; then
+    alias .cl='grc -es --colour=auto'
+    alias configure='.cl ./configure'
+    alias diff='.cl diff'
+    alias make='.cl make'
+    alias gcc='.cl gcc'
+    alias g++='.cl g++'
+    #alias as='.cl as'
+    #alias gas='.cl gas'
+    alias ld='.cl ld'
+    alias netstat='.cl netstat'
+    alias ping='.cl ping -c 10'
+    alias traceroute='.cl traceroute'
+  fi
+
+  # Colorize the grep command output for ease of use (good for log files)
+  alias grep='grep --color=auto'
+  alias egrep='egrep --color=auto'
+  alias fgrep='fgrep --color=auto'
+  
   # list all files colorized in long format
   alias l="ls -lhF --color=auto"
+  # Show hidden files
+  alias l.="ls -dlhF .* --color=auto"
   # use colors
   alias ls="ls -F --color=auto"
   # displays all files and directories in detail
   alias la="ls -laFh --color=auto"
   # displays all files and directories in detail with newest-files at bottom
   alias lr="ls -laFhtr --color=auto"
+  # show files and directories (also in sub-dir) that was touched in the last hour
+  alias lf='find ./* -ctime -1 | xargs ls -ltr --color'
   # displays files and directories in detail
   alias ll="ls -lFh --color=auto --group-directories-first"
   # shows the most recently modified files at the bottom of
@@ -99,6 +107,28 @@ if [ "$TERM" != "dumb" ]; then
   # displays more information about files and directories
   alias vdir="ls --color=auto --format=long"
 fi
+
+# Clipboard access. I created these aliases to have the same command on
+# Cygwin, Linux and OS X.
+if command -v pbpaste >/dev/null; then
+  alias getclip="pbpaste"
+  alias putclip="pbcopy"
+elif command -v xclip >/dev/null; then
+  alias getclip="xclip --out"
+  alias putclip="xclip --in"
+fi
+
+# the load-avg
+alias loadavg="cat /proc/loadavg"
+
+# show all partitions
+alias partitions="cat /proc/partitions"
+
+# speedtest: get a 100MB file via wget
+alias speedtest="wget -O /dev/null http://speedtest.wdc01.softlayer.com/downloads/test100.zip"
+
+# displays a directory tree
+alias tree="tree -Csu"
 
 # Gzip-enabled `curl`
 alias gurl='curl --compressed'
@@ -114,6 +144,9 @@ alias date_clean='date "+%Y-%m-%d"'
 
 # stopwatch
 alias timer='echo "Timer started. Stop with Ctrl-D." && date && time cat && date'
+
+# mkdir: always create parent-dirs, if needed
+alias mkdir="mkdir -p"
 
 # create a dir with date from today
 alias mkdd='mkdir $(date +%Y%m%d)'
@@ -134,31 +167,6 @@ alias whois="whois -h whois-servers.net"
 alias sniff="sudo ngrep -d 'en1' -t '^(GET|POST) ' 'tcp and port 80'"
 alias httpdump="sudo tcpdump -i en1 -n -s 0 -w - | grep -a -o -E \"Host\: .*|GET \/.*\""
 
-# Use "colordiff" or "highlight" to colour diffs.
-if command -v colordiff > /dev/null; then
-  alias difflight='colordiff | less -XFIRd'
-elif command -v highlight > /dev/null; then
-  alias difflight='highlight --dark-red ^-.* | highlight --dark-green ^+.* | highlight --yellow ^Only.* | highlight --yellow ^Files.*differ$ | less -XFIRd'
-else
-  alias difflight='less -XFIRd'
-fi
-
-# Colorize these commands if possible
-if which grc &>/dev/null; then
-    alias .cl='grc -es --colour=auto'
-    alias configure='.cl ./configure'
-    alias diff='.cl diff'
-    alias make='.cl make'
-    alias gcc='.cl gcc'
-    alias g++='.cl g++'
-    #alias as='.cl as'
-    #alias gas='.cl gas'
-    alias ld='.cl ld'
-    alias netstat='.cl netstat'
-    alias ping='.cl ping -c 10'
-    alias traceroute='.cl traceroute'
-fi
-
 # Canonical hex dump; some systems have this symlinked
 command -v hd > /dev/null || alias hd="hexdump -C"
 
@@ -173,9 +181,6 @@ alias c="tr -d '\n' | pbcopy"
 
 # Recursively delete `.DS_Store` files
 alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
-
-# show files and directories (also in sub-dir) that was touched in the last hour
-alias lf='find ./* -ctime -1 | xargs ls -ltr --color'
 
 # ROT13-encode text. Works for decoding, too! ;)
 alias rot13='tr a-zA-Z n-za-mN-ZA-M'
@@ -204,8 +209,21 @@ done
 # make Grunt print stack traces by default
 command -v grunt > /dev/null && alias grunt="grunt --stack"
 
-# show the memory usage
-alias memory_usage='ps -e -orss=,args= | sort -b -k1,1n | pr -TW$COLUMNS'
+# pass options to free
+alias meminfo='free -m -l -t'
+
+# get top process eating memory
+alias psmem='ps auxf | sort -nr -k 4'
+alias psmem10='ps auxf | sort -nr -k 4 | head -10'
+ 
+# get top process eating cpu
+alias pscpu='ps auxf | sort -nr -k 3'
+alias pscpu10='ps auxf | sort -nr -k 3 | head -10'
+
+# Get server cpu info
+alias cpuinfo='lscpu'
+# older system use /proc/cpuinfo
+#alias cpuinfo='less /proc/cpuinfo'
 
 # shows the corresponding process to ...
 alias psx='ps auxwf | grep '
