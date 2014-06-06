@@ -57,27 +57,24 @@ cleanTheSystem()
   local LINUXPKG="linux-(image|headers|ubuntu-modules|restricted-modules)"
   local METALINUXPKG="linux-(image|headers|restricted-modules)-(generic|i386|amd64|server|common|rt|xen)"
   local OLDKERNELS=$(dpkg -l | awk '{print $2}' | grep -E $LINUXPKG | grep -vE $METALINUXPKG | grep -v $CURKERNEL)
-  local GELB="\033[1;33m"
-  local ROT="\033[0;31m"
-  local FARBLOS="\033[0m"
 
-  echo -e $GELB"clear ".deb"-cache ..."$FARBLOS
+  echo -e $COLOR_YELLOW"clear ".deb"-cache ..."$COLOR_NO_COLOR
   sudo aptitude autoclean
 
-  echo -e $GELB"remove not needed packages ..."$FARBLOS
+  echo -e $COLOR_RED"remove not needed packages ..."$COLOR_NO_COLOR
   sudo apt-get autoremove
 
-  echo -e $GELB"remove old config-files..."$FARBLOS
+  echo -e $COLOR_YELLOW"remove old config-files..."$COLOR_NO_COLOUR
   sudo aptitude purge $OLDCONF
 
-  echo -e $GELB"remove old kernels ..."$FARBLOS
+  echo -e $COLOR_YELLOW"remove old kernels ..."$COLOR_NO_COLOUR
   sudo aptitude purge $OLDKERNELS
 
-  echo -e $GELB"clean trash ..."$FARBLOS
+  echo -e $COLOR_YELLOW"clean trash ..."$COLOR_NO_COLOUR
   sudo rm -rf /home/*/.local/share/Trash/*/** &> /dev/null
   sudo rm -rf /root/.local/share/Trash/*/** &> /dev/null
 
-  echo -e $GELB"... everything is clean!!!"$FARBLOS
+  echo -e $COLOR_YELLOW"... everything is clean!!!"$COLOR_NO_COLOUR
 }
 
 # -------------------------------------------------------------------
@@ -147,30 +144,39 @@ stripspace()
 # battery_life : Echo the percentage of battery life remaining
 battery_life ()
 {
-  local life=$(acpi -b | cut -d , -f 2)
+  local life=$(acpi -b | cut -d "," -f 2)
   # NOTE: the trailing % is stripped
   echo ${life%\%}
 }
 
 # -------------------------------------------------------------------
-# battery_color: Change console font based on battery life
-battery_color ()
+# battery_indicator: echo a indicator for your battery-time 
+battery_indicator()
 {
   local num=$(battery_life)
-  local color=""
 
-  if [ $num -gt 25 ]; then
-    # 26-100% remaining : GREEN
-    color='\033[32m'
+  if [ $num -gt 95 ]; then
+    # 95-100% remaining : GREEN
+    echo -e "${COLOR_GREEN}♥♥♥♥♥♥${COLOR_NO_COLOUR}"
+  elif [ $num -gt 85 ]; then
+    # 85-95% remaining : GREEN
+    echo -e "${COLOR_GREEN}♥♥♥♥♥♡${COLOR_NO_COLOUR}"
+  elif [ $num -gt 65 ]; then
+    # 65-85% remaining : GREEN
+    echo -e "${COLOR_GREEN}♥♥♥♥♡♡${COLOR_NO_COLOUR}"
+  elif [ $num -gt 45 ]; then
+    # 45-65% remaining : GREEN
+    echo -e "${COLOR_GREEN}♥♥♥♡♡♡${COLOR_NO_COLOUR}"
+  elif [ $num -gt 25 ]; then
+    # 25-45% remaining : GREEN
+    echo -e "${COLOR_GREEN}♥♥♡♡♡♡${COLOR_NO_COLOUR}"
   elif [ $num -gt 10 ]; then
     # 11-25% remaining : YELLOW
-    color='\033[1;33m'
+    echo -e "${COLOR_YELLOW}♥♡♡♡♡♡${COLOR_NO_COLOUR}"
   else
     # 0-10% remaining : RED
-    color='\033[31m'
+    echo -e "${COLOR_RED}♥♡♡♡♡♡${COLOR_NO_COLOUR}"
   fi
-
-  echo -e "${color}"
 }
 
 # -------------------------------------------------------------------
@@ -618,3 +624,4 @@ tre()
 {
   tree -aC -I '.git|node_modules|bower_components' --dirsfirst "$@" | less -FRNX
 }
+

@@ -1,3 +1,4 @@
+
 # If not running interactively: exit immediately.
 # Note that 'return' works because the file is sourced, not executed.
 
@@ -10,7 +11,7 @@ fi
 # load the shell dotfiles, and then some:
 # * ~/.path can be used to extend `$PATH`.
 # * ~/.extra can be used for other settings you don’t want to commit.
-for file in ~/.{path,exports,aliases,bash_prompt,complete,functions,extra}; do
+for file in ~/.{path,colors,icons,exports,aliases,complete,functions,extra,bash_prompt}; do
   [ -r "$file" ] && [ -f "$file" ] && source "$file"
 done
 unset file
