@@ -1,37 +1,3 @@
-" IMPORTANT: Uncomment one of the following lines to force
-" using 256 colors (or 88 colors) if your terminal supports it,
-" but does not automatically use 256 colors by default.
-"set t_Co=256
-
-" switch syntax highlighting on, when the terminal has colors
-if &t_Co > 2 || has("gui_running")
-  " Enable coloring for dark background terminals.
-  set background=dark
-
-  " use the Molokai theme (originally created for TextMate by Wimer Hazenberg)
-  colorscheme molokai
-
-  " turn on color syntax highlighting
-  if exists("+syntax")
-    syntax on
-  endif
-
-  syn sync fromstart
-
-  " set to 256 colors
-  set t_Co=256
-
-  " Also switch on highlighting the last used search pattern.
-  if exists("+hlsearch")
-    set hlsearch
-  endif
-
-  " highlight current line
-  if exists("+cursorline")
-    set cursorline
-  endif
-endif
-
 " set the shell
 set shell=bash
 
@@ -111,10 +77,10 @@ endif
 set backup
 if exists("+writebackup")
   set writebackup
+  set backupdir=~/.vim/backups
 endif
 
 " centralize backups, swapfiles and undo history
-set backupdir=~/.vim/backups
 set directory=~/.vim/swaps
 if exists("+undodir")
   set undodir=~/.vim/undo
@@ -249,6 +215,40 @@ set lazyredraw
 
 " Start scrolling horizontally at this number of columns.
 "set sidescrolloff=5
+
+" IMPORTANT: Uncomment one of the following lines to force
+" using 256 colors (or 88 colors) if your terminal supports it,
+" but does not automatically use 256 colors by default.
+"set t_Co=256
+
+" switch syntax highlighting on, when the terminal has colors
+if &t_Co > 2 || has("gui_running")
+  " Enable coloring for dark background terminals.
+  set background=dark
+
+  " use the Molokai theme (originally created for TextMate by Wimer Hazenberg)
+  colorscheme molokai
+
+  " turn on color syntax highlighting
+  if exists("+syntax")
+    syntax on
+  endif
+
+  syn sync fromstart
+
+  " set to 256 colors
+  set t_Co=256
+
+  " Also switch on highlighting the last used search pattern.
+  if exists("+hlsearch")
+    set hlsearch
+  endif
+
+  " highlight current line
+  if exists("+cursorline")
+    set cursorline
+  endif
+endif
 
 " copy between different vim sessions
 :nmap _Y :!echo “”> ~/.vim/tmp<CR><CR>:w! ~/.vim/tmp<CR>
