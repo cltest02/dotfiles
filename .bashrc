@@ -36,6 +36,9 @@
 #     ssh localhost 'echo "PS1: >$PS1<"'
 #
 
+# README: If you write Bash, read this before you write another line of code ->
+#           http://www.kfirlavi.com/blog/2012/11/14/defensive-bash-programming/
+
 # If not running interactively: exit immediately.                               
 # Note that 'return' works because the file is sourced, not executed.
 
