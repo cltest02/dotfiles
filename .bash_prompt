@@ -44,9 +44,9 @@ prompt_command()
   [ -n "$remote" ] && host="\[$COLOR_LIGHT_GREEN\]${ICON_FOR_AT}\h"
 
   if [[ -n $remote ]] && [[ $COLORTERM = gnome-* && $TERM = xterm ]] && infocmp gnome-256color >/dev/null 2>&1; then
-    export TERM=gnome-256color
+    export TERM='gnome-256color'
   elif infocmp xterm-256color >/dev/null 2>&1; then
-    export TERM=xterm-256color
+    export TERM='xterm-256color'
   fi
 
   # INFO:   Text (commands) inside \[...\] does not impact line length calculation which fixes stange bug when looking through the history

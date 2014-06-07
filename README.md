@@ -1,5 +1,7 @@
 # voku’s dotfiles
 
+![Screenshot of my shell prompt](http://TODO)
+
 ## Installation
 
 ### Using Git and the bootstrap script

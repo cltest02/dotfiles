@@ -1,3 +1,6 @@
+" make Vim more useful
+set nocompatible
+
 " set the shell
 set shell=bash
 
@@ -22,9 +25,6 @@ set whichwrap=b,s,h,l,<,>,[,]
 
 " make the status line always visible
 set laststatus=2
-
-" make Vim more useful
-set nocompatible
 
 " automatically re-read files when editted outsite of vim
 " set autoread
@@ -224,9 +224,14 @@ set lazyredraw
 " switch syntax highlighting on, when the terminal has colors
 if &t_Co > 2 || has("gui_running")
   " Enable coloring for dark background terminals.
-  set background=dark
+  if has('gui_running')
+    set background=light
+  else
+    set background=dark
+  endif
 
-  " use the Molokai theme (originally created for TextMate by Wimer Hazenberg)
+  " set the color-theme
+  "let g:solarized_termcolors=256
   colorscheme molokai
 
   " turn on color syntax highlighting
