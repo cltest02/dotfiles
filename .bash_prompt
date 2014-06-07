@@ -40,15 +40,6 @@ __svn_repository_root()
   svn info 2>/dev/null | sed -ne 's#^Repository Root: ##p'
 }
 
-__last_command_status()
-{
-  if [ "$?" -eq "0" ]; then
-    echo -e ${COLOR_GREEN}${ICON_FOR_TRUE}
-  else
-    echo -e ${COLOR_RED}${ICON_FOR_FALSE}
-  fi
-}
-
 prompt_command()
 {
   # Local or SSH session?
@@ -70,7 +61,7 @@ prompt_command()
   #         $? is a status of last command, should be processed every time prompt prints
 
   # Format prompt
-  export PS1="\n\$(__last_command_status) \[$user_color\]${user}${host}\[$user_color\]:\[$COLOR_LIGHT_BLUE\]\w\[$COLOR_LIGHT_RED\]${ICON_FOR_ARROW_RIGHT}\$(__git_branch)\$(__svn_branch)\$(__git_dirty)\[$COLOR_NO_COLOUR\] "
+  export PS1="\`if [ \$? -eq 0 ]; then echo -e \[\$COLOR_GREEN\]\${ICON_FOR_TRUE}; else echo -e \[\$COLOR_RED\]\${ICON_FOR_FALSE}; fi\` \[$user_color\]${user}${host}\[$user_color\]:\[$COLOR_LIGHT_BLUE\]\w\[$COLOR_LIGHT_RED\]${ICON_FOR_ARROW_RIGHT}\$(__git_branch)\$(__svn_branch)\$(__git_dirty)\[$COLOR_NO_COLOUR\] "
 
   # Multiline command
   export PS2="\[$COLOR_LIGHT_RED\]${ICON_FOR_ARROW_RIGHT}\[$COLOR_NO_COLOUR\]"
