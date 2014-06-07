@@ -1,19 +1,5 @@
 #!/bin/bash
 
-# settings for chroot
-if [ -z "$debian_chroot" -a -r /etc/debian_chroot ]; then
-  debian_chroot=$(cat /etc/debian_chroot)
-fi
-
-if [[ $COLORTERM = gnome-* && $TERM = xterm ]] && infocmp gnome-256color >/dev/null 2>&1; then
-  export TERM=gnome-256color
-elif infocmp xterm-256color >/dev/null 2>&1; then
-  export TERM=xterm-256color
-fi
-
-# set the title (user@host:dir)
-PROMPT_COMMAND='color_prompt=yes; echo -ne "\033]0;${USER}@${HOSTNAME}: ${PWD/$HOME/~}\007"'
-
 __git_dirty()
 {
   git diff --quiet HEAD &>/dev/null 
@@ -57,6 +43,12 @@ prompt_command()
   local host=""
   [ -n "$remote" ] && host="\[$COLOR_LIGHT_GREEN\]${ICON_FOR_AT}\h"
 
+  if [[ -n $remote ]] && [[ $COLORTERM = gnome-* && $TERM = xterm ]] && infocmp gnome-256color >/dev/null 2>&1; then
+    export TERM=gnome-256color
+  elif infocmp xterm-256color >/dev/null 2>&1; then
+    export TERM=xterm-256color
+  fi
+
   # INFO:   Text (commands) inside \[...\] does not impact line length calculation which fixes stange bug when looking through the history
   #         $? is a status of last command, should be processed every time prompt prints
 
@@ -71,4 +63,8 @@ prompt_command()
 }
 
 # Show awesome prompt only if Git is istalled
-command -v git >/dev/null 2>&1 && PROMPT_COMMAND=prompt_command
+if command -v git > /dev/null 2>&1; then
+  PROMPT_COMMAND=prompt_command
+else
+  PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME}: ${PWD/$HOME/~}\007"'
+fi
