@@ -17,17 +17,17 @@ PROMPT_COMMAND='color_prompt=yes; echo -ne "\033]0;${USER}@${HOSTNAME}: ${PWD/$H
 __git_dirty()
 {
   git diff --quiet HEAD &>/dev/null 
-  [ $? == 1 ] && echo "!" 
+  [ $? == 1 ] && echo "!"
 }
 
 __git_branch()
 {
-  __git_ps1 " (git → %s)"
+  __git_ps1 " (%s)"
 }
 
 __svn_branch()
 {
-  __svn_url | sed -e 's#^'"$(__svn_repository_root)"'##g' | awk '{print " (svn → "$1")" }'
+  __svn_url | sed -e 's#^'"$(__svn_repository_root)"'##g' | awk '{print " ("$1")" }'
 }
 
 __svn_url()
@@ -40,32 +40,44 @@ __svn_repository_root()
   svn info 2>/dev/null | sed -ne 's#^Repository Root: ##p'
 }
 
-shell_colored() {
-  local GRAY="\[\033[1;30m\]"
-  local LIGHT_GRAY="\[\033[0;37m\]"
-  local CYAN="\[\033[0;36m\]"
-  local LIGHT_CYAN="\[\033[1;36m\]"
-  local BLUE="\[\033[0;34m\]"
-  local LIGHT_BLUE="\[\033[1;34m\]"
-  local RED="\[\033[0;31m\]"
-  local LIGHT_RED="\[\033[1;31m\]"
-  local GREEN="\[\033[0;32m\]"
-  local LIGHT_GREEN="\[\033[1;32m\]"
-  local PURPLE="\[\033[0;35m\]"
-  local LIGHT_PURPLE="\[\033[1;35m\]"
-  local BROWN="\[\033[0;33m\]"
-  local YELLOW="\[\033[1;33m\]"
-  local BLACK="\[\033[0;30m\]"
-  local WHITE="\[\033[1;37m\]"
-  local NO_COLOUR="\[\033[0m\]"
-
-  local UC=$LIGHT_GREEN           # user's color
-  [ $UID -eq "0" ] && UC=$RED     # root's color
-
-  # set colors for the bash-prompt
-  export PS1="\n${debian_chroot:+($debian_chroot)}$UC\u$LIGHT_BLUE@$LIGHT_GREEN\h$UC:$LIGHT_BLUE\w$LIGHT_RED→\$(__git_branch)\$(__svn_branch)\$(__git_dirty)$NO_COLOUR "
-  export PS2="\[$LIGHT_RED\]→ \[$NO_COLOUR\]"
+__last_command_status()
+{
+  if [ "$?" -eq "0" ]; then
+    echo -e ${COLOR_GREEN}${ICON_FOR_TRUE}
+  else
+    echo -e ${COLOR_RED}${ICON_FOR_FALSE}
+  fi
 }
 
-shell_colored
-unset shell_colored
+prompt_command()
+{
+  # Local or SSH session?
+  local remote=""
+  [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ] && remote=1
+
+  # set the user-color
+  local user_color=$COLOR_LIGHT_GREEN           # user's color
+  [ $UID -eq "0" ] && user_color=$COLOR_RED     # root's color
+
+  # set the user
+  local user="\u"
+
+  # set the hostname inside SSH session
+  local host=""
+  [ -n "$remote" ] && host="\[$COLOR_LIGHT_GREEN\]${ICON_FOR_AT}\h"
+
+  # INFO:   Text (commands) inside \[...\] does not impact line length calculation which fixes stange bug when looking through the history
+  #         $? is a status of last command, should be processed every time prompt prints
+
+  # Format prompt
+  export PS1="\n\$(__last_command_status) \[$user_color\]${user}${host}\[$user_color\]:\[$COLOR_LIGHT_BLUE\]\w\[$COLOR_LIGHT_RED\]${ICON_FOR_ARROW_RIGHT}\$(__git_branch)\$(__svn_branch)\$(__git_dirty)\[$COLOR_NO_COLOUR\] "
+
+  # Multiline command
+  export PS2="\[$COLOR_LIGHT_RED\]${ICON_FOR_ARROW_RIGHT}\[$COLOR_NO_COLOUR\]"
+
+  # Terminal title
+  echo -ne "\033]0;${USER}@${HOSTNAME}: ${PWD/$HOME/~}\007"
+}
+
+# Show awesome prompt only if Git is istalled
+command -v git >/dev/null 2>&1 && PROMPT_COMMAND=prompt_command

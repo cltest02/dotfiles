@@ -2,3 +2,11 @@
 
 export ICON_FOR_FALSE="✗"
 export ICON_FOR_TRUE="✓"
+export ICON_FOR_NEXT="❯"
+export ICON_FOR_ARROW_RIGHT="→"
+export ICON_FOR_SUN="☀"
+export ICON_FOR_UMBRELLA="☂"
+export ICON_FOR_CLOUD="☁"
+export ICON_FOR_FULL_HEART="♥"
+export ICON_FOR_EMPTY_HEADRT="♡"
+export ICON_FOR_AT="@"

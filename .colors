@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Reset
 export COLOR_NO_COLOUR='\e[0m'
 
