@@ -116,6 +116,7 @@ sudo aptitude install \
 #sudo gem install autoprefixer-rails
 
 #sudo npm install -g bower
+#sudo npm install -g psi
 #sudo npm install -g grunt-cli
 #sudo npm install -g grunt-init
 #sudo npm install -g yo
