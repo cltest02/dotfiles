@@ -39,9 +39,11 @@ shopt -s histreedit;
 # append to the Bash history file, rather than overwriting it
 shopt -s histappend
 
+# rezize the windows-size if needed
+shopt -s checkwinsize
+
+# check if the user isn't root
 if [ "$UID" != 0 ]; then
-  # rezize the windows-size if needed
-  shopt -s checkwinsize
 
   # case-insensitive globbing (used in pathname expansion)
   shopt -s nocaseglob
