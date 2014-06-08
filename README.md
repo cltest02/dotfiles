@@ -1,6 +1,6 @@
 # voku’s dotfiles
 
-![Screenshot of my shell prompt](http://TODO)
+![Screenshot of my shell prompt](http://suckup.de/wp-content/uploads/2014/06/bash_prompt.png)
 
 ## Installation
 
