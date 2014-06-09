@@ -33,6 +33,7 @@ My `~/.extra` looks something like this:
 ```bash
 # Git credentials
 # Not in the repository, to prevent people from accidentally committing under my name
+DEFAULT_USER="lars"
 GIT_AUTHOR_NAME="Lars Moelleken"
 GIT_COMMITTER_NAME="$GIT_AUTHOR_NAME"
 git config --global user.name "$GIT_AUTHOR_NAME"

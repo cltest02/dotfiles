@@ -272,7 +272,7 @@
   algorithm = patience
 
   # Diff will detect both renames and copies.
-  renames = copies
+  #renames = copies
 
   # Default to opendiff for visualising diffs.
   # opendiff opens FileMerge
