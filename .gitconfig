@@ -306,7 +306,7 @@
   # for more information on different options of the below setting.
   # Setting to Git 2.0 default to surpress warning message
   # If you use branches with different remote name, use "upstream"
-  default = simple
+#  default = simple #disabled for now to be compatible with debian wheezy
 
 # URL shorthands
 # 
