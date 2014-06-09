@@ -1,5 +1,19 @@
 #!/bin/bash
 
+function ask_install() {
+  echo
+  echo
+  read -p"$1 (y/n) " -n 1
+  echo
+  if [[ $REPLY =~ ^[Yy]$ ]]; then
+    return 1
+  else
+    return 0
+  fi
+
+}
+
+
 # use aptitude in the next steps ...
 if [ \! -f `whereis aptitude | cut -f 2 -d ' '` ] ; then
   sudo apt-get install aptitude
@@ -88,6 +102,7 @@ sudo aptitude install \
   rename \
   ucspi-tcp \
   xpdf \
+  python-pygments \ #install python-pygments for json print
 
 #
 # install java
@@ -111,19 +126,23 @@ sudo aptitude install \
 # only for webworker
 #
 
-#sudo gem install sass
-#sudo gem install compass
-#sudo gem install autoprefixer-rails
+ask_install "install webworker tools"
+if [[ $? -eq 1 ]]; then
+  sudo gem install sass
+  sudo gem install compass
+  sudo gem install autoprefixer-rails
+  
+  sudo npm install -g bower
+  sudo npm install -g psi
+  sudo npm install -g grunt-cli
+  sudo npm install -g grunt-init
+  sudo npm install -g yo
 
-#sudo npm install -g bower
-#sudo npm install -g psi
-#sudo npm install -g grunt-cli
-#sudo npm install -g grunt-init
-#sudo npm install -g yo
+  sudo aptitude install php5-cli php5-mysql php5-curl php5-gd php5-intl php-pear php5-imagick php5-imap php5-mcrypt php5-memcache php5-ming php5-ps php5-pspell php5-recode php5-snmp php5-sqlite php5-tidy php5-xmlrpc php5-xsl php5-xdebug php5-apcu
+  curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/bin
+  sudo ln -s /usr/bin/composer.phar /usr/bin/composer
+fi
 
-#sudo aptitude install apache2 libapache2-mod-php5 php5-mysql php5-curl php5-gd php5-intl php-pear php5-imagick php5-imap php5-mcrypt php5-memcache php5-ming php5-ps php5-pspell php5-recode php5-snmp php5-sqlite php5-tidy php5-xmlrpc php5-xsl php5-xdebug php5-apcu
-#curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/bin
-#sudo ln -s /usr/bin/composer.phar /usr/bin/composer
 
 # clean downloaded and already installed packages
 sudo aptitude clean
