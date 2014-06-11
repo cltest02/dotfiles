@@ -56,9 +56,10 @@ sudo aptitude install \
   libjpeg-progs \
   `# utilities` \
   coreutils  \
+  moreutils \
   findutils  \
   colordiff \
-  moreutils \
+  ack \
   atop \
   tree \
   rsync \
@@ -105,15 +106,49 @@ sudo aptitude install \
   python-pygments \ #install python-pygments for json print
 
 #
-# install java
+# install java / ubuntu
+#
+
+#sudo add-apt-repository -y ppa:nilarimogard/webupd8
+#sudo add-apt-repository -y ppa:webupd8team/java
+#sudo aptitude update
+#sudo aptitude install oracle-java7-installer
+
+#
+# install java / debian
 #
 
 #su -
-#echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu precise main" | tee /etc/apt/sources.list.d
-#echo "deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu precise main" | tee -a /etc/apt/sources
+#echo "deb http://ppa.launchpad.net/nilarimogard/webupd8/ubuntu precise main" | tee /etc/apt/sources.list.d/webupd8.list
+#echo "deb-src http://ppa.launchpad.net/nilarimogard/webupd8/ubuntu precise main" | tee -a /etc/apt/sources.d/webupd8.list
+#apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4C9D234C
+#
+#echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu precise main" | tee /etc/apt/sources.list.d/webupd8team-java.list
+#echo "deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu precise main" | tee -a /etc/apt/sources.d/webupd8team-java.list
 #apt-key adv --keyserver keyserver.ubuntu.com --recv-keys EEA14886
 #aptitude update
 #aptitude install oracle-java7-installer
+#exit
+
+
+#
+# install new git / ubuntu
+#
+
+#sudo add-apt-repository -y ppa:git-core/ppa
+#sudo aptitude update
+#sudo aptitude upgrade git
+
+#
+# install new git / debian
+#
+
+#su -
+#echo "deb http://ppa.launchpad.net/git-core/ppa/ubuntu precise main" | tee /etc/apt/sources.list.d/git-core.list
+#echo "deb-src http://ppa.launchpad.net/git-core/ppa/ubuntu precise main" | tee -a /etc/apt/sources.d/git-core.list
+#apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E1DF1F24
+#aptitude update
+#aptitude upgrade git
 #exit
 
 # 

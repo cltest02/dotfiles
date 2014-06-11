@@ -212,7 +212,7 @@
 
 [apply]
   # Detect whitespace errors when applying a patch
-  whitespace = fix
+  whitespace = warn
 
 [color]
   # Use colors in Git commands that are capable of colored output when
@@ -265,14 +265,19 @@
   # as an error.
   whitespace = space-before-tab,-indent-with-non-tab,trailing-space
 
+  # https://stackoverflow.com/questions/18257622/why-is-git-core-preloadindex-default-value-false/18259086
+  preloadindex = true
+
 [diff]
   # Use more time to create better diffs.
   # E.g. matching opening/closing braces from neighbour functions.
   # See "`git help diff` --patience" and "`git help merge` recursive".
   algorithm = patience
 
-  # Diff will detect both renames and copies.
-  #renames = copies
+  # Tells git to detect renames. If set to any boolean value, 
+  # it will enable basic rename detection. If set to "copies" or "copy", 
+  # it will detect copies, as well.
+  renames = copies
 
   # Default to opendiff for visualising diffs.
   # opendiff opens FileMerge
