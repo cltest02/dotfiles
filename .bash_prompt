@@ -48,7 +48,7 @@ prompt_command()
 
   # set extra ":" after user || host
   local userOrHostExtra=""
-  if [[ $host -ne "" ]] || [[ $user -ne "" ]]; then
+  if [[ -n "$host" ]] || [[ -n $user ]]; then
     userOrHostExtra="\[$user_color\]:"
   fi
 
