@@ -260,3 +260,9 @@ command -v npm > /dev/null && alias npme="npm --registry http://registry.npmjs.e
 
 # php - package-manager - composer
 alias composer-install="composer install --optimize-autoloader"
+
+#add ssh key to ssh-agent when key exist
+if [ -f ~/.ssh/id_rsa ] && [ -x /usr/bin/ssh-add  ]; then 
+  ssh-add -l >/dev/null || alias ssh='(ssh-add -l >/dev/null || ssh-add) && unalias ssh; ssh'
+fi
+
