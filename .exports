@@ -15,7 +15,7 @@ if [ "$UID" != 0 ]; then
     PATH="$PATH:/usr/local/bin:/usr/sbin:/sbin:/usr/local/sbin"
 fi
 
-if which ruby >/dev/null && which gem >/dev/null; then
+if which ruby >/dev/null 2>&1 && which gem >/dev/null 2>&1; then
     PATH="$PATH:$(ruby -rubygems -e 'puts Gem.user_dir')/bin"
 fi
 
@@ -75,7 +75,7 @@ if [ "$UID" != 0 ]; then
     export LESSCHARSET="utf-8"
 
     if [ -z "$LESSOPEN" ]; then
-      [ -x "`which lesspipe`" ] && eval "$(lesspipe)"
+      [ -x "`which lesspipe 2>/dev/null`" ] && eval "$(lesspipe)"
     fi
 
     # yep, 'less' can colorize manpages
