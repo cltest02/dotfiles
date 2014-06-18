@@ -125,7 +125,7 @@ if exists("+smartindent")
 endif
 
 " show â€œinvisibleâ€ characters
-set lcs=tab:â–¸\ ,trail:Â·,eol:Â¬,nbsp:_
+set lcs=trail:·,tab:»·,eol:¬,nbsp:¯
 
 " ignore case of searches
 set ignorecase
