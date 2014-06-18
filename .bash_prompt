@@ -58,11 +58,16 @@ prompt_command()
     export TERM='xterm-256color'
   fi
 
+  local SCM=""
+  if command -v git > /dev/null 2>&1; then
+    SCM="\$(__git_branch)\$(__svn_branch)\$(__git_dirty)"
+  fi
+
   # INFO:   Text (commands) inside \[...\] does not impact line length calculation which fixes stange bug when looking through the history
   #         $? is a status of last command, should be processed every time prompt prints
 
   # Format prompt
-  export PS1="\`if [ \$? -eq 0 ]; then echo -e \[\$COLOR_GREEN\]\${ICON_FOR_TRUE}; else echo -e \[\$COLOR_RED\]\${ICON_FOR_FALSE}; fi\` \[$user_color\]${user}${host}${userOrHostExtra}\[$COLOR_LIGHT_BLUE\]\w\[$COLOR_LIGHT_RED\]${ICON_FOR_ARROW_RIGHT}\$(__git_branch)\$(__svn_branch)\$(__git_dirty)\[$COLOR_NO_COLOUR\] "
+  export PS1="\`if [ \$? -eq 0 ]; then echo -e \[\$COLOR_GREEN\]\${ICON_FOR_TRUE}; else echo -e \[\$COLOR_RED\]\${ICON_FOR_FALSE}; fi\` \[$user_color\]${user}${host}${userOrHostExtra}\[$COLOR_LIGHT_BLUE\]\w\[$COLOR_LIGHT_RED\]${ICON_FOR_ARROW_RIGHT}${SCM}\[$COLOR_NO_COLOUR\] "
 
   # Multiline command
   export PS2="\[$COLOR_LIGHT_RED\]${ICON_FOR_ARROW_RIGHT}\[$COLOR_NO_COLOUR\]"
@@ -71,9 +76,5 @@ prompt_command()
   echo -ne "\033]0;${USER}@${HOSTNAME}: ${PWD/$HOME/~}\007"
 }
 
-# Show awesome prompt only if Git is istalled
-if command -v git > /dev/null 2>&1; then
-  PROMPT_COMMAND=prompt_command
-else
-  PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME}: ${PWD/$HOME/~}\007"'
-fi
+# Show awesome prompt always
+PROMPT_COMMAND=prompt_command
