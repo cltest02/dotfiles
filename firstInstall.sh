@@ -1,18 +1,17 @@
 #!/bin/bash
 
-function ask_install() {
-  echo
-  echo
+ask_install()
+{
+  echo ""
+  echo ""
   read -p"$1 (y/n) " -n 1
-  echo
+  echo ""
   if [[ $REPLY =~ ^[Yy]$ ]]; then
     return 1
   else
     return 0
   fi
-
 }
-
 
 # use aptitude in the next steps ...
 if [ \! -f `whereis aptitude | cut -f 2 -d ' '` ] ; then
@@ -20,9 +19,13 @@ if [ \! -f `whereis aptitude | cut -f 2 -d ' '` ] ; then
 fi
 
 # update && upgrade 
-sudo aptitude update
-sudo aptitude upgrade
+ask_install "upgrade your system?"
+if [[ $? -eq 1 ]]; then
+  sudo aptitude update
+  sudo aptitude upgrade
+fi
 
+# install default-stuff
 sudo aptitude install \
   `# read-write NTFS driver for Linux` \
   ntfs-3g \
@@ -49,7 +52,6 @@ sudo aptitude install \
   xz-utils \
   `# optimize image-size` \
   gifsicle \
-  svgo \
   optipng \
   pngcrush \
   jpegoptim \
@@ -59,7 +61,7 @@ sudo aptitude install \
   moreutils \
   findutils  \
   colordiff \
-  ack \
+  ack-grep \
   atop \
   tree \
   rsync \
@@ -103,7 +105,8 @@ sudo aptitude install \
   rename \
   ucspi-tcp \
   xpdf \
-  python-pygments \ #install python-pygments for json print
+  `# nstall python-pygments for json print` \
+  python-pygments \
   locales
 
 #
