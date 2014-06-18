@@ -30,9 +30,9 @@ set laststatus=2
 " set autoread
 
 " use the OS clipboard by default (on versions compiled with `+clipboard`)
-if exists("+clipboard")
-  set clipboard=unnamed
-endif
+"if exists("+clipboard")
+"  set clipboard=unnamed
+"endif
 
 " enhance command-line completion
 if exists("+wildmenu")
