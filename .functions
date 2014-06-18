@@ -47,37 +47,6 @@ testConnection() {
 }
 
 # -------------------------------------------------------------------
-# cleanTheSystem: purge old config, kernel, trash etc.
-#
-# WARNING: take a look on what the package-manager will do
-cleanTheSystem()
-{
-  local OLDCONF=$(dpkg -l | grep "^rc"|awk '{print $2}')
-  local CURKERNEL=$(uname -r | sed 's/-*[a-z]//g' | sed 's/-386//g' | sed 's/-164//g')
-  local LINUXPKG="linux-(image|headers|ubuntu-modules|restricted-modules)"
-  local METALINUXPKG="linux-(image|headers|restricted-modules)-(generic|i386|amd64|server|common|rt|xen)"
-  local OLDKERNELS=$(dpkg -l | awk '{print $2}' | grep -E $LINUXPKG | grep -vE $METALINUXPKG | grep -v $CURKERNEL)
-
-  echo -e $COLOR_YELLOW"clear ".deb"-cache ..."$COLOR_NO_COLOR
-  sudo aptitude autoclean
-
-  echo -e $COLOR_RED"remove not needed packages ..."$COLOR_NO_COLOR
-  sudo apt-get autoremove
-
-  echo -e $COLOR_YELLOW"remove old config-files..."$COLOR_NO_COLOUR
-  sudo aptitude purge $OLDCONF
-
-  echo -e $COLOR_YELLOW"remove old kernels ..."$COLOR_NO_COLOUR
-  sudo aptitude purge $OLDKERNELS
-
-  echo -e $COLOR_YELLOW"clean trash ..."$COLOR_NO_COLOUR
-  sudo rm -rf /home/*/.local/share/Trash/*/** &> /dev/null
-  sudo rm -rf /root/.local/share/Trash/*/** &> /dev/null
-
-  echo -e $COLOR_YELLOW"... everything is clean!!!"$COLOR_NO_COLOUR
-}
-
-# -------------------------------------------------------------------
 # packen: create a compressed backup + date
 packen()
 {
@@ -141,45 +110,6 @@ stripspace()
 }
 
 # -------------------------------------------------------------------
-# battery_life : Echo the percentage of battery life remaining
-battery_life ()
-{
-  local life=$(acpi -b | cut -d "," -f 2)
-  # NOTE: the trailing % is stripped
-  echo ${life%\%}
-}
-
-# -------------------------------------------------------------------
-# battery_indicator: echo a indicator for your battery-time 
-battery_indicator()
-{
-  local num=$(battery_life)
-
-  if [ $num -gt 95 ]; then
-    # 95-100% remaining : GREEN
-    echo -e "${COLOR_GREEN}♥♥♥♥♥♥${COLOR_NO_COLOUR}"
-  elif [ $num -gt 85 ]; then
-    # 85-95% remaining : GREEN
-    echo -e "${COLOR_GREEN}♥♥♥♥♥♡${COLOR_NO_COLOUR}"
-  elif [ $num -gt 65 ]; then
-    # 65-85% remaining : GREEN
-    echo -e "${COLOR_GREEN}♥♥♥♥♡♡${COLOR_NO_COLOUR}"
-  elif [ $num -gt 45 ]; then
-    # 45-65% remaining : GREEN
-    echo -e "${COLOR_GREEN}♥♥♥♡♡♡${COLOR_NO_COLOUR}"
-  elif [ $num -gt 25 ]; then
-    # 25-45% remaining : GREEN
-    echo -e "${COLOR_GREEN}♥♥♡♡♡♡${COLOR_NO_COLOUR}"
-  elif [ $num -gt 10 ]; then
-    # 11-25% remaining : YELLOW
-    echo -e "${COLOR_YELLOW}♥♡♡♡♡♡${COLOR_NO_COLOUR}"
-  else
-    # 0-10% remaining : RED
-    echo -e "${COLOR_RED}♥♡♡♡♡♡${COLOR_NO_COLOUR}"
-  fi
-}
-
-# -------------------------------------------------------------------
 # logssh: establish ssh connection + write a logfile
 logssh() 
 {
@@ -222,14 +152,6 @@ calc()
 mkd()
 {
   mkdir -p "$@" && cd "$@"
-}
-
-# -------------------------------------------------------------------
-# cdf: Change working directory to the top-most Finder window location
-# info: short for `cdfinder`
-cdf()
-{
-  cd "$(osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)')"
 }
 
 # -------------------------------------------------------------------
@@ -354,18 +276,6 @@ dataurl()
   fi
 
   echo "data:${mimeType};base64,$(openssl base64 -in "$1" | tr -d '\n')"
-}
-
-# -------------------------------------------------------------------
-# gitio: Create a git.io short URL
-gitio()
-{
-  if [ -z "${1}" -o -z "${2}" ]; then
-    echo "Usage: \`gitio slug url\`"
-    return 1
-  fi
-
-  curl -i http://git.io/ -F "url=${2}" -F "code=${1}"
 }
 
 # -------------------------------------------------------------------
@@ -533,91 +443,6 @@ httpDebug()
   curl $@ -o /dev/null -w "dns: %{time_namelookup} connect: %{time_connect} pretransfer: %{time_pretransfer} starttransfer: %{time_starttransfer} total: %{time_total}\n"
 }
  
-
-# -------------------------------------------------------------------
-# gi: Install Grunt plugins and add them as `devDependencies` to `package.json`
-#
-# usage -> `gi contrib-watch contrib-uglify zopfli`
-gi() 
-{
-  npm install --save-dev ${*/#/grunt-}
-}
-
-# -------------------------------------------------------------------
-# `m`: with no arguments opens the current directory in TextMate, otherwise
-# opens the given location
-m() 
-{
-  if [ $# -eq 0 ]; then
-    mate .
-  else
-    mate "$@"
-  fi
-}
-
-# -------------------------------------------------------------------
-# `s`: with no arguments opens the current directory in Sublime Text, otherwise
-# opens the given location
-s() 
-{
-  if [ $# -eq 0 ]; then
-    subl .
-  else
-    subl "$@"
-  fi
-}
-
-# -------------------------------------------------------------------
-# `a`: with no arguments opens the current directory in Atom Editor, otherwise
-# opens the given location
-a() 
-{
-  if [ $# -eq 0 ]; then
-    atom .
-  else
-    atom "$@"
-  fi
-}
-
-# -------------------------------------------------------------------
-# `v`: with no arguments opens the current directory in Vim, otherwise opens the
-# given location
-v() 
-{
-  if [ $# -eq 0 ]; then
-    vim .
-  else
-    vim "$@"
-  fi
-}
-
-# -------------------------------------------------------------------
-# `o`: with no arguments opens current directory, otherwise opens the given
-# location
-o() 
-{
-  if [ $# -eq 0 ]; then
-    open .
-  else
-    open "$@"
-  fi
-}
-
-# -------------------------------------------------------------------
-# `np`: with an optional argument `patch`/`minor`/`major`/`<version>`
-# defaults to `patch`
-np() 
-{
-  git pull --rebase && \
-  rm -rf node_modules && \
-  npm install && \
-  npm test && \
-  npm version ${1:=patch} && \
-  npm publish && \
-  git push origin master && \
-  git push origin master --tags
-}
-
 # -------------------------------------------------------------------
 # `tre`: is a shorthand for `tree` with hidden files and color enabled, ignoring
 # the `.git` directory, listing directories first. The output gets piped into

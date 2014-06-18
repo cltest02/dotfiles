@@ -7,7 +7,9 @@
 alias sudo='sudo '
 
 # use vim
-alias vi="vim"
+if which vim >/dev/null 2>&1; then
+  alias vi="vim"
+fi
 
 # Confirm before overwriting
 # -----------------------------------------------------------------------------
@@ -20,7 +22,7 @@ alias vi="vim"
 #alias mv='mv -i'
 #alias ln='ln -i'
 
-alias rm='rm -I'                    # 'rm -i' prompts for every file  
+#alias rm='rm -I'                    # 'rm -i' prompts for every file  
 
 # safety features
 alias chown='chown --preserve-root'  
