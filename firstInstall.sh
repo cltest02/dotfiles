@@ -167,9 +167,10 @@ sudo aptitude install \
 
 ask_install "install webworker tools"
 if [[ $? -eq 1 ]]; then
-  sudo gem install sass
-  sudo gem install compass
-  sudo gem install autoprefixer-rails
+  sudo gem install sass --pre
+  sudo gem install compass --pre
+  sudo gem install autoprefixer-rails --pre
+  sudo gem install compass-rgbapng --pre
   
   sudo npm install -g bower
   sudo npm install -g psi
