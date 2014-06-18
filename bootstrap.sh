@@ -6,7 +6,8 @@ function doIt() {
 	rsync --exclude ".git/" --exclude ".DS_Store" --exclude "bootstrap.sh" \
         --exclude "README.md" --exclude "firstInstall.sh" \
         --exclude ".gitignore" --exclude ".gitattributes" \
-        --exclude "LICENSE-MIT.txt" -avhi --no-perms . ~
+        --exclude "LICENSE-MIT.txt" --exclude ".editorconfig" \
+        -avhi --no-perms . ~
 	source ~/.bash_profile
 }
 
@@ -14,7 +15,8 @@ function dryRun() {
 	rsync --exclude ".git/" --exclude ".DS_Store" --exclude "bootstrap.sh" \
         --exclude "README.md" --exclude "firstInstall.sh" \
         --exclude ".gitignore" --exclude ".gitattributes" \
-        --exclude "LICENSE-MIT.txt" -avhni --no-perms . ~
+        --exclude "LICENSE-MIT.txt" --exclude ".editorconfig" \
+        -avhni --no-perms . ~
 	source ~/.bash_profile
 }
 
