@@ -420,6 +420,20 @@ phpserver()
   php -S "${ip}:${port}"
 }
 
+# php-parse-error-check: check for parse errors
+#
+# usage: php-parse-error-check /var/www/web3/
+php-parse-error-check()
+{
+  if [ $1 ]; then
+    local location=$1
+  else
+    local location="."
+  fi
+
+  find ${location} -name "*.php" -exec php -l {} \; | grep "Parse error"
+}
+
 # -------------------------------------------------------------------
 # psgrep: grep a process
 psgrep()
