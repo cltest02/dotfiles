@@ -69,6 +69,8 @@ sniff()
 
 # -------------------------------------------------------------------
 # httpdump: view HTTP traffic
+#
+# usage: httpdump eth1
 httpdump()
 {
   if [ $1 ]; then
@@ -91,6 +93,22 @@ iptablesBlockIP()
   else
     sudo iptables -A INPUT -s $1 -j DROP
   fi
+}
+
+# -------------------------------------------------------------------
+# ips: get the local IP's
+ips()
+{
+  local _ip _myip _line _nl=$'\n'
+  
+  while IFS=$': \t' read -a _line ; do
+    [ -z "${_line%inet}" ] &&
+      _ip=${_line[${#_line[1]}>4?1:2]} &&
+        [ "${_ip#127.0.0.1}" ] && 
+          _myip=$_ip
+    done< <(LANG=C ifconfig)
+
+  printf ${1+-v} $1 "%s${_nl:0:$[${#1}>0?0:1]}" $_myip
 }
 
 # -------------------------------------------------------------------
