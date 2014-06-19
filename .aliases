@@ -150,6 +150,9 @@ alias date_clean='date "+%Y-%m-%d"'
 # stopwatch
 alias timer='echo "Timer started. Stop with Ctrl-D." && date && time cat && date'
 
+# decimal to hexadecimal value
+alias dec2hex='printf "%x\n" $1'
+
 # mkdir: always create parent-dirs, if needed
 alias mkdir="mkdir -p"
 
