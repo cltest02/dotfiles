@@ -96,6 +96,8 @@ if [ "$TERM" != "dumb" ]; then
   alias la="ls -laFh --color=auto"
   # displays all files and directories in detail with newest-files at bottom
   alias lr="ls -laFhtr --color=auto"
+  # show last 10 recently changed files
+  alias lt="ls -altr | grep -v '^d' | tail -n 10"
   # show files and directories (also in sub-dir) that was touched in the last hour
   alias lf='find ./* -ctime -1 | xargs ls -ltr --color'
   # displays files and directories in detail
