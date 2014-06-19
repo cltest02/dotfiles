@@ -54,6 +54,33 @@ findFreeLocalPort()
   $(netstat -atn | awk '{printf "%s\n%s\n", $4, $4}' | grep -oE '[0-9]*$'; seq 32768 61000) | sort -n | uniq -u | head -n 1
 }
 
+# -------------------------------------------------------------------
+# sniff: view HTTP traffic
+sniff()
+{
+  if [ $1 ]; then
+    local device=$1
+  else
+    local device='eth0'
+  fi
+
+  sudo ngrep -d ${device} -t '^(GET|POST) ' 'tcp and port 80'
+}
+
+# -------------------------------------------------------------------
+# httpdump: view HTTP traffic
+httpdump()
+{
+  if [ $1 ]; then
+    local device=$1
+  else
+    local device='eth0'
+  fi
+
+  sudo tcpdump -i ${device} -n -s 0 -w - | grep -a -o -E \"Host\: .*|GET \/.*\"
+}
+
+# -------------------------------------------------------------------
 # iptablesBlockIP: block a IP via "iptables"
 #
 # usage: iptablesBlockIP 8.8.8.8

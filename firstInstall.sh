@@ -62,6 +62,7 @@ sudo aptitude install \
   findutils  \
   colordiff \
   ack-grep \
+  ngrep \
   atop \
   tree \
   rsync \
