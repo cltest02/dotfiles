@@ -48,6 +48,13 @@ testConnection()
 }
 
 # -------------------------------------------------------------------
+# findFreeLocalPort: get a free tcp-port (from 32768-61000)
+findFreeLocalPort()
+{
+  $(netstat -atn | awk '{printf "%s\n%s\n", $4, $4}' | grep -oE '[0-9]*$'; seq 32768 61000) | sort -n | uniq -u | head -n 1
+}
+
+# -------------------------------------------------------------------
 # cleanTheSystem: purge old config, kernel, trash etc.
 #
 # WARNING: take a look on what the package-manager will do
