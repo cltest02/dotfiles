@@ -245,6 +245,9 @@ alias lsport='sudo lsof -i -T -n'
 # shows more about the ports on which the applications use
 alias llport='netstat -nape --inet --inet6'
 
+# show only active network listeners
+alias netlisteners='lsof -i -P | grep LISTEN'
+
 # shows the disk usage of a directory legibly
 alias du='du -kh'
 
