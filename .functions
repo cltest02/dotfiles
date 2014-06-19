@@ -54,6 +54,18 @@ findFreeLocalPort()
   $(netstat -atn | awk '{printf "%s\n%s\n", $4, $4}' | grep -oE '[0-9]*$'; seq 32768 61000) | sort -n | uniq -u | head -n 1
 }
 
+# iptablesBlockIP: block a IP via "iptables"
+#
+# usage: iptablesBlockIP 8.8.8.8
+iptablesBlockIP()
+{
+  if [ "`id -u`" == "0" ] ; then
+    iptables -A INPUT -s $1 -j DROP
+  else
+    sudo iptables -A INPUT -s $1 -j DROP
+  fi
+}
+
 # -------------------------------------------------------------------
 # cleanTheSystem: purge old config, kernel, trash etc.
 #
