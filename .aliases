@@ -132,6 +132,9 @@ alias speedtest="wget -O /dev/null http://speedtest.wdc01.softlayer.com/download
 # displays a directory tree
 alias tree="tree -Csu"
 
+# displays a directory tree - paginated
+alias ltree="tree -Csu | less -R"
+
 # Gzip-enabled `curl`
 alias gurl='curl --compressed'
 
