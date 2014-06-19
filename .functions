@@ -517,6 +517,16 @@ note()
 }
 
 # -------------------------------------------------------------------
+# tail with search highlight
+#
+# usage -> t /var/log/Xorg.0.log kHz
+t() 
+{ 
+tail -f $1 | perl -pe "s/$2/${COLOR_LIGHT_RED}$&${COLOR_NO_COLOUR}/g"
+}
+ 
+
+# -------------------------------------------------------------------
 # httpDebug: download a web page and show info on what took time
 #
 # usage -> httpDebug http://github.com
