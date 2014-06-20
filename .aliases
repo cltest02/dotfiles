@@ -166,9 +166,6 @@ alias updates='sudo apt-get update'
 alias myip_dns="dig +short myip.opendns.com @resolver1.opendns.com"
 alias myip_http="GET http://ipecho.net/plain && echo"
 
-# Enhanced WHOIS lookups
-alias whois="whois -h whois-servers.net"
-
 # becoming root + executing last command
 alias sulast='su -c $(history -p !-1) root'
 
