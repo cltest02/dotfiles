@@ -26,7 +26,7 @@ __svn_repository_root()
   svn info 2>/dev/null | sed -ne 's#^Repository Root: ##p'
 }
 
-prompt_command()
+setup_prompt()
 {
   # Local or SSH session?
   local remote=""
@@ -62,21 +62,29 @@ prompt_command()
 
   local SCM=""
   if command -v git > /dev/null 2>&1; then
-    SCM="\$(__git_branch)\$(__svn_branch)\$(__git_dirty)"
+    SCM+="\$(__git_branch)\$(__git_dirty)"
+  fi
+  if command -v svn > /dev/null 2>&1; then
+    SCM+="\$(__svn_branch)"
+  fi
+
+  # Terminal title
+  local TITLE=""
+  # echo title sequence only for pseudo terminals
+  # real tty do not support title escape sequences.
+  if [[ "$(tty)" == /dev/pts/* ]]; then
+    TITLE="\[\033]0;${USER}@${HOSTNAME}: \w\007\]"
   fi
 
   # INFO:   Text (commands) inside \[...\] does not impact line length calculation which fixes stange bug when looking through the history
   #         $? is a status of last command, should be processed every time prompt prints
 
   # Format prompt
-  export PS1="\`if [ \$? -eq 0 ]; then echo -e \[\$COLOR_GREEN\]\${ICON_FOR_TRUE}; else echo -e \[\$COLOR_RED\]\${ICON_FOR_FALSE}; fi\` \[$user_color\]${user}${host}${userOrHostExtra}\[$COLOR_LIGHT_BLUE\]\w\[$COLOR_LIGHT_RED\]${ICON_FOR_ARROW_RIGHT}${SCM}\[$COLOR_NO_COLOUR\] "
+  export PS1="${TITLE}\`if [ \$? -eq 0 ]; then echo -e \[\$COLOR_GREEN\]\${ICON_FOR_TRUE}; else echo -e \[\$COLOR_RED\]\${ICON_FOR_FALSE}; fi\` \[$user_color\]${user}${host}${userOrHostExtra}\[$COLOR_LIGHT_BLUE\]\w\[$COLOR_LIGHT_RED\]${ICON_FOR_ARROW_RIGHT}${SCM}\[$COLOR_NO_COLOUR\] "
 
   # Multiline command
   export PS2="\[$COLOR_LIGHT_RED\]${ICON_FOR_ARROW_RIGHT}\[$COLOR_NO_COLOUR\]"
-
-  # Terminal title
-  echo -ne "\033]0;${USER}@${HOSTNAME}: ${PWD/$HOME/~}\007"
 }
 
 # Show awesome prompt always
-PROMPT_COMMAND=prompt_command
+setup_prompt
