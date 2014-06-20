@@ -66,15 +66,13 @@ if [ "$TERM" != "dumb" ]; then
   fi
 
   # colorize these commands if possible
-  if which grc &>/dev/null; then
+  if which grc >/dev/null 2>&1; then
     alias .cl='grc -es --colour=auto'
     alias configure='.cl ./configure'
     alias diff='.cl diff'
     alias make='.cl make'
     alias gcc='.cl gcc'
     alias g++='.cl g++'
-    #alias as='.cl as'
-    #alias gas='.cl gas'
     alias ld='.cl ld'
     alias netstat='.cl netstat'
     alias ping='.cl ping -c 10'
@@ -118,8 +116,8 @@ if command -v pbpaste >/dev/null; then
   alias getclip="pbpaste"
   alias putclip="pbcopy"
 elif command -v xclip >/dev/null; then
-  alias getclip="xclip --out"
-  alias putclip="xclip --in"
+  alias getclip="xclip -o"
+  alias putclip="xclip -i"
 fi
 
 # the load-avg
