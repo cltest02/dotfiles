@@ -34,16 +34,30 @@ lman()
 }
 
 # -------------------------------------------------------------------
-# testConnection: check-funktion - ob eine Internet-Verbindung besteht
+# testConnection: check if connection to google.com is possible
+#
+# usage: 
+#   testConnection 1  # will echo 1 || 0
+#   testConnection    # will return 1 || 0
 testConnection()
 {
-  local TMPFILE=$(mktemp -t)
-  local TESTCONNECTION=`wget --tries=3 --timeout=10 www.google.com -O ${TMPFILE} &>/dev/null 2>&1`
+  local tmpFile=$(mktemp -t)
+  local tmpReturn=1
+  wgetGoogle=`wget --tries=2 --timeout=2 www.google.com -O ${tmpFile} &>/dev/null 2>&1`
 
-  if [ ${?} != 0 ]; then
-    echo "problem - can't get google.com"
+  if [ $? -eq 0 ]; then
+    tmpReturn=0
   else
-    echo "ok"
+    tmpReturn=1
+  fi
+
+  unset wgetGoogle
+  rm $tmpFile
+
+  if [ "$1" ] && [ $1 -eq 1 ]; then
+    echo $tmpReturn
+  else
+    return $tmpReturn
   fi
 }
 
