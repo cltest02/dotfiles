@@ -223,16 +223,16 @@ set lazyredraw
 
 " switch syntax highlighting on, when the terminal has colors
 if &t_Co > 2 || has("gui_running")
+  " set the color-theme
+  "let g:solarized_termcolors=256
+  colorscheme molokai
+
   " Enable coloring for dark background terminals.
   if has('gui_running')
     set background=light
   else
     set background=dark
   endif
-
-  " set the color-theme
-  "let g:solarized_termcolors=256
-  colorscheme molokai
 
   " turn on color syntax highlighting
   if exists("+syntax")
@@ -242,7 +242,7 @@ if &t_Co > 2 || has("gui_running")
   syn sync fromstart
 
   " set to 256 colors
-  set t_Co=256
+  " set t_Co=256
 
   " Also switch on highlighting the last used search pattern.
   if exists("+hlsearch")
