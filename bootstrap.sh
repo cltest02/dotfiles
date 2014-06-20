@@ -15,7 +15,7 @@ function doIt() {
   echo "git configuration not present anymore after bootstrapping:"
   LANG=C comm -23 /tmp/oldgit$$ /tmp/newgit$$
   echo -e "\nYou can use the following commands to add it again:"
-  for i in $(LANG=C comm -23 /tmp/oldgit$$ /tmp/newgit$$); do echo "git config --global --add "$(echo $i | sed 's/=/ /') ;done
+  LANG=C comm -23 /tmp/oldgit$$ /tmp/newgit$$ | while read line; do echo "git config --global --add "$(echo $line | sed 's/=/ \"/;s/$/\"/') ;done
 }
 
 function dryRun() {
