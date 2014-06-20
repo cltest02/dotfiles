@@ -63,6 +63,7 @@ Suggestions/improvements
 
 ## Thanks to…
 
+* [DrVanScott](https://github.com/DrVanScott/dotfiles/)
 * [TuxCoder](https://github.com/TuxCoder/dotfiles/)
 * [Mathias Bynens](https://github.com/mathiasbynens/dotfiles/)
 * [@ptb and his _OS X Lion Setup_ repository](https://github.com/ptb/Mac-OS-X-Lion-Setup)
