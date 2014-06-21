@@ -103,7 +103,9 @@ sudo aptitude install \
   ucspi-tcp \
   xpdf \
   python-pygments \ #install python-pygments for json print
-  locales
+  locales \
+  sysstat \
+  htop
 
 #
 # install java
