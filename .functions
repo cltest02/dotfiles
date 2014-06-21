@@ -62,10 +62,31 @@ testConnection()
 }
 
 # -------------------------------------------------------------------
-# netstat_free_local_port: get a free tcp-port (from 32768-61000)
+# netstat_used_local_ports: get used tcp-ports
+netstat_used_local_ports()
+{
+  netstat -atn | awk '{printf "%s\n%s\n", $4, $4}' | grep -oE '[0-9]*$' | sort -n | uniq
+}
+
+# -------------------------------------------------------------------
+# netstat_free_local_port: get one free tcp-port
 netstat_free_local_port()
 {
-  $(netstat -atn | awk '{printf "%s\n%s\n", $4, $4}' | grep -oE '[0-9]*$'; seq 32768 61000) | sort -n | uniq -u | head -n 1
+  read lowerPort upperPort < /proc/sys/net/ipv4/ip_local_port_range
+ 
+  # create a local array of used ports 
+  local all_used_ports=($(netstat_used_local_ports))
+
+  for port in $(seq $lowerPort $upperPort); do
+    for used_port in "${all_used_ports[@]}"; do
+      if [ $used_port -eq $port ]; then
+        continue
+      else
+        echo $port
+        return 0
+      fi
+    done
+  done 
 }
 
 # -------------------------------------------------------------------
@@ -465,7 +486,8 @@ gitio()
 # server: Start an HTTP server from a directory, optionally specifying the port
 server()
 {
-  local port="${1:-8000}"
+  local free_port=$(netstat_free_local_port)
+  local port="${1:-${free_port}}"
   sleep 1 && xdg-open "http://localhost:${port}/" &
   # Set the default Content-Type to `text/plain` instead of `application/octet-stream`
   # And serve everything as UTF-8 (although not technically correct, this doesn’t break anything for binary files)
@@ -480,7 +502,8 @@ server()
 # phpserver [port=4000] [ip=127.0.0.1]
 phpserver()
 {
-  local port="${1:-4000}"
+  local free_port=$(netstat_free_local_port)
+  local port="${1:-${free_port}}"
   local ip="${2:-127.0.0.1}"
   sleep 1 && xdg-open "http://${ip}:${port}/" &
   php -S "${ip}:${port}"
