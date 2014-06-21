@@ -2,6 +2,8 @@
 
 # -------------------------------------------------------------------
 # box: a function to create a box of '=' characters around a given string
+#
+# usage: box 'testing'
 box() 
 { 
   local t="$1xxxx"
@@ -12,7 +14,7 @@ box()
   echo ${t//?/$c} 
 }
 
-# optiImages: optimized images in the current dir + sub-dirs
+# optiImages: optimized images (png/jpg) in the current dir + sub-dirs
 #
 # INFO: use "grunt-contrib-imagemin" for websites!
 optiImages()
@@ -65,7 +67,7 @@ testConnection()
 # netstat_used_local_ports: get used tcp-ports
 netstat_used_local_ports()
 {
-  netstat -atn | awk '{printf "%s\n%s\n", $4, $4}' | grep -oE '[0-9]*$' | sort -n | uniq
+  netstat -atn | awk '{printf "%s\n", $4}' | grep -oE '[0-9]*$' | sort -n | uniq
 }
 
 # -------------------------------------------------------------------
@@ -98,6 +100,8 @@ netstat_connection_overview()
 
 # -------------------------------------------------------------------
 # sniff: view HTTP traffic
+#
+# usage: sniff [eth0]
 sniff()
 {
   if [ $1 ]; then
@@ -112,7 +116,7 @@ sniff()
 # -------------------------------------------------------------------
 # httpdump: view HTTP traffic
 #
-# usage: httpdump eth1
+# usage: httpdump [eth1]
 httpdump()
 {
   if [ $1 ]; then
@@ -185,13 +189,6 @@ cleanTheSystem()
 }
 
 # -------------------------------------------------------------------
-# packen: create a compressed backup + date
-packen()
-{
-  tar czvf "$1-$(date +%y%m%d-%H%M%S).tar.gz" "$1"
-}
-
-# -------------------------------------------------------------------
 # extract: extract of compressed-files
 extract()
 {
@@ -217,7 +214,8 @@ extract()
 
 # -------------------------------------------------------------------
 # os-info: show some info about your system
-os-info() {
+os-info()
+{
   lsb_release -a
   uname -a
 
@@ -427,6 +425,15 @@ fstr()
 
   find . -type f -name "${2:-*}" -print0 | \
   xargs -0 egrep --color=auto -sn ${case} "$1" 2>&- | more
+}
+
+# -------------------------------------------------------------------
+# file_backup_compressed: create a compressed backup (with date)
+#
+# usage: file_backup_simple test.txt
+file_backup_compressed()
+{
+  tar czvf "${1}-$(date +%y%m%d-%H%M%S).tar.gz" "$1"
 }
 
 # -------------------------------------------------------------------
