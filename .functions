@@ -2,6 +2,8 @@
 
 # -------------------------------------------------------------------
 # box: a function to create a box of '=' characters around a given string
+#
+# usage: box 'testing'
 box() 
 { 
   local t="$1xxxx"
@@ -12,7 +14,7 @@ box()
   echo ${t//?/$c} 
 }
 
-# optiImages: optimized images in the current dir + sub-dirs
+# optiImages: optimized images (png/jpg) in the current dir + sub-dirs
 #
 # INFO: use "grunt-contrib-imagemin" for websites!
 optiImages()
@@ -34,16 +36,125 @@ lman()
 }
 
 # -------------------------------------------------------------------
-# testConnection: check-funktion - ob eine Internet-Verbindung besteht
-testConnection() {
-  local TMPFILE=$(mktemp -t)
-  local TESTCONNECTION=`wget --tries=3 --timeout=10 www.google.com -O ${TMPFILE} &>/dev/null 2>&1`
+# testConnection: check if connection to google.com is possible
+#
+# usage: 
+#   testConnection 1  # will echo 1 || 0
+#   testConnection    # will return 1 || 0
+testConnection()
+{
+  local tmpFile=$(mktemp -t)
+  local tmpReturn=1
+  wgetGoogle=`wget --tries=2 --timeout=2 www.google.com -O ${tmpFile} &>/dev/null 2>&1`
 
-  if [ ${?} != 0 ]; then
-    echo "problem - can't get google.com"
+  if [ $? -eq 0 ]; then
+    tmpReturn=0
   else
-    echo "ok"
+    tmpReturn=1
   fi
+
+  unset wgetGoogle
+  rm $tmpFile
+
+  if [ "$1" ] && [ $1 -eq 1 ]; then
+    echo $tmpReturn
+  else
+    return $tmpReturn
+  fi
+}
+
+# -------------------------------------------------------------------
+# netstat_used_local_ports: get used tcp-ports
+netstat_used_local_ports()
+{
+  netstat -atn | awk '{printf "%s\n", $4}' | grep -oE '[0-9]*$' | sort -n | uniq
+}
+
+# -------------------------------------------------------------------
+# netstat_free_local_port: get one free tcp-port
+netstat_free_local_port()
+{
+  read lowerPort upperPort < /proc/sys/net/ipv4/ip_local_port_range
+ 
+  # create a local array of used ports 
+  local all_used_ports=($(netstat_used_local_ports))
+
+  for port in $(seq $lowerPort $upperPort); do
+    for used_port in "${all_used_ports[@]}"; do
+      if [ $used_port -eq $port ]; then
+        continue
+      else
+        echo $port
+        return 0
+      fi
+    done
+  done 
+}
+
+# -------------------------------------------------------------------
+# connection_overview: get stats-overview about your connections
+netstat_connection_overview()
+{
+  netstat -nat | awk '{print $6}' | sort | uniq -c | sort -n
+}
+
+# -------------------------------------------------------------------
+# sniff: view HTTP traffic
+#
+# usage: sniff [eth0]
+sniff()
+{
+  if [ $1 ]; then
+    local device=$1
+  else
+    local device='eth0'
+  fi
+
+  sudo ngrep -d ${device} -t '^(GET|POST) ' 'tcp and port 80'
+}
+
+# -------------------------------------------------------------------
+# httpdump: view HTTP traffic
+#
+# usage: httpdump [eth1]
+httpdump()
+{
+  if [ $1 ]; then
+    local device=$1
+  else
+    local device='eth0'
+  fi
+
+  sudo tcpdump -i ${device} -n -s 0 -w - | grep -a -o -E \"Host\: .*|GET \/.*\"
+}
+
+# -------------------------------------------------------------------
+# iptablesBlockIP: block a IP via "iptables"
+#
+# usage: iptablesBlockIP 8.8.8.8
+iptablesBlockIP()
+{
+  if [ "`id -u`" == "0" ] ; then
+    iptables -A INPUT -s $1 -j DROP
+  else
+    sudo iptables -A INPUT -s $1 -j DROP
+  fi
+}
+
+# -------------------------------------------------------------------
+# ips: get the local IP's
+ips()
+{
+  local _ip _myip _line _nl=$'\n'
+  
+  while IFS=$': \t' read -a _line ; do
+    [ -z "${_line%inet}" ] &&
+      _ip=${_line[${#_line[1]}>4?1:2]} &&
+        [ "${_ip#127.0.0.1}" ] && 
+          _myip=$_ip
+    done< <(LANG=C ifconfig)
+
+  printf ${1+-v} $1 "%s${_nl:0:$[${#1}>0?0:1]}" $_myip
 }
 
 # -------------------------------------------------------------------
@@ -78,13 +189,6 @@ cleanTheSystem()
 }
 
 # -------------------------------------------------------------------
-# packen: create a compressed backup + date
-packen()
-{
-  tar czvf "$1-$(date +%y%m%d-%H%M%S).tar.gz" "$1"
-}
-
-# -------------------------------------------------------------------
 # extract: extract of compressed-files
 extract()
 {
@@ -110,7 +214,8 @@ extract()
 
 # -------------------------------------------------------------------
 # os-info: show some info about your system
-os-info() {
+os-info()
+{
   lsb_release -a
   uname -a
 
@@ -225,11 +330,18 @@ mkd()
 }
 
 # -------------------------------------------------------------------
-# cdf: Change working directory to the top-most Finder window location
-# info: short for `cdfinder`
-cdf()
+# passwdgen: a password generator
+#
+# usage: passwdgen 8
+passwdgen()
 {
-  cd "$(osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)')"
+  if [ $1 ]; then
+    local length=$1
+  else 
+    local length=16
+  fi
+
+  cat /dev/urandom | head -c${1:-512} | sha512sum | head -c${1:-${length}}
 }
 
 # -------------------------------------------------------------------
@@ -316,6 +428,15 @@ fstr()
 }
 
 # -------------------------------------------------------------------
+# file_backup_compressed: create a compressed backup (with date)
+#
+# usage: file_backup_simple test.txt
+file_backup_compressed()
+{
+  tar czvf "${1}-$(date +%y%m%d-%H%M%S).tar.gz" "$1"
+}
+
+# -------------------------------------------------------------------
 # file_backup: creating a backup of a file (with date)
 file_backup()
 {
@@ -372,8 +493,9 @@ gitio()
 # server: Start an HTTP server from a directory, optionally specifying the port
 server()
 {
-  local port="${1:-8000}"
-  sleep 1 && open "http://localhost:${port}/" &
+  local free_port=$(netstat_free_local_port)
+  local port="${1:-${free_port}}"
+  sleep 1 && xdg-open "http://localhost:${port}/" &
   # Set the default Content-Type to `text/plain` instead of `application/octet-stream`
   # And serve everything as UTF-8 (although not technically correct, this doesn’t break anything for binary files)
   python -c $'import SimpleHTTPServer;\nmap = SimpleHTTPServer.SimpleHTTPRequestHandler.extensions_map;\nmap[""] = "text/plain";\nfor key, value in map.items():\n\tmap[key] = value + ";charset=UTF-8";\nSimpleHTTPServer.test();' "$port"
@@ -384,13 +506,28 @@ server()
 # (Requires PHP 5.4.0+.)
 #
 # usage:
-# phpserver [port=4000] [ip=127.0.0.1]
+# phpserver [port=`some_free_port` [ip=127.0.0.1]]
 phpserver()
 {
-  local port="${1:-4000}"
+  local free_port=$(netstat_free_local_port)
+  local port="${1:-${free_port}}"
   local ip="${2:-127.0.0.1}"
-  sleep 1 && open "http://${ip}:${port}/" &
+  sleep 1 && xdg-open "http://${ip}:${port}/" &
   php -S "${ip}:${port}"
+}
+
+# php-parse-error-check: check for parse errors
+#
+# usage: php-parse-error-check /var/www/web3/
+php-parse-error-check()
+{
+  if [ $1 ]; then
+    local location=$1
+  else
+    local location="."
+  fi
+
+  find ${location} -name "*.php" -exec php -l {} \; | grep "Parse error"
 }
 
 # -------------------------------------------------------------------
@@ -525,6 +662,16 @@ note()
 }
 
 # -------------------------------------------------------------------
+# tail with search highlight
+#
+# usage -> t /var/log/Xorg.0.log kHz
+t() 
+{ 
+tail -f $1 | perl -pe "s/$2/${COLOR_LIGHT_RED}$&${COLOR_NO_COLOUR}/g"
+}
+ 
+
+# -------------------------------------------------------------------
 # httpDebug: download a web page and show info on what took time
 #
 # usage -> httpDebug http://github.com
@@ -597,9 +744,9 @@ v()
 o() 
 {
   if [ $# -eq 0 ]; then
-    open .
+    xdg-open .
   else
-    open "$@"
+    xdg-open "$@"
   fi
 }
 

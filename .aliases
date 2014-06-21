@@ -7,7 +7,9 @@
 alias sudo='sudo '
 
 # use vim
-alias vi="vim"
+if which vim >/dev/null 2>&1; then
+  alias vi="vim"
+fi
 
 # Confirm before overwriting
 # -----------------------------------------------------------------------------
@@ -64,15 +66,13 @@ if [ "$TERM" != "dumb" ]; then
   fi
 
   # colorize these commands if possible
-  if which grc &>/dev/null; then
+  if which grc >/dev/null 2>&1; then
     alias .cl='grc -es --colour=auto'
     alias configure='.cl ./configure'
     alias diff='.cl diff'
     alias make='.cl make'
     alias gcc='.cl gcc'
     alias g++='.cl g++'
-    #alias as='.cl as'
-    #alias gas='.cl gas'
     alias ld='.cl ld'
     alias netstat='.cl netstat'
     alias ping='.cl ping -c 10'
@@ -94,6 +94,8 @@ if [ "$TERM" != "dumb" ]; then
   alias la="ls -laFh --color=auto"
   # displays all files and directories in detail with newest-files at bottom
   alias lr="ls -laFhtr --color=auto"
+  # show last 10 recently changed files
+  alias lt="ls -altr | grep -v '^d' | tail -n 10"
   # show files and directories (also in sub-dir) that was touched in the last hour
   alias lf='find ./* -ctime -1 | xargs ls -ltr --color'
   # displays files and directories in detail
@@ -114,8 +116,8 @@ if command -v pbpaste >/dev/null; then
   alias getclip="pbpaste"
   alias putclip="pbcopy"
 elif command -v xclip >/dev/null; then
-  alias getclip="xclip --out"
-  alias putclip="xclip --in"
+  alias getclip="xclip -o"
+  alias putclip="xclip -i"
 fi
 
 # the load-avg
@@ -130,20 +132,28 @@ alias speedtest="wget -O /dev/null http://speedtest.wdc01.softlayer.com/download
 # displays a directory tree
 alias tree="tree -Csu"
 
+# displays a directory tree - paginated
+alias ltree="tree -Csu | less -R"
+
 # Gzip-enabled `curl`
 alias gurl='curl --compressed'
 
-# get week number
-alias week='date +%V'
-
-# show the timestamp in the ISO 8601 format
-alias timestamp_iso_8601='date "+%Y%m%dT%H%M%S"'
-
-#show a clean date: YYYY-MM-DD
+# date
+alias date_iso_8601='date "+%Y%m%dT%H%M%S"'
 alias date_clean='date "+%Y-%m-%d"'
+alias date_year='date "+%Y"'
+alias date_month='date "+%m"'
+alias date_week='date "+%V"'
+alias date_day='date "+%d"'
+alias date_hour='date "+%H"'
+alias date_minute='date "+%M"'
+alias date_second='date "+%S"'
 
 # stopwatch
 alias timer='echo "Timer started. Stop with Ctrl-D." && date && time cat && date'
+
+# decimal to hexadecimal value
+alias dec2hex='printf "%x\n" $1'
 
 # mkdir: always create parent-dirs, if needed
 alias mkdir="mkdir -p"
@@ -157,15 +167,9 @@ alias updates='sudo apt-get update'
 # IP addresses
 alias myip_dns="dig +short myip.opendns.com @resolver1.opendns.com"
 alias myip_http="GET http://ipecho.net/plain && echo"
-alias localip="ipconfig getifaddr en0"
-alias ips="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[0-9]\+\)\|[a-fA-F0-9:]\+\)' | awk '{ sub(/inet6? (addr:)? ?/, \"\"); print }'"
 
-# Enhanced WHOIS lookups
-alias whois="whois -h whois-servers.net"
-
-# View HTTP traffic
-alias sniff="sudo ngrep -d 'en1' -t '^(GET|POST) ' 'tcp and port 80'"
-alias httpdump="sudo tcpdump -i en1 -n -s 0 -w - | grep -a -o -E \"Host\: .*|GET \/.*\""
+# becoming root + executing last command
+alias sulast='su -c $(history -p !-1) root'
 
 # Canonical hex dump; some systems have this symlinked
 command -v hd > /dev/null || alias hd="hexdump -C"
@@ -181,6 +185,12 @@ alias c="tr -d '\n' | pbcopy"
 
 # Recursively delete `.DS_Store` files
 alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
+
+# urldecode - url http network decode
+alias urldecode='python -c "import sys, urllib as ul; print ul.unquote_plus(sys.argv[1])"'
+
+# urlencode - url encode network http
+alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1])"'
 
 # ROT13-encode text. Works for decoding, too! ;)
 alias rot13='tr a-zA-Z n-za-mN-ZA-M'
@@ -240,9 +250,13 @@ alias lsport='sudo lsof -i -T -n'
 # shows more about the ports on which the applications use
 alias llport='netstat -nape --inet --inet6'
 
+# show only active network listeners
+alias netlisteners='sudo lsof -i -P | grep LISTEN'
+
 # shows the disk usage of a directory legibly
 alias du='du -kh'
 
+# show the biggest files in a folder first
 alias du_overview='du -h | grep "^[0-9,]*[MG]" | sort -hr | less'
 
 # shows the complete disk usage to legibly

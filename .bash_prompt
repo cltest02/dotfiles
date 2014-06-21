@@ -26,7 +26,7 @@ __svn_repository_root()
   svn info 2>/dev/null | sed -ne 's#^Repository Root: ##p'
 }
 
-prompt_command()
+setup_prompt()
 {
   # Local or SSH session?
   local remote=""
@@ -37,34 +37,54 @@ prompt_command()
   [ $UID -eq "0" ] && user_color=$COLOR_RED     # root's color
 
   # set the user
-  local user="\u"
+  local user=""
+  if [[ -z $DEFAULT_USER ]] || [[ $DEFAULT_USER -ne $USER ]]; then
+    user=$USER
+  fi
 
   # set the hostname inside SSH session
   local host=""
   [ -n "$remote" ] && host="\[$COLOR_LIGHT_GREEN\]${ICON_FOR_AT}\h"
 
-  if [[ -n $remote ]] && [[ $COLORTERM = gnome-* && $TERM = xterm ]] && infocmp gnome-256color >/dev/null 2>&1; then
-    export TERM='gnome-256color'
-  elif infocmp xterm-256color >/dev/null 2>&1; then
-    export TERM='xterm-256color'
+  # set extra ":" after user || host
+  local userOrHostExtra=""
+  if [[ -n "$host" ]] || [[ -n $user ]]; then
+    userOrHostExtra="\[$user_color\]:"
+  fi
+
+  if [[ "$(tty)" == /dev/pts/* ]]; then
+    if [[ -n $remote ]] && [[ $COLORTERM = gnome-* && $TERM = xterm ]] && infocmp gnome-256color >/dev/null 2>&1; then
+      export TERM='gnome-256color'
+    elif infocmp xterm-256color >/dev/null 2>&1; then
+      export TERM='xterm-256color'
+    fi
+  fi
+
+  local SCM=""
+  if command -v git > /dev/null 2>&1; then
+    SCM+="\$(__git_branch)\$(__git_dirty)"
+  fi
+  if command -v svn > /dev/null 2>&1; then
+    SCM+="\$(__svn_branch)"
+  fi
+
+  # Terminal title
+  local TITLE=""
+  # echo title sequence only for pseudo terminals
+  # real tty do not support title escape sequences.
+  if [[ "$(tty)" == /dev/pts/* ]]; then
+    TITLE="\[\033]0;${USER}@${HOSTNAME}: \w\007\]"
   fi
 
   # INFO:   Text (commands) inside \[...\] does not impact line length calculation which fixes stange bug when looking through the history
   #         $? is a status of last command, should be processed every time prompt prints
 
   # Format prompt
-  export PS1="\`if [ \$? -eq 0 ]; then echo -e \[\$COLOR_GREEN\]\${ICON_FOR_TRUE}; else echo -e \[\$COLOR_RED\]\${ICON_FOR_FALSE}; fi\` \[$user_color\]${user}${host}\[$user_color\]:\[$COLOR_LIGHT_BLUE\]\w\[$COLOR_LIGHT_RED\]${ICON_FOR_ARROW_RIGHT}\$(__git_branch)\$(__svn_branch)\$(__git_dirty)\[$COLOR_NO_COLOUR\] "
+  export PS1="${TITLE}\`if [ \$? -eq 0 ]; then echo -e \[\$COLOR_GREEN\]\${ICON_FOR_TRUE}; else echo -e \[\$COLOR_RED\]\${ICON_FOR_FALSE}; fi\` \[$user_color\]${user}${host}${userOrHostExtra}\[$COLOR_LIGHT_BLUE\]\w\[$COLOR_LIGHT_RED\]${ICON_FOR_ARROW_RIGHT}${SCM}\[$COLOR_NO_COLOUR\] "
 
   # Multiline command
   export PS2="\[$COLOR_LIGHT_RED\]${ICON_FOR_ARROW_RIGHT}\[$COLOR_NO_COLOUR\]"
-
-  # Terminal title
-  echo -ne "\033]0;${USER}@${HOSTNAME}: ${PWD/$HOME/~}\007"
 }
 
-# Show awesome prompt only if Git is istalled
-if command -v git > /dev/null 2>&1; then
-  PROMPT_COMMAND=prompt_command
-else
-  PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME}: ${PWD/$HOME/~}\007"'
-fi
+# Show awesome prompt always
+setup_prompt
