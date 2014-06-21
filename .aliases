@@ -138,14 +138,16 @@ alias ltree="tree -Csu | less -R"
 # Gzip-enabled `curl`
 alias gurl='curl --compressed'
 
-# get week number
-alias week='date +%V'
-
-# show the timestamp in the ISO 8601 format
-alias timestamp_iso_8601='date "+%Y%m%dT%H%M%S"'
-
-#show a clean date: YYYY-MM-DD
+# date
+alias date_iso_8601='date "+%Y%m%dT%H%M%S"'
 alias date_clean='date "+%Y-%m-%d"'
+alias date_year='date "+%Y"'
+alias date_month='date "+%m"'
+alias date_week='date "+%V"'
+alias date_day='date "+%d"'
+alias date_hour='date "+%H"'
+alias date_minute='date "+%M"'
+alias date_second='date "+%S"'
 
 # stopwatch
 alias timer='echo "Timer started. Stop with Ctrl-D." && date && time cat && date'
