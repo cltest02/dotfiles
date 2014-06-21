@@ -108,7 +108,9 @@ sudo aptitude install \
   xpdf \
   `# nstall python-pygments for json print` \
   python-pygments \
-  locales
+  locales \
+  sysstat \
+  htop
 
 #
 # install java / ubuntu
