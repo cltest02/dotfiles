@@ -461,7 +461,7 @@ file_information()
 }
 
 # -------------------------------------------------------------------
-# dataurl: Create a data URL from a file
+# dataurl: create a data URL from a file
 dataurl()
 {
   local mimeType=$(file -b --mime-type "$1")
@@ -474,7 +474,7 @@ dataurl()
 }
 
 # -------------------------------------------------------------------
-# gitio: Create a git.io short URL
+# gitio: create a git.io short URL
 gitio()
 {
   if [ -z "${1}" -o -z "${2}" ]; then
@@ -552,7 +552,7 @@ gz()
 # -------------------------------------------------------------------
 # json: Syntax-highlight JSON strings or files
 #
-# usage -> `json '{"foo":42}'` or `echo '{"foo":42}' | json`
+# usage: json '{"foo":42}'` or `echo '{"foo":42}' | json
 json()
 {
   if [ -t 0 ]; then # argument
@@ -641,7 +641,8 @@ getcertnames()
 # -------------------------------------------------------------------
 # note: add a note to the ~/notes.txt file
 #
-# usage -> `note 'title' 'body'` or `echo 'body' | note`
+# usage:  note 'title' 'body'
+#         echo 'body' | note
 note() 
 {
   local title
@@ -660,7 +661,7 @@ note()
 # -------------------------------------------------------------------
 # tail with search highlight
 #
-# usage -> t /var/log/Xorg.0.log kHz
+# usage: t /var/log/Xorg.0.log kHz
 t() 
 { 
 tail -f $1 | perl -pe "s/$2/${COLOR_LIGHT_RED}$&${COLOR_NO_COLOUR}/g"
@@ -670,7 +671,7 @@ tail -f $1 | perl -pe "s/$2/${COLOR_LIGHT_RED}$&${COLOR_NO_COLOUR}/g"
 # -------------------------------------------------------------------
 # httpDebug: download a web page and show info on what took time
 #
-# usage -> httpDebug http://github.com
+# usage: httpDebug http://github.com
 httpDebug()
 {
   curl $@ -o /dev/null -w "dns: %{time_namelookup} connect: %{time_connect} pretransfer: %{time_pretransfer} starttransfer: %{time_starttransfer} total: %{time_total}\n"
@@ -680,10 +681,19 @@ httpDebug()
 # -------------------------------------------------------------------
 # gi: Install Grunt plugins and add them as `devDependencies` to `package.json`
 #
-# usage -> `gi contrib-watch contrib-uglify zopfli`
-gi() 
+# usage: gid contrib-watch contrib-uglify
+gid() 
 {
   npm install --save-dev ${*/#/grunt-}
+}
+
+# -------------------------------------------------------------------
+# Install Grunt plugins and add them as `dependencies` to `package.json`
+#
+# usage: gi contrib-watch contrib-uglify
+gi()
+{
+  npm install --save ${*/#/grunt-}
 }
 
 # -------------------------------------------------------------------
@@ -704,9 +714,9 @@ m()
 s() 
 {
   if [ $# -eq 0 ]; then
-    subl .
+    subl -a .
   else
-    subl "$@"
+    subl -a "$@"
   fi
 }
 
@@ -744,21 +754,6 @@ o()
   else
     xdg-open "$@"
   fi
-}
-
-# -------------------------------------------------------------------
-# `np`: with an optional argument `patch`/`minor`/`major`/`<version>`
-# defaults to `patch`
-np() 
-{
-  git pull --rebase && \
-  rm -rf node_modules && \
-  npm install && \
-  npm test && \
-  npm version ${1:=patch} && \
-  npm publish && \
-  git push origin master && \
-  git push origin master --tags
 }
 
 # -------------------------------------------------------------------
