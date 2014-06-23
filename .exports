@@ -33,7 +33,7 @@ export HISTCONTROL=ignoredups
 export HISTIGNORE='&:clear:pwd:exit:date:[bf]g:exit:[ t\]*:* --help'
 
 # add the date to the historylog
-# 
+#
 # Keep track of the time the commands were executed.
 # The xterm colour escapes require special care when piping; e.g. "| less -R".
 export HISTTIMEFORMAT="${FG_BLUE}${FONT_BOLD}%Y/%m/%d %H:%M:%S${FONT_RESET}  ";
@@ -82,8 +82,8 @@ if [ "$UID" != 0 ]; then
     export LESS_TERMCAP_mb=$'\E[01;31m'
     export LESS_TERMCAP_md=$'\E[01;31m'
     export LESS_TERMCAP_me=$'\E[0m'
-    export LESS_TERMCAP_se=$'\E[0m'                           
-    export LESS_TERMCAP_so=$'\E[01;44;33m'                                 
+    export LESS_TERMCAP_se=$'\E[0m'
+    export LESS_TERMCAP_so=$'\E[01;44;33m'
     export LESS_TERMCAP_ue=$'\E[0m'
     export LESS_TERMCAP_us=$'\E[01;32m'
 fi

@@ -18,7 +18,7 @@ if [ \! -f `whereis aptitude | cut -f 2 -d ' '` ] ; then
   sudo apt-get install aptitude
 fi
 
-# update && upgrade 
+# update && upgrade
 ask_install "upgrade your system?"
 if [[ $? -eq 1 ]]; then
   sudo aptitude update
@@ -158,7 +158,7 @@ sudo aptitude install \
 #aptitude upgrade git
 #exit
 
-# 
+#
 # install node.js without deb-files e.g. for Debian - stable
 #
 
@@ -174,7 +174,7 @@ if [[ $? -eq 1 ]]; then
   sudo gem install compass --pre
   sudo gem install autoprefixer-rails --pre
   sudo gem install compass-rgbapng --pre
-  
+
   sudo npm install -g bower
   sudo npm install -g psi
   sudo npm install -g grunt-cli
@@ -191,7 +191,7 @@ fi
 sudo aptitude clean
 
 # update-fonts
-sudo dpkg-reconfigure fontconfig                                                                       
+sudo dpkg-reconfigure fontconfig
 sudo fc-cache -fv
 
 # update-locate-db

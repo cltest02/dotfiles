@@ -4,14 +4,14 @@
 # box: a function to create a box of '=' characters around a given string
 #
 # usage: box 'testing'
-box() 
-{ 
+box()
+{
   local t="$1xxxx"
   local c=${2:-#}
- 
+
   echo ${t//?/$c}
-  echo "$c $1 $c" 
-  echo ${t//?/$c} 
+  echo "$c $1 $c"
+  echo ${t//?/$c}
 }
 
 # optiImages: optimized images (png/jpg) in the current dir + sub-dirs
@@ -25,7 +25,7 @@ optiImages()
 
 # -------------------------------------------------------------------
 # lman: Open the manual page for the last command you executed.
-lman() 
+lman()
 {
   set -- $(fc -nl -1)
   while [ $# -gt 0 -a '(' "sudo" = "$1" -o "-" = "${1:0:1}" ')' ]; do
@@ -38,7 +38,7 @@ lman()
 # -------------------------------------------------------------------
 # testConnection: check if connection to google.com is possible
 #
-# usage: 
+# usage:
 #   testConnection 1  # will echo 1 || 0
 #   testConnection    # will return 1 || 0
 testConnection()
@@ -71,8 +71,8 @@ netstat_used_local_ports()
 netstat_free_local_port()
 {
   read lowerPort upperPort < /proc/sys/net/ipv4/ip_local_port_range
- 
-  # create a local array of used ports 
+
+  # create a local array of used ports
   local all_used_ports=($(netstat_used_local_ports))
 
   for port in $(seq $lowerPort $upperPort); do
@@ -84,7 +84,7 @@ netstat_free_local_port()
         return 0
       fi
     done
-  done 
+  done
 }
 
 # -------------------------------------------------------------------
@@ -142,11 +142,11 @@ iptablesBlockIP()
 ips()
 {
   local _ip _myip _line _nl=$'\n'
-  
+
   while IFS=$': \t' read -a _line ; do
     [ -z "${_line%inet}" ] &&
       _ip=${_line[${#_line[1]}>4?1:2]} &&
-        [ "${_ip#127.0.0.1}" ] && 
+        [ "${_ip#127.0.0.1}" ] &&
           _myip=$_ip
     done< <(LANG=C ifconfig)
 
@@ -230,7 +230,7 @@ os-info()
 
 # -------------------------------------------------------------------
 # stripspace: strip unnecessary whitespace from file
-stripspace() 
+stripspace()
 {
   if [ $# -eq 0 ]; then
     echo "Usage: stripspace FILE"
@@ -251,7 +251,7 @@ battery_life ()
 }
 
 # -------------------------------------------------------------------
-# battery_indicator: echo a indicator for your battery-time 
+# battery_indicator: echo a indicator for your battery-time
 battery_indicator()
 {
   local num=$(battery_life)
@@ -282,7 +282,7 @@ battery_indicator()
 
 # -------------------------------------------------------------------
 # logssh: establish ssh connection + write a logfile
-logssh() 
+logssh()
 {
   ssh $1 | tee sshlog
 }
@@ -300,7 +300,7 @@ replace()
 
 # -------------------------------------------------------------------
 # calc: Simple calculator
-calc() 
+calc()
 {
   local result=""
   result="$(printf "scale=10;$*\n" | bc --mathlib | tr -d '\\\n')"
@@ -333,7 +333,7 @@ passwdgen()
 {
   if [ $1 ]; then
     local length=$1
-  else 
+  else
     local length=16
   fi
 
@@ -342,7 +342,7 @@ passwdgen()
 
 # -------------------------------------------------------------------
 # targz: Create a .tar.gz archive, using `zopfli`, `pigz` or `gzip` for compression
-targz() 
+targz()
 {
   local tmpFile="${@%/}.tar"
   local size=0
@@ -374,7 +374,7 @@ targz()
 
 # -------------------------------------------------------------------
 # fs: Determine size of a file or total size of a directory
-fs() 
+fs()
 {
   if du -b /dev/null > /dev/null 2>&1; then
     local arg=-sbh
@@ -391,7 +391,7 @@ fs()
 
 # -------------------------------------------------------------------
 # ff: displays all files in the current directory (recursively)
-ff() 
+ff()
 {
   find . -type f -iname '*'$*'*' -ls
 }
@@ -443,10 +443,10 @@ file_backup()
 
 # -------------------------------------------------------------------
 # file_information: output information to a file
-file_information() 
+file_information()
 {
   if [ $1 ]; then
-    if [ -z $1 ]; then 
+    if [ -z $1 ]; then
       echo "$1: not found"
       return
     fi
@@ -571,7 +571,7 @@ digga()
 
 # -------------------------------------------------------------------
 # escape: Escape UTF-8 characters into their 3-byte format
-escape() 
+escape()
 {
   printf "\\\x%s" $(printf "$@" | xxd -p -c1 -u)
   # print a newline unless we’re piping the output to another program
@@ -582,7 +582,7 @@ escape()
 
 # -------------------------------------------------------------------
 # unidecode: Decode \x{ABCD}-style Unicode escape sequences
-unidecode() 
+unidecode()
 {
   perl -e "binmode(STDOUT, ':utf8'); print \"$@\""
   # print a newline unless we’re piping the output to another program
@@ -593,7 +593,7 @@ unidecode()
 
 # -------------------------------------------------------------------
 # codepoint: Get a character’s Unicode code point
-codepoint() 
+codepoint()
 {
   perl -e "use utf8; print sprintf('U+%04X', ord(\"$@\"))"
   # print a newline unless we’re piping the output to another program
@@ -643,7 +643,7 @@ getcertnames()
 #
 # usage:  note 'title' 'body'
 #         echo 'body' | note
-note() 
+note()
 {
   local title
   local body
@@ -662,11 +662,11 @@ note()
 # tail with search highlight
 #
 # usage: t /var/log/Xorg.0.log kHz
-t() 
-{ 
+t()
+{
 tail -f $1 | perl -pe "s/$2/${COLOR_LIGHT_RED}$&${COLOR_NO_COLOUR}/g"
 }
- 
+
 
 # -------------------------------------------------------------------
 # httpDebug: download a web page and show info on what took time
@@ -676,13 +676,13 @@ httpDebug()
 {
   curl $@ -o /dev/null -w "dns: %{time_namelookup} connect: %{time_connect} pretransfer: %{time_pretransfer} starttransfer: %{time_starttransfer} total: %{time_total}\n"
 }
- 
+
 
 # -------------------------------------------------------------------
 # gi: Install Grunt plugins and add them as `devDependencies` to `package.json`
 #
 # usage: gid contrib-watch contrib-uglify
-gid() 
+gid()
 {
   npm install --save-dev ${*/#/grunt-}
 }
@@ -699,7 +699,7 @@ gi()
 # -------------------------------------------------------------------
 # `m`: with no arguments opens the current directory in TextMate, otherwise
 # opens the given location
-m() 
+m()
 {
   if [ $# -eq 0 ]; then
     mate .
@@ -711,7 +711,7 @@ m()
 # -------------------------------------------------------------------
 # `s`: with no arguments opens the current directory in Sublime Text, otherwise
 # opens the given location
-s() 
+s()
 {
   if [ $# -eq 0 ]; then
     subl -a .
@@ -723,7 +723,7 @@ s()
 # -------------------------------------------------------------------
 # `a`: with no arguments opens the current directory in Atom Editor, otherwise
 # opens the given location
-a() 
+a()
 {
   if [ $# -eq 0 ]; then
     atom .
@@ -735,7 +735,7 @@ a()
 # -------------------------------------------------------------------
 # `v`: with no arguments opens the current directory in Vim, otherwise opens the
 # given location
-v() 
+v()
 {
   if [ $# -eq 0 ]; then
     vim .
@@ -747,7 +747,7 @@ v()
 # -------------------------------------------------------------------
 # `o`: with no arguments opens current directory, otherwise opens the given
 # location
-o() 
+o()
 {
   if [ $# -eq 0 ]; then
     xdg-open .
@@ -761,7 +761,7 @@ o()
 # the `.git` directory, listing directories first. The output gets piped into
 # `less` with options to preserve color and line numbers, unless the output is
 # small enough for one screen.
-tre() 
+tre()
 {
   tree -aC -I '.git|node_modules|bower_components' --dirsfirst "$@" | less -FRNX
 }

@@ -274,8 +274,8 @@
   # See "`git help diff` --patience" and "`git help merge` recursive".
   algorithm = patience
 
-  # Tells git to detect renames. If set to any boolean value, 
-  # it will enable basic rename detection. If set to "copies" or "copy", 
+  # Tells git to detect renames. If set to any boolean value,
+  # it will enable basic rename detection. If set to "copies" or "copy",
   # it will detect copies, as well.
   renames = copies
 
@@ -294,7 +294,7 @@
 
 [merge]
   #tool = opendiff
-  
+
   # Include summaries of merged commits in newly created merge commit messages
   log = true
 
@@ -314,9 +314,9 @@
 #  default = simple #disabled for now to be compatible with debian wheezy
 
 # URL shorthands
-# 
+#
 # See `git help config` and search for "url.<base>"
-# 
+#
 # gh: is a shorthand for git@github.com
 [url "git@github.com:"]
   insteadOf = "gh:"

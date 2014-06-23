@@ -7,6 +7,7 @@ function doIt() {
         --exclude "README.md" --exclude "firstInstall.sh" --exclude "android_sdk_install.sh" \
         --exclude ".gitignore" --exclude ".gitattributes" \
         --exclude "LICENSE-MIT.txt" --exclude ".editorconfig" \
+        --exclude "examples/" \
         -avhi --no-perms . ~
 	source ~/.bash_profile
 }
@@ -16,6 +17,7 @@ function dryRun() {
         --exclude "README.md" --exclude "firstInstall.sh" --exclude "android_sdk_install.sh" \
         --exclude ".gitignore" --exclude ".gitattributes" \
         --exclude "LICENSE-MIT.txt" --exclude ".editorconfig" \
+        --exclude "examples/" \
         -avhni --no-perms . ~
 	source ~/.bash_profile
 }
