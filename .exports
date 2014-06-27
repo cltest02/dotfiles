@@ -55,7 +55,8 @@ less_options=(
   --ignore-case
 
   # Do not automatically wrap long lines.
-  --chop-long-lines
+  # This is a problem for --quit-if-one-screen if there are chopped lines
+  #--chop-long-lines
 
   # Allow ANSI colour escapes, but no other escapes.
   --RAW-CONTROL-CHARS
