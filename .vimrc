@@ -225,7 +225,11 @@ set lazyredraw
 if &t_Co > 2 || has("gui_running")
   " set the color-theme
   "let g:solarized_termcolors=256
-  colorscheme molokai
+  try
+    colorscheme molokai
+  catch /^Vim\%((\a\+)\)\=:E185/
+    " not available
+  endtry
 
   " Enable coloring for dark background terminals.
   if has('gui_running')

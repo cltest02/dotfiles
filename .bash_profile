@@ -6,6 +6,11 @@ if [[ $- != *i* ]] || [ -z "$PS1" ]; then
   return 0
 fi
 
+#windows git bash is too minimal
+if [[ "$(bash --version)" == *-pc-msys* ]]; then
+  return 0
+fi
+
 ############# INCLUDE ####################################
 
 # load the shell dotfiles, and then some:
