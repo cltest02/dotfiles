@@ -251,7 +251,7 @@ if &t_Co > 2 || has("gui_running")
 
   " highlight current line
   if exists("+cursorline")
-    set cursorline
+    " set cursorline
   endif
 endif
 
