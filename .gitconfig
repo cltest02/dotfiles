@@ -85,7 +85,6 @@
   # diff
   d = diff                          # diff unstaged changes
   dc = diff --cached                # diff staged changes
-  last = diff HEAD^                 # diff last committed change
 
   # Show the diff between the latest commit and the current state
   diff-to-latest-commit = !"git diff-index --quiet HEAD -- || clear; git --no-pager diff --patch-with-stat"
@@ -164,10 +163,6 @@
 
   # Shorthand for remote (verbose)
   r = remote -v
-
-  # Interactive rebase with the given number of latest commits
-  # Same as ri - left for BC.
-  reb = "!r() { git rebase --interactive HEAD~$1; }; r"
 
   #via http://stackoverflow.com/questions/5188320/how-can-i-get-a-list-of-git-branches-ordered-by-most-recent-commit
   recent-branches = !git for-each-ref --count=5 --sort=-committerdate refs/heads/ --format='%(refname:short)'
