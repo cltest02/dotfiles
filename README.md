@@ -15,13 +15,8 @@ cd ~ && git clone https://github.com/voku/dotfiles.git && cd dotfiles && source 
 To update, `cd` into your local `dotfiles` repository and then:
 
 ```bash
-source bootstrap.sh
-```
-
-Alternatively, to update while avoiding the confirmation prompt:
-
-```bash
-set -- -f; source bootstrap.sh
+git pull
+./bootstrap.sh
 ```
 
 ### Add custom commands without creating a new fork
