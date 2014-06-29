@@ -174,6 +174,7 @@ if [[ $? -eq 1 ]]; then
   sudo gem install compass --pre
   sudo gem install autoprefixer-rails --pre
   sudo gem install compass-rgbapng --pre
+  sudo gem install oily_png
 
   sudo npm install -g bower
   sudo npm install -g psi
