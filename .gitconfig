@@ -6,8 +6,11 @@
 # Long flag names are used for readability wherever possible.
 # Short flags are meant for writing on the command line.
 [alias]
-# Shorthand for add
+  # Shorthand for add
   a = add
+
+  #same as git init but creates the git repository in the given path. In a cygwin environment path names are translated to dos style, otherwise the linking would not work in egit (eclipse). Cygwin's git and git-bash is also happy with this.
+  initexternal = !"f() { WORKTREE=\"$(pwd)\"; GITDIR=\"$1\"; command -v cygpath >/dev/null 2>&1 && { WORKTREE=$(cygpath -m $WORKTREE); GITDIR=$(cygpath -m $1); }; git --work-tree=$WORKTREE --git-dir=\"$GITDIR\" init && echo \"gitdir: $GITDIR\" >> .git && git config --local core.worktree \"$WORKTREE\"; }; f"
 
   # Add all unstaged (including untracked) files.
   # See`git help add`
@@ -274,8 +277,8 @@
   # See "`git help diff` --patience" and "`git help merge` recursive".
   algorithm = patience
 
-  # Tells git to detect renames. If set to any boolean value, 
-  # it will enable basic rename detection. If set to "copies" or "copy", 
+  # Tells git to detect renames. If set to any boolean value,
+  # it will enable basic rename detection. If set to "copies" or "copy",
   # it will detect copies, as well.
   renames = copies
 
@@ -294,7 +297,7 @@
 
 [merge]
   #tool = opendiff
-  
+
   # Include summaries of merged commits in newly created merge commit messages
   log = true
 
@@ -314,9 +317,9 @@
 #  default = simple #disabled for now to be compatible with debian wheezy
 
 # URL shorthands
-# 
+#
 # See `git help config` and search for "url.<base>"
-# 
+#
 # gh: is a shorthand for git@github.com
 [url "git@github.com:"]
   insteadOf = "gh:"

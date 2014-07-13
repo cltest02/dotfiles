@@ -22,12 +22,12 @@ fi
 #alias mv='mv -i'
 #alias ln='ln -i'
 
-alias rm='rm -I'                    # 'rm -i' prompts for every file  
+alias rm='rm -I'                    # 'rm -i' prompts for every file
 
 # safety features
-alias chown='chown --preserve-root'  
-alias chmod='chmod --preserve-root'  
-alias chgrp='chgrp --preserve-root'  
+alias chown='chown --preserve-root'
+alias chmod='chmod --preserve-root'
+alias chgrp='chgrp --preserve-root'
 
 # Easier navigation: .., ..., ...., ....., ~ and -
 alias ..="cd .."
@@ -83,7 +83,7 @@ if [ "$TERM" != "dumb" ]; then
   alias grep='grep --color=auto'
   alias egrep='egrep --color=auto'
   alias fgrep='fgrep --color=auto'
-  
+
   # list all files colorized in long format
   alias l="ls -lhF --color=auto"
   # Show hidden files
@@ -195,7 +195,7 @@ alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.ar
 # ROT13-encode text. Works for decoding, too! ;)
 alias rot13='tr a-zA-Z n-za-mN-ZA-M'
 
-# empty the your trash-dir 
+# empty the your trash-dir
 alias emptytrash="rm -rfv ~/.local/share/Trash/*"
 
 # URL-encode strings
@@ -206,7 +206,7 @@ alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.ar
 alias badge="tput bel"
 
 # intuitive map function
-# 
+#
 # For example, to list all directories that contain a certain file:
 # find . -name .gitattributes | map dirname
 alias map="xargs -n1"
@@ -225,7 +225,7 @@ alias meminfo='free -m -l -t'
 # get top process eating memory
 alias psmem='ps auxf | sort -nr -k 4'
 alias psmem10='ps auxf | sort -nr -k 4 | head -10'
- 
+
 # get top process eating cpu
 alias pscpu='ps auxf | sort -nr -k 3'
 alias pscpu10='ps auxf | sort -nr -k 3 | head -10'
@@ -275,8 +275,11 @@ command -v npm > /dev/null && alias npme="npm --registry http://registry.npmjs.e
 # php - package-manager - composer
 alias composer-install="composer install --optimize-autoloader"
 
-#add ssh key to ssh-agent when key exist
-if [ "$SSH_AUTH_SOCK" != "" ] && [ -f ~/.ssh/id_rsa ] && [ -x /usr/bin/ssh-add  ]; then 
+# add ssh-key to clipboard
+alias sshkey="cat ~/.ssh/id_rsa.pub | putclip && echo 'Copied to clipboard.'"
+
+# add sshi-key to ssh-agent when key exist
+if [ "$SSH_AUTH_SOCK" != "" ] && [ -f ~/.ssh/id_rsa ] && [ -x /usr/bin/ssh-add  ]; then
   ssh-add -l >/dev/null || alias ssh='(ssh-add -l >/dev/null || ssh-add) && unalias ssh; ssh'
 fi
 
