@@ -105,7 +105,8 @@ sudo aptitude install \
   rename \
   ucspi-tcp \
   xpdf \
-  python-pygments \ #install python-pygments for json print
+  `#install python-pygments for json print`
+  python-pygments \
   locales \
   sysstat \
   htop
