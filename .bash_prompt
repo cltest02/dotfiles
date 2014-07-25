@@ -67,9 +67,9 @@ __git_prompt() {
       git rev-parse --short HEAD 2> /dev/null || \
       echo '(unknown)')"
 
-    [ -n "${s}" ] && s="${style}[${s}]"
+    [ -n "${s}" ] && s=" ${style}[${s}]"
 
-    echo "${COLOR_WHITE} ${COLOR_PURPLE}(${branchName}) ${s}"
+    echo "${COLOR_WHITE} ${COLOR_PURPLE}(${branchName})${s}"
   else
     return
   fi
