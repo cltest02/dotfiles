@@ -15,15 +15,16 @@ __git_prompt() {
       git update-index --really-refresh -q &>/dev/null
 
       # Check if we are ahead or behind our tracking branch (https://gist.github.com/HowlingMind/996093).
-      git_status="$(git status 2> /dev/null)"
-      remote_pattern="Your branch is (ahead|behind).*by ([[:digit:]]*) commit"
+      local git_status="$(git status 2> /dev/null)"
+      local remote_pattern="Your branch is (ahead|behind).*by ([[:digit:]]*) commit"
+      local remote_pattern_de="Ihr Branch ist (vor|hinter).*um ([[:digit:]]*) Commits"
 
-      if [[ ${git_status} =~ ${remote_pattern} ]]; then
+      if [[ $git_status} =~ $remote_pattern ]] || [[ $git_status =~ $remote_pattern_de ]]; then
 
         if [[ ${BASH_REMATCH[1]} == "ahead" ]]; then
-          s+="▲${BASH_REMATCH[2]} "
+          s+="${ICON_FOR_UP}${BASH_REMATCH[2]} "
         else
-          s+="▼${BASH_REMATCH[2]} "
+          s+="${ICON_FOR_DOWN}${BASH_REMATCH[2]} "
         fi
 
         style="$COLOR_WHITE"
@@ -66,9 +67,9 @@ __git_prompt() {
       git rev-parse --short HEAD 2> /dev/null || \
       echo '(unknown)')"
 
-    [ -n "${s}" ] && s="${style}[${s}${style}]"
+    [ -n "${s}" ] && s="${style}[${s}]"
 
-    echo "${COLOR_WHITE} (${COLOR_PURPLE}${branchName}) ${s}"
+    echo "${COLOR_WHITE} ${COLOR_PURPLE}(${branchName}) ${s}"
   else
     return
   fi
