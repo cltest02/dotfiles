@@ -226,16 +226,16 @@ if &t_Co > 2 || has("gui_running")
   " set the color-theme
   "let g:solarized_termcolors=256
   try
-    colorscheme molokai
+    "colorscheme molokai
   catch /^Vim\%((\a\+)\)\=:E185/
     " not available
   endtry
 
   " Enable coloring for dark background terminals.
   if has('gui_running')
-    set background=light
+    "set background=light
   else
-    set background=dark
+    "set background=dark
   endif
 
   " turn on color syntax highlighting
@@ -255,7 +255,7 @@ if &t_Co > 2 || has("gui_running")
 
   " highlight current line
   if exists("+cursorline")
-    set cursorline
+    "set cursorline
   endif
 endif
 
