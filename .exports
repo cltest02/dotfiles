@@ -39,8 +39,9 @@ export HISTIGNORE='&:clear:pwd:exit:date:[bf]g:exit:[ t\]*:* --help'
 export HISTTIMEFORMAT="${FG_BLUE}${FONT_BOLD}%Y/%m/%d %H:%M:%S${FONT_RESET}  ";
 
 # prefer US English and use UTF-8
-#export LANG="en_EN.UTF-8"
-#export LC_ALL="en_EN.UTF-8"
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+export LANGUAGE=en_US.UTF-8
 
 # make less the default pager, and specify some useful defaults
 less_options=(
