@@ -17,7 +17,7 @@ __git_prompt() {
       # Check if we are ahead or behind our tracking branch (https://gist.github.com/HowlingMind/996093).
       local git_status="$(git status 2> /dev/null)"
       local remote_pattern="Your branch is (ahead|behind).*by ([[:digit:]]*) commit"
-      local remote_pattern_de="Ihr Branch ist (vor|hinter).*um ([[:digit:]]*) Commits"
+      local remote_pattern_de="Ihr Branch ist (vor|hinter).*um ([[:digit:]]*) Commit"
 
       if [[ $git_status} =~ $remote_pattern ]] || [[ $git_status =~ $remote_pattern_de ]]; then
 
