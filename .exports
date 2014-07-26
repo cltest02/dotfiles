@@ -57,6 +57,13 @@ setLocale()
   return 1
 }
 setLocale
+
+if [ $? -eq 1 ]; then
+  export UTF8_LANG="0"
+else
+  export UTF8_LANG="1"
+fi
+
 unset setLocale
 
 # make less the default pager, and specify some useful defaults
