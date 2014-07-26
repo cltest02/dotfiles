@@ -35,9 +35,9 @@ __git_prompt() {
       if [[ $git_status} =~ $remote_pattern ]] || [[ $git_status =~ $remote_pattern_de ]]; then
 
         if [[ ${BASH_REMATCH[1]} == "ahead" ]] || [[ ${BASH_REMATCH[1]} == "vor" ]]; then
-          s+="${ICON_FOR_DOWN}${BASH_REMATCH[2]} "
-        else
           s+="${ICON_FOR_UP}${BASH_REMATCH[2]} "
+        else
+          s+="${ICON_FOR_DOWN}${BASH_REMATCH[2]} "
         fi
 
         style="$white"
