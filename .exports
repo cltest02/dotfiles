@@ -38,9 +38,33 @@ export HISTIGNORE='&:clear:pwd:exit:date:[bf]g:exit:[ t\]*:* --help'
 # The xterm colour escapes require special care when piping; e.g. "| less -R".
 export HISTTIMEFORMAT="${FG_BLUE}${FONT_BOLD}%Y/%m/%d %H:%M:%S${FONT_RESET}  ";
 
-# prefer US English and use UTF-8
-#export LANG="en_EN.UTF-8"
-#export LC_ALL="en_EN.UTF-8"
+# use UTF-8
+setLocale()
+{
+  i=""
+  localeAll=$(locale -a | grep -i "utf")
+  pattern=".{2,2}_.{2,2}\.(UTF-8|UTF8|utf-8|utf8)$"
+
+  for i in $localeAll; do
+    if [[ $i =~ $pattern ]]; then
+      export LC_ALL=${i};
+      export LANG=${i};
+      export LANGUAGE=${i};
+      return 0;
+    fi;
+  done
+
+  return 1
+}
+setLocale
+
+if [ $? -eq 1 ]; then
+  export UTF8_LANG="0"
+else
+  export UTF8_LANG="1"
+fi
+
+unset setLocale
 
 # make less the default pager, and specify some useful defaults
 less_options=(

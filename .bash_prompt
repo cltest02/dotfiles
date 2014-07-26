@@ -1,14 +1,91 @@
 #!/bin/bash
 
-__git_dirty()
-{
-  git diff --quiet HEAD &>/dev/null
-  [ $? == 1 ] && echo "!"
-}
+__git_prompt() {
+  local s=''
+  local branchName=''
+  local style=''
 
-__git_branch()
-{
-  __git_ps1 " (%s)"
+  if tput setaf 1 &> /dev/null; then
+    local black=$(tput setaf 0)
+    local red=$(tput setaf 1)
+    local green=$(tput setaf 2)
+    local yellow=$(tput setaf 3)
+    local blue=$(tput setaf 4)
+    local purple=$(tput setaf 5)
+    local cyan=$(tput setaf 6)
+    local white=$(tput setaf 7)
+    local bold=$(tput bold)
+    local reset=$(tput sgr0)
+  fi
+
+  # Check if the current directory is in a Git repository.
+  if [ $(git rev-parse --is-inside-work-tree &>/dev/null; echo "${?}") == '0' ]; then
+
+    # check if the current directory is in .git before running git checks
+    if [ "$(git rev-parse --is-inside-git-dir 2> /dev/null)" == 'false' ]; then
+
+      # Ensure the index is up to date.
+      git update-index --really-refresh -q &>/dev/null
+
+      # Check if we are ahead or behind our tracking branch (https://gist.github.com/HowlingMind/996093).
+      local git_status="$(git status 2> /dev/null)"
+      local remote_pattern="Your branch is (ahead|behind).*by ([[:digit:]]*) commit"
+      local remote_pattern_de="Ihr Branch ist (vor|hinter).*um ([[:digit:]]*) Commit"
+
+      if [[ $git_status} =~ $remote_pattern ]] || [[ $git_status =~ $remote_pattern_de ]]; then
+
+        if [[ ${BASH_REMATCH[1]} == "ahead" ]] || [[ ${BASH_REMATCH[1]} == "vor" ]]; then
+          s+="${ICON_FOR_UP}${BASH_REMATCH[2]} "
+        else
+          s+="${ICON_FOR_DOWN}${BASH_REMATCH[2]} "
+        fi
+
+        style="$white"
+      fi
+
+      # Check for uncommitted changes in the index.
+      if ! $(git diff --quiet --ignore-submodules --cached); then
+        s+="${green}+"
+        style="$green"
+      fi;
+
+      # Check for unstaged changes.
+      if ! $(git diff-files --quiet --ignore-submodules --); then
+        s+="${yellow}!"
+        style="$yellow"
+      fi;
+
+      # Check for untracked files.
+      if [ -n "$(git ls-files --others --exclude-standard)" ]; then
+        s+="${red}?"
+        style="$red"
+      fi;
+
+      # Check for stashed files.
+      if $(git rev-parse --verify refs/stash &>/dev/null); then
+        s+="${cyan}$"
+        style="$cyan"
+
+      fi
+
+      # The number of commits ahead/behind ends with a trailing space. If no other indicator was added, it will be lingering at the end of `s`.
+      s=$(echo "${s}" | sed 's/ *$//')
+
+    fi
+
+    # Get the short symbolic ref.
+    # If HEAD isn’t a symbolic ref, get the short SHA for the latest commit
+    # Otherwise, just give up.
+    branchName="$(git symbolic-ref --quiet --short HEAD 2> /dev/null || \
+      git rev-parse --short HEAD 2> /dev/null || \
+      echo '(unknown)')"
+
+    [ -n "${s}" ] && s=" ${style}[${s}]"
+
+    echo "${white} ${purple}(${branchName})${s}"
+  else
+    return
+  fi
 }
 
 __svn_branch()
@@ -62,7 +139,7 @@ setup_prompt()
 
   local SCM=""
   if command -v git > /dev/null 2>&1; then
-    SCM+="\$(__git_branch)\$(__git_dirty)"
+    SCM+="\$(__git_prompt)"
   fi
   if command -v svn > /dev/null 2>&1; then
     SCM+="\$(__svn_branch)"

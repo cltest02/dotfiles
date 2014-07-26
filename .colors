@@ -81,6 +81,7 @@ export COLOR_BG_HI_PURPLE='\e[10;95m'  # Purple
 export COLOR_BG_HI_CYAN='\e[0;106m'    # Cyan
 export COLOR_BG_HI_WHITE='\e[0;107m'   # White
 
+
 if [ "$TERM" = "linux" ]; then
     echo -en "\e]P0000000" #black
     echo -en "\e]P82B2B2B" #darkgrey

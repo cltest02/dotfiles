@@ -67,6 +67,7 @@ sudo aptitude install \
   rsync \
   vim \
   csstidy \
+  recode \
   `# GNU bash` \
   bash \
   bash-completion \
