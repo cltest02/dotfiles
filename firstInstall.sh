@@ -113,6 +113,7 @@ sudo aptitude install \
   sysstat \
   htop
 
+
 #
 # install java / ubuntu
 #
@@ -159,11 +160,23 @@ sudo aptitude install \
 #aptitude upgrade git
 #exit
 
+
+#
+# install Sublime Text 3
+#
+
+#sudo add-apt-repository -y ppa:webupd8team/sublime-text-3
+#sudo aptitude update
+#sudo aptitude install sublime-text-installer
+#sudo ln -sf /opt/sublime_text/sublime_text /usr/local/bin/sublime
+
+
 #
 # install node.js without deb-files e.g. for Debian - stable
 #
 
 #curl https://www.npmjs.org/install.sh | sudo sh
+
 
 #
 # only for webworker
