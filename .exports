@@ -9,14 +9,16 @@ export VISUAL=$EDITOR
 export SUDO_PROMPT='[sudo] password for %u on %h: ';
 
 # PATH addons
-[ -d "$HOME/bin" ] && PATH="$HOME/bin:$PATH"
+if [ -d "$HOME/bin" ]; then
+  PATH="$HOME/bin:$PATH"
+fi
 
 if [ "$UID" != 0 ]; then
-    PATH="$PATH:/usr/local/bin:/usr/sbin:/sbin:/usr/local/sbin"
+  PATH="$PATH:/usr/local/bin:/usr/sbin:/sbin:/usr/local/sbin"
 fi
 
 if which ruby >/dev/null 2>&1 && which gem >/dev/null 2>&1; then
-    PATH="$PATH:$(ruby -rubygems -e 'puts Gem.user_dir')/bin"
+  PATH="$PATH:$(ruby -rubygems -e 'puts Gem.user_dir')/bin"
 fi
 
 export PATH
