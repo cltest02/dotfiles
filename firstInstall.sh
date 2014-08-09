@@ -13,20 +13,26 @@ function ask_install() {
 
 }
 
+# Make sure only root can run our script
+if [ "$(id -u)" != "0" ]; then
+  echo "This script must be run as root"
+  echo "Plese use sudo or su"
+  exit 1
+fi
 
 # use aptitude in the next steps ...
 if [ \! -f `whereis aptitude | cut -f 2 -d ' '` ] ; then
-  sudo apt-get install aptitude
+  apt-get install aptitude
 fi
 
 # update && upgrade
 ask_install "upgrade your system?"
 if [[ $? -eq 1 ]]; then
-  sudo aptitude update
-  sudo aptitude upgrade
+  aptitude update
+  aptitude upgrade
 fi
 
-sudo aptitude install \
+aptitude install \
   `# read-write NTFS driver for Linux` \
   ntfs-3g \
   `# do not delete main-system-dirs` \
@@ -157,30 +163,30 @@ sudo aptitude install \
 
 ask_install "install webworker tools"
 if [[ $? -eq 1 ]]; then
-  sudo gem install sass --pre
-  sudo gem install compass --pre
-  sudo gem install autoprefixer-rails --pre
-  sudo gem install compass-rgbapng --pre
-  sudo gem install oily_png
+  gem install sass --pre
+  gem install compass --pre
+  gem install autoprefixer-rails --pre
+  gem install compass-rgbapng --pre
+  gem install oily_png
 
-  sudo npm install -g bower
-  sudo npm install -g psi
-  sudo npm install -g grunt-cli
-  sudo npm install -g grunt-init
-  sudo npm install -g yo
+  npm install -g bower
+  npm install -g psi
+  npm install -g grunt-cli
+  npm install -g grunt-init
+  npm install -g yo
 
-  sudo aptitude install php5-cli php5-mysql php5-curl php5-gd php5-intl php-pear php5-imagick php5-imap php5-mcrypt php5-memcached php5-ming php5-ps php5-pspell php5-recode php5-snmp php5-sqlite php5-tidy php5-xmlrpc php5-xsl php5-xdebug php5-apcu php5-geoip
-  curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/bin
-  sudo ln -s /usr/bin/composer.phar /usr/bin/composer
+  aptitude install php5-cli php5-mysql php5-curl php5-gd php5-intl php-pear php5-imagick php5-imap php5-mcrypt php5-memcached php5-ming php5-ps php5-pspell php5-recode php5-snmp php5-sqlite php5-tidy php5-xmlrpc php5-xsl php5-xdebug php5-apcu php5-geoip
+  curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin
+  ln -s /usr/bin/composer.phar /usr/bin/composer
 fi
 
 
 # clean downloaded and already installed packages
-sudo aptitude clean
+aptitude clean
 
 # update-fonts
-sudo dpkg-reconfigure fontconfig
-sudo fc-cache -fv
+dpkg-reconfigure fontconfig
+fc-cache -fv
 
 # update-locate-db
-sudo updatedb
+updatedb
