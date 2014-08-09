@@ -112,7 +112,7 @@ aptitude install \
   rename \
   ucspi-tcp \
   xpdf \
-  `#install python-pygments for json print`
+  `#install python-pygments for json print` \
   python-pygments \
   locales \
   sysstat \
