@@ -6,17 +6,19 @@ export EDITOR="vim"
 export VISUAL=$EDITOR
 
 # make the "sudo" prompt more useful, without requiring access to "visudo"
-export SUDO_PROMPT='[sudo] password for %u on %h: ';
+export SUDO_PROMPT="[sudo] password for %u on %h: "
 
 # PATH addons
-[ -d "$HOME/bin" ] && PATH="$HOME/bin:$PATH"
+if [ -d "$HOME/bin" ]; then
+  PATH="$HOME/bin:$PATH"
+fi
 
 if [ "$UID" != 0 ]; then
-    PATH="$PATH:/usr/local/bin:/usr/sbin:/sbin:/usr/local/sbin"
+  PATH="$PATH:/usr/local/bin:/usr/sbin:/sbin:/usr/local/sbin"
 fi
 
 if which ruby >/dev/null 2>&1 && which gem >/dev/null 2>&1; then
-    PATH="$PATH:$(ruby -rubygems -e 'puts Gem.user_dir')/bin"
+  PATH="$PATH:$(ruby -rubygems -e 'puts Gem.user_dir')/bin"
 fi
 
 export PATH
@@ -36,23 +38,25 @@ export HISTIGNORE='&:clear:pwd:exit:date:[bf]g:exit:[ t\]*:* --help'
 #
 # Keep track of the time the commands were executed.
 # The xterm colour escapes require special care when piping; e.g. "| less -R".
-export HISTTIMEFORMAT="${FG_BLUE}${FONT_BOLD}%Y/%m/%d %H:%M:%S${FONT_RESET}  ";
+export HISTTIMEFORMAT="${FG_BLUE}${FONT_BOLD}%Y/%m/%d %H:%M:%S${FONT_RESET}  "
 
 # use UTF-8
 setLocale()
 {
-  i=""
-  localeAll=$(locale -a | grep -i "utf")
-  pattern=".{2,2}_.{2,2}\.(UTF-8|UTF8|utf-8|utf8)$"
+  if [ $CONFIG_CHARSET_UTF8 == true ]; then
+    local i=""
+    local localeAll=$(locale -a | grep -i "utf")
+    local pattern=".{2,2}_.{2,2}\.(UTF-8|UTF8|utf-8|utf8)$"
 
-  for i in $localeAll; do
-    if [[ $i =~ $pattern ]]; then
-      export LC_ALL=${i};
-      export LANG=${i};
-      export LANGUAGE=${i};
-      return 0;
-    fi;
-  done
+    for i in $localeAll; do
+      if [[ $i =~ $pattern ]]; then
+        export LC_ALL=${i};
+        export LANG=${i};
+        export LANGUAGE=${i};
+        return 0;
+      fi
+    done
+  fi
 
   return 1
 }

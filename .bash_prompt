@@ -40,32 +40,31 @@ __git_prompt() {
           s+="${ICON_FOR_DOWN}${BASH_REMATCH[2]} "
         fi
 
-        style="$white"
+        style="${white}"
       fi
 
       # Check for uncommitted changes in the index.
       if ! $(git diff --quiet --ignore-submodules --cached); then
-        s+="${green}+"
-        style="$green"
-      fi;
+        s+="+"
+        style="${green}"
+      fi
 
       # Check for unstaged changes.
       if ! $(git diff-files --quiet --ignore-submodules --); then
-        s+="${yellow}!"
-        style="$yellow"
-      fi;
+        s+="!"
+        style="${yellow}"
+      fi
 
       # Check for untracked files.
       if [ -n "$(git ls-files --others --exclude-standard)" ]; then
-        s+="${red}?"
-        style="$red"
-      fi;
+        s+="?"
+        style="${red}"
+      fi
 
       # Check for stashed files.
       if $(git rev-parse --verify refs/stash &>/dev/null); then
-        s+="${cyan}$"
-        style="$cyan"
-
+        s+="$"
+        style="${cyan}"
       fi
 
       # The number of commits ahead/behind ends with a trailing space. If no other indicator was added, it will be lingering at the end of `s`.
