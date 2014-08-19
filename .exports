@@ -45,7 +45,7 @@ setLocale()
 {
   if [ $CONFIG_CHARSET_UTF8 == true ]; then
     local i=""
-    local localeAll=$(locale -a | grep -i "utf")
+    local localeAll=$(locale -a 2> /dev/null | grep -i "utf")
     local pattern=".{2,2}_.{2,2}\.(UTF-8|UTF8|utf-8|utf8)$"
 
     for i in $localeAll; do
