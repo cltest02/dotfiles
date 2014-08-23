@@ -135,7 +135,7 @@ setup_prompt()
   #         $? is a status of last command, should be processed every time prompt prints
 
   # Format prompt
-  export PS1="${TITLE}\`if [ \$? -eq 0 ]; then echo -e \[\$COLOR_GREEN\]\${ICON_FOR_TRUE}; else echo -e \[\$COLOR_RED\]\${ICON_FOR_FALSE}; fi\` \[$user_color\]${user}${host}${userOrHostExtra}\[$COLOR_LIGHT_BLUE\]\w\[$COLOR_LIGHT_RED\]${ICON_FOR_ARROW_RIGHT}${scm}\[$COLOR_NO_COLOUR\] "
+  export PS1="${TITLE}\`if [ \$? -eq 0 ]; then echo -e \[\$COLOR_GREEN\]\${ICON_FOR_TRUE}; else echo -e \[\$COLOR_RED\]\${ICON_FOR_FALSE}; fi\` \[$user_color\]${user}${host}${userOrHostExtra}\[$COLOR_LIGHT_BLUE\]\w\[$COLOR_LIGHT_RED\]${ICON_FOR_ARROW_RIGHT}\[$COLOR_LIGHT_PURPLE\]${scm}\[$COLOR_NO_COLOUR\] "
 
   # Multiline command
   export PS2="\[$COLOR_LIGHT_RED\]${ICON_FOR_ARROW_RIGHT}\[$COLOR_NO_COLOUR\]"
