@@ -114,7 +114,7 @@ setup_prompt()
 
   # set the user
   local user=""
-  if [[ -z $DEFAULT_USER ]] || [[ $DEFAULT_USER -ne $USER ]]; then
+  if [[ -z $CONFIG_DEFAULT_USER ]] || [[ $CONFIG_DEFAULT_USER -ne $USER ]]; then
     user=$USER
   fi
 
