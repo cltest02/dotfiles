@@ -1,5 +1,223 @@
 #!/bin/bash
 
+# ------------------------------------------------------------------- 
+# lc: Convert the parameters or STDIN to lowercase.
+lc()
+{
+  if [ $# -eq 0 ]; then
+    tr '[:upper:]' '[:lower:]'
+  else
+    tr '[:upper:]' '[:lower:]' <<< "$@"
+  fi
+}
+
+# -------------------------------------------------------------------
+# uc: Convert the parameters or STDIN to uppercase.
+uc()
+{
+  if [ $# -eq 0 ]; then
+    tr '[:lower:]' '[:upper:]'
+  else
+    tr '[:lower:]' '[:upper:]' <<< "$@"
+  fi
+}
+
+# -------------------------------------------------------------------
+# wtfis: Show what a given command really is. It is a combination of "type", "file"
+# and "ls". Unlike "which", it does not only take $PATH into account. This
+# means it works for aliases and hashes, too. (The name "whatis" was taken,
+# and I did not want to overwrite "which", hence "wtfis".)
+# The return value is the result of "type" for the last command specified.
+#
+# usage:
+#
+#   wtfis man
+#   wtfis vi
+#
+# source: https://raw.githubusercontent.com/janmoesen/tilde/master/.bash/commands
+wtfis()
+{
+  local cmd=""
+  local type=""
+  local i=1 
+  local ret=0
+
+  if [ $# -eq 0 ]; then
+    # Use "fc" to get the last command, and use that when no command
+    # was given as a parameter to "wtfis".
+    set -- $(fc -nl -1)
+
+    while [ $# -gt 0 -a '(' "sudo" = "$1" -o "-" = "${1:0:1}" ')' ]; do
+      # Ignore "sudo" and options ("-x" or "--bla").
+      shift
+    done
+
+    # Replace the positional parameter array with the last command name.
+    set -- "$1"
+  fi
+
+  for cmd; do
+    type="$(type "$cmd")"
+    ret=$?
+
+    if [ $ret -eq 0 ]; then
+      # Try to get the physical path. This works for hashes and
+      # "normal" binaries.
+      local path="$(type -p "$cmd")"
+
+      if [ -z "$path" ]; then
+        # Show the output from "type" without ANSI escapes.
+        echo "${type//$'\e'/\\033}"
+
+        case "$(command -v "$cmd")" in
+          'alias')
+            local alias_="$(alias "$cmd")"
+
+            # The output looks like "alias foo='bar'" so
+            # strip everything except the body.
+            alias_="${alias_#*\'}"
+            alias_="${alias_%\'}"
+
+            # Use "read" to process escapes. E.g. 'test\ it'
+            # will # be read as 'test it'. This allows for
+            # spaces inside command names.
+            read -d ' ' alias_ <<< "$alias_"
+
+            # Recurse and indent the output.
+            # TODO: prevent infinite recursion
+            wtfis "$alias_" 2>&2 | sed 's/^/  /'
+
+            ;;
+          'keyword' | 'builtin')
+
+            # Get the one-line description from the built-in
+            # help, if available. Note that this does not
+            # guarantee anything useful, though. Look at the
+            # output for "help set", for instance.
+            help "$cmd" 2> /dev/null | {
+              local buf line
+              read -r line
+              while read -r line; do
+                buf="$buf${line/.  */.} "
+                if [[ "$buf" =~ \.\ $ ]]; then
+                  echo "$buf"
+                  break
+                fi
+              done
+            }
+
+            ;;
+        esac
+      else
+        # For physical paths, get some more info.
+        # First, get the one-line description from the man page.
+        # ("col -b" gets rid of the backspaces used by OS X's man
+        # to get a "bold" font.)
+        (COLUMNS=10000 man "$(basename "$path")" 2>/dev/null) | col -b | \
+        awk '/^NAME$/,/^$/' | {
+          local buf=""
+          local line=""
+
+          read -r line
+          while read -r line; do
+            buf="$buf${line/.  */.} "
+            if [[ "$buf" =~ \.\ $ ]]; then
+              echo "$buf"
+              buf=''
+              break
+            fi
+          done
+
+          [ -n "$buf" ] && echo "$buf"
+        }
+
+        # Get the absolute path for the binary.
+        local full_path="$(
+          cd "$(dirname "$path")" \
+            && echo "$PWD/$(basename "$path")" \
+            || echo "$path"
+        )"
+
+        # Then, combine the output of "type" and "file".
+        local fileinfo="$(file "$full_path")"
+        echo "${type%$path}${fileinfo}"
+
+        # Finally, show it using "ls" and highlight the path.
+        # If the path is a symlink, keep going until we find the
+        # final destination. (This assumes there are no circular
+        # references.)
+        local paths=("$path") target_path="$path"
+        while [ -L "$target_path" ]; do
+          target_path="$(readlink "$target_path")"
+          paths+=("$(
+            # Do some relative path resolving for systems
+            # without readlink --canonicalize.
+            cd "$(dirname "$path")"
+            cd "$(dirname "$target_path")"
+            echo "$PWD/$(basename "$target_path")"
+          )")
+        done
+        local ls="$(command ls -fdalF "${paths[@]}")"
+        echo "${ls/$path/$'\e[7m'${path}$'\e[27m'}"
+      fi
+    fi
+
+    # Separate the output for all but the last command with blank lines.
+    [ $i -lt $# ] && echo
+    let i++
+  done
+
+  return $ret
+}
+
+# -------------------------------------------------------------------
+# whenis: Try to make sense of the date. It supports everything GNU date knows how to
+# parse, as well as UNIX timestamps. It formats the given date using the
+# default GNU date format, which you can override using "--format='%x %y %z'.
+#
+# usage:
+#
+#   $ whenis 1234567890            # UNIX timestamps
+#   Sat Feb 14 00:31:30 CET 2009
+#
+#   $ whenis +1 year -3 months     # relative dates
+#   Fri Jul 20 21:51:27 CEST 2012
+#
+#   $ whenis 2011-10-09 08:07:06   # MySQL DATETIME strings
+#   Sun Oct  9 08:07:06 CEST 2011
+#
+#   $ whenis 1979-10-14T12:00:00.001-04:00 # HTML5 global date and time
+#   Sun Oct 14 17:00:00 CET 1979
+#
+#   $ TZ=America/Vancouver whenis # Current time in Vancouver
+#   Thu Oct 20 13:04:20 PDT 2011
+#
+# For more info, check out http://kak.be/gnudateformats.
+whenis()
+{
+  local error='Unable to parse that using http://kak.be/gnudateformats'
+
+  # Default GNU date format as seen in date.c from GNU coreutils.
+  local format='%a %b %e %H:%M:%S %Z %Y'
+  if [[ "$1" =~ ^--format= ]]; then
+    format="${1#--format=}"
+    shift
+  fi
+
+  # Concatenate all arguments as one string specifying the date.
+  local date="$*"
+  if [[ "$date"  =~ ^[[:space:]]*$ ]]; then
+    date='now'
+  elif [[ "$date"  =~ ^[0-9]{13}$ ]]; then
+    # Cut the microseconds part.
+    date="${date:0:10}"
+  fi
+
+  # Use GNU date in all other situations.
+  [[ "$date" =~ ^[0-9]+$ ]] && date="@$date"
+  date -d "$date" +"$format"
+}
+
 # -------------------------------------------------------------------
 # box: a function to create a box of '=' characters around a given string
 #
@@ -393,6 +611,24 @@ targz()
   "${cmd}" -v "${tmpFile}" || return 1
   [ -f "${tmpFile}" ] && rm "${tmpFile}"
   echo "${tmpFile}.gz created successfully."
+}
+
+# -------------------------------------------------------------------
+# duh: Sort the "du"-command output and use human-readable units.
+duh()
+{
+  local unit=""
+  local size=""
+
+  du -k "$@" | sort -n | while read size fname; do
+    for unit in KiB MiB GiB TiB PiB EiB ZiB YiB; do
+      if [ "$size" -lt 1024 ]; then
+        echo -e "${size} ${unit}\t${fname}"
+        break
+      fi
+      size=$((size/1024))
+    done
+  done
 }
 
 # -------------------------------------------------------------------

@@ -30,10 +30,6 @@ for option in autocd globstar cmdhist dotglob extglob cdable_vars; do
   shopt -s "$option" 2> /dev/null
 done
 
-# Do not autocomplete when accidentally pressing Tab on an empty line. (It takes
-# forever and yields "Display all 15 gazillion possibilites?")
-shopt -s no_empty_cmd_completion;
-
 # When the command contains an invalid history operation (for instance when
 # using an unescaped "!" (I get that a lot in quick e-mails and commit
 # messages) or a failed substitution (e.g. "^foo^bar" when there was no "foo"
@@ -60,3 +56,7 @@ fi
 # Do not autocomplete when accidentally pressing Tab on an empty line. (It takes
 # forever and yields "Display all 15 gazillion possibilites?")
 shopt -s no_empty_cmd_completion;
+
+# Do not overwrite files when redirecting using ">".
+# Note that you can still override this with ">|".
+#set -o noclobber;

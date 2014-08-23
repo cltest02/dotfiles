@@ -216,26 +216,20 @@ set lazyredraw
 " Start scrolling horizontally at this number of columns.
 "set sidescrolloff=5
 
-" IMPORTANT: Uncomment one of the following lines to force
-" using 256 colors (or 88 colors) if your terminal supports it,
-" but does not automatically use 256 colors by default.
-"set t_Co=256
-
 " switch syntax highlighting on, when the terminal has colors
 if &t_Co > 2 || has("gui_running")
-  " set the color-theme
-  "let g:solarized_termcolors=256
+
   try
-    "colorscheme molokai
+    colorscheme molokai
   catch /^Vim\%((\a\+)\)\=:E185/
     " not available
   endtry
 
   " Enable coloring for dark background terminals.
   if has('gui_running')
-    "set background=light
+    set background=light
   else
-    "set background=dark
+    set background=dark
   endif
 
   " turn on color syntax highlighting
@@ -245,8 +239,10 @@ if &t_Co > 2 || has("gui_running")
 
   syn sync fromstart
 
-  " set to 256 colors
-  " set t_Co=256
+  " IMPORTANT: Uncomment one of the following lines to force
+  " using 256 colors (or 88 colors) if your terminal supports it,
+  " but does not automatically use 256 colors by default.
+  set t_Co=256
 
   " Also switch on highlighting the last used search pattern.
   if exists("+hlsearch")
