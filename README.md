@@ -21,13 +21,24 @@ git pull
 
 ### Add custom commands without creating a new fork
 
+If `~/.config_dotfiles` does not exists, the "bootstrap.sh"-script will create a default config for you.
+
+My `~/.config_dotfiles` looks something like this:
+
+```bash
+#!/bin/bash
+
+CONFIG_DEFAULT_USER="lars"
+CONFIG_CHARSET_UTF8=true
+CONFIG_LANG="de_DE"
+```
+
 If `~/.extra` exists, it will be sourced along with the other files. You can use this to add a few custom commands without the need to fork this entire repository, or to add commands you don’t want to commit to a public repository.
 
 My `~/.extra` looks something like this:
 
 ```bash
 #!/bin/bash                                                                                                                                                                                                       
-DEFAULT_USER="lars"
 GIT_AUTHOR_NAME="Lars Moelleken"
 GIT_COMMITTER_NAME="$GIT_AUTHOR_NAME"
 git config --global user.name "$GIT_AUTHOR_NAME"
