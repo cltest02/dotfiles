@@ -130,7 +130,7 @@ mv -f 99-android.rules /etc/udev/rules.d/
 chmod a+r /etc/udev/rules.d/99-android.rules
 
 #Check if ADB is already installed
-if [ ! -f "/usr/local/android-sdk/platform-tools/adb" ]; then
+if [ ! -f /usr/local/android-sdk/platform-tools/adb ]; then
   nohup /usr/local/android-sdk/tools/android update sdk > /dev/null 2>&1 &
   zenity --info --text="Please accept the licensing agreement for Android SDK Platform-tools to install the Android Debug Bridge."
 else

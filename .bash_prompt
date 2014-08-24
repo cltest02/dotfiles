@@ -3,20 +3,6 @@
 __git_prompt() {
   local s=''
   local branchName=''
-  local style=''
-
-  if tput setaf 1 &> /dev/null; then
-    local black=$(tput setaf 0)
-    local red=$(tput setaf 1)
-    local green=$(tput setaf 2)
-    local yellow=$(tput setaf 3)
-    local blue=$(tput setaf 4)
-    local purple=$(tput setaf 5)
-    local cyan=$(tput setaf 6)
-    local white=$(tput setaf 7)
-    local bold=$(tput bold)
-    local reset=$(tput sgr0)
-  fi
 
   # Check if the current directory is in a Git repository.
   if [ $(git rev-parse --is-inside-work-tree &>/dev/null; echo "${?}") == '0' ]; then
@@ -33,38 +19,31 @@ __git_prompt() {
       local remote_pattern_de="Ihr Branch ist (vor|hinter).*um ([[:digit:]]*) Commit"
 
       if [[ $git_status} =~ $remote_pattern ]] || [[ $git_status =~ $remote_pattern_de ]]; then
-
         if [[ ${BASH_REMATCH[1]} == "ahead" ]] || [[ ${BASH_REMATCH[1]} == "vor" ]]; then
           s+="${ICON_FOR_UP}${BASH_REMATCH[2]} "
         else
           s+="${ICON_FOR_DOWN}${BASH_REMATCH[2]} "
         fi
-
-        style="${white}"
       fi
 
       # Check for uncommitted changes in the index.
       if ! $(git diff --quiet --ignore-submodules --cached); then
         s+="+"
-        style="${green}"
       fi
 
       # Check for unstaged changes.
       if ! $(git diff-files --quiet --ignore-submodules --); then
         s+="!"
-        style="${yellow}"
       fi
 
       # Check for untracked files.
       if [ -n "$(git ls-files --others --exclude-standard)" ]; then
         s+="?"
-        style="${red}"
       fi
 
       # Check for stashed files.
       if $(git rev-parse --verify refs/stash &>/dev/null); then
         s+="$"
-        style="${cyan}"
       fi
 
       # The number of commits ahead/behind ends with a trailing space. If no other indicator was added, it will be lingering at the end of `s`.
@@ -79,9 +58,9 @@ __git_prompt() {
       git rev-parse --short HEAD 2> /dev/null || \
       echo '(unknown)')"
 
-    [ -n "${s}" ] && s=" ${style}[${s}]"
+    [ -n "${s}" ] && s=" [${s}]"
 
-    echo "${white} ${purple}(${branchName})${s}"
+    echo " (${branchName})${s}"
   else
     return
   fi
@@ -114,7 +93,7 @@ setup_prompt()
 
   # set the user
   local user=""
-  if [[ -z $DEFAULT_USER ]] || [[ $DEFAULT_USER -ne $USER ]]; then
+  if [[ -z $CONFIG_DEFAULT_USER ]] || [[ $CONFIG_DEFAULT_USER -ne $USER ]]; then
     user=$USER
   fi
 
@@ -136,12 +115,12 @@ setup_prompt()
     fi
   fi
 
-  local SCM=""
+  local scm=""
   if command -v git > /dev/null 2>&1; then
-    SCM+="\$(__git_prompt)"
+    scm+="\$(__git_prompt)"
   fi
   if command -v svn > /dev/null 2>&1; then
-    SCM+="\$(__svn_branch)"
+    scm+="\$(__svn_branch)"
   fi
 
   # Terminal title
@@ -156,10 +135,14 @@ setup_prompt()
   #         $? is a status of last command, should be processed every time prompt prints
 
   # Format prompt
-  export PS1="${TITLE}\`if [ \$? -eq 0 ]; then echo -e \[\$COLOR_GREEN\]\${ICON_FOR_TRUE}; else echo -e \[\$COLOR_RED\]\${ICON_FOR_FALSE}; fi\` \[$user_color\]${user}${host}${userOrHostExtra}\[$COLOR_LIGHT_BLUE\]\w\[$COLOR_LIGHT_RED\]${ICON_FOR_ARROW_RIGHT}${SCM}\[$COLOR_NO_COLOUR\] "
+  export PS1="${TITLE}\`if [ \$? -eq 0 ]; then echo -e \[\$COLOR_GREEN\]\${ICON_FOR_TRUE}; else echo -e \[\$COLOR_RED\]\${ICON_FOR_FALSE}; fi\` \[$user_color\]${user}${host}${userOrHostExtra}\[$COLOR_LIGHT_BLUE\]\w\[$COLOR_LIGHT_RED\]${ICON_FOR_ARROW_RIGHT}\[$COLOR_LIGHT_PURPLE\]${scm}\[$COLOR_NO_COLOUR\] "
 
   # Multiline command
   export PS2="\[$COLOR_LIGHT_RED\]${ICON_FOR_ARROW_RIGHT}\[$COLOR_NO_COLOUR\]"
+
+  # Restore the original prompt for select menus. This is unset initially and
+  # seems to default to "#? ".
+  unset PS3;
 }
 
 # Show awesome prompt always
