@@ -232,6 +232,10 @@ if &t_Co > 2 || has("gui_running")
     set background=dark
   endif
 
+  " settings for the molokai-colorscheme
+  "let g:rehash256 = 1
+  "let g:molokai_original = 1
+
   " turn on color syntax highlighting
   if exists("+syntax")
     syntax on
