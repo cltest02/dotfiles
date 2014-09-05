@@ -13,6 +13,7 @@
 " Sections:
 "    -> General
 "    -> VIM user interface
+"    -> Parenthesis/bracket
 "    -> Colors and Fonts
 "    -> Files and backups
 "    -> Text, tab and indent related
@@ -182,15 +183,6 @@ set lazyredraw
 " For regular expressions turn magic on
 set magic
 
-" Show matching brackets when text indicator is over them
-set showmatch 
-
-" Include angle brackets in matching.
-set matchpairs+=<:>
-
-" How many tenths of a second to blink when matching brackets
-set mat=2
-
 " split vertically to the right
 set splitright
 
@@ -229,8 +221,37 @@ set novisualbell
 set t_vb=
 set tm=500
 
-" Add a bit extra margin to the left
-set foldcolumn=1
+" no extra margin to the left
+set foldcolumn=0
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Parenthesis/bracket
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Show matching brackets when text indicator is over them
+set showmatch
+
+" Include angle brackets in matching.
+set matchpairs+=<:>
+
+" How many tenths of a second to blink when matching brackets
+set mat=2
+
+vnoremap $1 <esc>`>a)<esc>`<i(<esc>
+vnoremap $2 <esc>`>a]<esc>`<i[<esc>
+vnoremap $3 <esc>`>a}<esc>`<i{<esc>
+vnoremap $$ <esc>`>a"<esc>`<i"<esc>
+vnoremap $q <esc>`>a'<esc>`<i'<esc>
+vnoremap $e <esc>`>a"<esc>`<i"<esc>
+
+" Map auto complete of (, ", ', [
+inoremap $1 ()<esc>i
+inoremap $2 []<esc>i
+inoremap $3 {}<esc>i
+inoremap $4 {<esc>o}<esc>O
+inoremap $q ''<esc>i
+inoremap $e ""<esc>i
+inoremap $t <><esc>i
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -281,9 +302,9 @@ endif
 
 " Set extra options when running in GUI mode
 if has("gui_running")
-    set guioptions-=T
-    set guioptions-=e
-    set guitablabel=%M\ %t
+  set guioptions-=T
+  set guioptions-=e
+  set guitablabel=%M\ %t
 endif
 
 " use UTF-8 without BOM
@@ -292,6 +313,17 @@ set encoding=utf-8 nobomb
 
 " Use Unix as the standard file type
 set ffs=unix,dos,mac
+
+" Set font according to system
+if has("mac") || has("macunix")
+  set gfn=Source\ Code\ Pro:h15,Menlo:h15
+elseif has("win16") || has("win32")
+  set gfn=Source\ Code\ Pro:h12,Bitstream\ Vera\ Sans\ Mono:h11
+elseif has("linux")
+  set gfn=Source\ Code\ Pro:h12,Bitstream\ Vera\ Sans\ Mono:h11
+elseif has("unix")
+  set gfn=Monospace\ 11
+endif
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
