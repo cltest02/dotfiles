@@ -7,8 +7,8 @@
 "       Amir Salihefendic
 "       http://amix.dk - amix@amix.dk
 "
-" Version: 
-"       1.0 - 05/09/14 21:20:36
+" Version:
+"       1.1 - 08/09/14 01:02:30
 "
 " Sections:
 "    -> General
@@ -75,6 +75,9 @@ filetype indent on
 " pasting text unmodified from other applications
 set paste
 
+" decrease timeout for faster insert with 'O'
+set ttimeoutlen=100
+
 " Try to detect file formats.
 " Unix for new files and autodetect for the rest.
 set fileformats=unix,dos,mac
@@ -110,7 +113,7 @@ endif
 " Fast saving
 "nmap <leader>w :w!<cr>
 
-" :W sudo saves the file 
+" :W sudo saves the file
 " (useful for handling the permission-denied error)
 "command W w !sudo tee % > /dev/null
 
@@ -178,7 +181,7 @@ if exists("+incsearch")
 endif
 
 " Don't redraw while executing macros (good performance config)
-set lazyredraw 
+set lazyredraw
 
 " For regular expressions turn magic on
 set magic
@@ -215,11 +218,9 @@ endif
 " disable line numbers
 set nonumber
 
-" No annoying sound on errors
+" no annoying sound on errors
 set noerrorbells
-set novisualbell
-set t_vb=
-set tm=500
+set visualbell
 
 " no extra margin to the left
 set foldcolumn=0
@@ -297,6 +298,16 @@ if &t_Co > 2 || has("gui_running")
   " highlight current line
   if exists("+cursorline")
     "set cursorline
+  endif
+
+" highlight trailing spaces in annoying red
+if has('autocmd')
+    highlight ExtraWhitespace ctermbg=1 guibg=red
+    match ExtraWhitespace /\s\+$/
+    autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
+    autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+    autocmd InsertLeave * match ExtraWhitespace /\s\+$/
+    autocmd BufWinLeave * call clearmatches()
   endif
 endif
 
@@ -396,6 +407,14 @@ if exists("+smarttab")
   set smarttab
 endif
 
+" does nothing more than copy the indentation from the previous line,
+" when starting a new line
+" info: if we active this, then we have trouble when we copy paste via mouse
+if exists("+autoindent")
+  set noautoindent
+endif
+
+" automatically inserts one extra level of indentation in some cases
 if exists("+smartindent")
   set smartindent
 endif
@@ -414,7 +433,7 @@ set softtabstop=2
 
 " don't automatically wrap on load
 set nowrap
-  
+
 " don't automatically wrap text when typing
 set fo-=t
 
@@ -461,8 +480,8 @@ map <leader>ba :1,1000 bd!<cr>
 map <leader>tn :tabnew<cr>
 map <leader>to :tabonly<cr>
 map <leader>tc :tabclose<cr>
-map <leader>tm :tabmove 
-map <leader>t<leader> :tabnext 
+map <leader>tm :tabmove
+map <leader>t<leader> :tabnext
 
 " Opens a new tab with the current buffer's path
 " Super useful when editing files in the same directory
@@ -471,7 +490,7 @@ map <leader>te :tabedit <c-r>=expand("%:p:h")<cr>/
 " Switch CWD to the directory of the open buffer
 map <leader>cd :cd %:p:h<cr>:pwd<cr>
 
-" Specify the behavior when switching between buffers 
+" Specify the behavior when switching between buffers
 try
   set switchbuf=useopen,usetab,newtab
   set stal=2
@@ -479,10 +498,12 @@ catch
 endtry
 
 " Return to last edit position when opening files (You want this!)
-autocmd BufReadPost *
-     \ if line("'\"") > 0 && line("'\"") <= line("$") |
-     \   exe "normal! g`\"" |
-     \ endif
+if has('autocmd')
+  autocmd BufReadPost *
+    \ if line("'\"") > 0 && line("'\"") <= line("$") |
+    \   exe "normal! g`\"" |
+    \ endif
+endif
 " Remember info about open buffers on close
 set viminfo^=%
 
@@ -557,8 +578,20 @@ if has("autocmd")
   autocmd BufNewFile,BufRead *.md setlocal filetype=markdown
 endif
 
+" multi-purpose tab key (auto-complete)
+function! InsertTabWrapper()
+  let col = col('.') - 1
+  if !col || getline('.')[col - 1] !~ '\k'
+    return "\<tab>"
+  else
+    return "\<c-p>"
+  endif
+endfunction
+inoremap <tab> <c-r>=InsertTabWrapper()<cr>
+inoremap <s-tab> <c-n>
+
+" Delete trailing white space on save, useful for Python and CoffeeScript ;)
 if has("autocmd")
-  " Delete trailing white space on save, useful for Python and CoffeeScript ;)
   func! DeleteTrailingWS()
     exe "normal mz"
     %s/\s\+$//ge
@@ -577,7 +610,7 @@ endif
 vnoremap <silent> gv :call VisualSelection('gv', '')<CR>
 
 " Open Ack and put the cursor in the right position
-map <leader>g :Ack 
+map <leader>g :Ack
 
 " When you press <leader>r you can search and replace the selected text
 vnoremap <silent> <leader>r :call VisualSelection('replace', '')<CR>
