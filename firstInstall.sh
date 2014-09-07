@@ -32,6 +32,7 @@ sudo aptitude install \
   `# do not delete main-system-dirs` \
   safe-rm \
   `# default for many other things` \
+  tmux \
   build-essential \
   mktemp \
   dialog \
