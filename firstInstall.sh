@@ -14,7 +14,7 @@ ask_install()
 }
 
 # use aptitude in the next steps ...
-if [ \! -f `whereis aptitude | cut -f 2 -d ' '` ] ; then
+if [ \! -f $(whereis aptitude | cut -f 2 -d ' ') ] ; then
   sudo apt-get install aptitude
 fi
 
