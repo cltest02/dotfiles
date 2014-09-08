@@ -43,7 +43,7 @@ export HISTTIMEFORMAT="${FG_BLUE}${FONT_BOLD}%Y/%m/%d %H:%M:%S${FONT_RESET}  "
 # use UTF-8
 setLocale()
 {
-  if [ $CONFIG_CHARSET_UTF8 == true ]; then
+  if [ "$CONFIG_CHARSET_UTF8" == true ]; then
     local i=""
     local pattern=""
     local localeAll=$(locale -a 2> /dev/null | grep -i "utf")
