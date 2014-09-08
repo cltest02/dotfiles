@@ -51,9 +51,9 @@ if [ "$TERM" != "dumb" ]; then
 
   # dircolors
   if [ -s "$HOME/.dircolors" ]; then
-    eval "`dircolors -b $HOME/.dircolors`"
+    eval "$(dircolors -b $HOME/.dircolors)"
   else
-    eval "`dircolors -b`"
+    eval "$(dircolors -b)"
   fi
 
   # Use "colordiff" or "highlight" to colour diffs.

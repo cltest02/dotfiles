@@ -1,4 +1,12 @@
 #!/usr/bin/env bash
+
+echo "      _       _         __ _ _"
+echo "   __| | ___ | |_      / _(_) | ___  ___"
+echo "  / _\` |/ _ \| __|____| |_| | |/ _ \/ __|"
+echo " | (_| | (_) | ||_____|  _| | |  __/\__ \\"
+echo "  \__,_|\___/ \__|    |_| |_|_|\___||___/"
+echo ""
+
 cd "$(dirname "${BASH_SOURCE}")"
 git pull origin master
 

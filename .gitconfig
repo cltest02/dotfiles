@@ -6,15 +6,18 @@
 # Long flag names are used for readability wherever possible.
 # Short flags are meant for writing on the command line.
 [alias]
+  # same as git init but creates the git repository in the given path. In a cygwin environment path names are translated to dos style, otherwise the linking would not work in egit (eclipse). Cygwin's git and git-bash is also happy with this.
+  initexternal = !"f() { WORKTREE=\"$(pwd)\"; GITDIR=\"$1\"; command -v cygpath >/dev/null 2>&1 && { WORKTREE=$(cygpath -m $WORKTREE); GITDIR=$(cygpath -m $1); }; git --work-tree=$WORKTREE --git-dir=\"$GITDIR\" init && echo \"gitdir: $GITDIR\" >> .git && git config --local core.worktree \"$WORKTREE\"; }; f"
+ 
   # Shorthand for add
   a = add
-
-  #same as git init but creates the git repository in the given path. In a cygwin environment path names are translated to dos style, otherwise the linking would not work in egit (eclipse). Cygwin's git and git-bash is also happy with this.
-  initexternal = !"f() { WORKTREE=\"$(pwd)\"; GITDIR=\"$1\"; command -v cygpath >/dev/null 2>&1 && { WORKTREE=$(cygpath -m $WORKTREE); GITDIR=$(cygpath -m $1); }; git --work-tree=$WORKTREE --git-dir=\"$GITDIR\" init && echo \"gitdir: $GITDIR\" >> .git && git config --local core.worktree \"$WORKTREE\"; }; f"
 
   # Add all unstaged (including untracked) files.
   # See`git help add`
   aa = add --all
+
+  # verbose add
+  add = add -v
 
   # Make "git grep" look a bit like "ack"/"ag". Note that you need to
   # specify --no-index to search all files, and that submodules are not
@@ -142,6 +145,9 @@
   # last commit
   last = log -1 HEAD
 
+  # ls alias
+  ls = ls-files
+
   # Shorthand for merge
   m = merge
 
@@ -184,6 +190,9 @@
   # rebase
   rc = rebase --continue            # continue rebase
   rs = rebase --skip                # skip rebase
+
+  # grep alias
+  search = grep
 
   # reset
   unstage = reset HEAD              # remove files from index (tracking)

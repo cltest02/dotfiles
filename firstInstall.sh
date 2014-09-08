@@ -21,7 +21,7 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 # use aptitude in the next steps ...
-if [ \! -f `whereis aptitude | cut -f 2 -d ' '` ] ; then
+if [ \! -f $(whereis aptitude | cut -f 2 -d ' ') ] ; then
   apt-get install aptitude
 fi
 
@@ -38,6 +38,7 @@ aptitude install \
   `# do not delete main-system-dirs` \
   safe-rm \
   `# default for many other things` \
+  tmux \
   build-essential \
   mktemp \
   dialog \
