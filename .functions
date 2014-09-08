@@ -1057,3 +1057,14 @@ sshkey()
     exit 1
   fi
 }
+
+##
+# source: http://stackoverflow.com/questions/3569784/using-sed-to-get-an-env-var-from-proc-environ-weirdness-with-x00
+# thx to camh (http://stackoverflow.com/users/23744/camh)
+#
+#usage:
+# pidenv $PID
+pidenv()
+{
+  xargs -n 1 -0 < /proc/${1:-self}/environ
+}
