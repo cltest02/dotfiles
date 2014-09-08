@@ -53,7 +53,7 @@ fi
 
 source ~/.bash_profile;
 
-if [ $CONFIG_TMUX == true ]; then
+if [ "$CONFIG_TMUX" == true ]; then
   if [[ -z "$TMUX" ]]; then
     # get the id of a deattached session
     TMUX_ID="`tmux ls 2> /dev/null | grep -v -m 1 attached | cut -d: -f 1`"
