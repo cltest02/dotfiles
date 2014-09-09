@@ -39,6 +39,10 @@ set nocompatible
 " set the shell
 set shell=bash
 
+if filereadable(expand("~/.vimrc.bundles"))
+  source ~/.vimrc.bundles
+endif
+
 " Sets how many lines of history VIM has to remember
 set history=100
 

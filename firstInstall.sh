@@ -202,7 +202,6 @@ if [[ $? -eq 1 ]]; then
   sudo ln -s /usr/bin/composer.phar /usr/bin/composer
 fi
 
-
 # clean downloaded and already installed packages
 sudo aptitude clean
 
@@ -212,3 +211,8 @@ sudo fc-cache -fv
 
 # update-locate-db
 sudo updatedb
+
+# install vim-plugin-manager
+mkdir ~/.vim/bundle
+git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
+echo "run ':BundleInstall' or ':BundleUpdate' in vim command mode"
