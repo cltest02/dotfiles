@@ -30,7 +30,7 @@ if [ -d $HOME/.oh-my-zsh ]; then
   # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
   # Example format: plugins=(rails git textmate ruby lighthouse)
   # Add wisely, as too many plugins slow down shell startup.
-  plugins=(git)
+  plugins=($CONFIG_OH_MY_ZSH_PLUGINS)
 
   source $ZSH/oh-my-zsh.sh
 fi
