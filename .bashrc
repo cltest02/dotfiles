@@ -51,19 +51,5 @@ if [ -f /etc/bashrc ]; then
   . /etc/bashrc
 fi
 
-source ~/.bash_profile;
-
-if [ "$CONFIG_TMUX" == true ]; then
-  if [[ -z "$TMUX" ]]; then
-    # get the id of a deattached session
-    TMUX_ID="`tmux ls 2> /dev/null | grep -v -m 1 attached | cut -d: -f 1`"
-
-    if [[ -z "$TMUX_ID" ]]; then
-      # if not available create a new one
-      tmux new-session
-    else
-      # if available attach to it
-      tmux attach-session -t "$TMUX_ID"
-    fi
-  fi
-fi
+source ~/.bash_profile
+source ~/.shellrc
