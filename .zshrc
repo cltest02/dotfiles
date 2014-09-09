@@ -1,4 +1,7 @@
-# TAKE A LOOK AT THIS SOURCES: ".bashrc"
+# TAKE A LOOK AT THIS SOURCES:
+#
+# https://wiki.archlinux.org/index.php/Zsh
+# http://ohmyz.sh/
 #
 
 if [[ $- != *i* ]] || [ -z "$PS1" ]; then
