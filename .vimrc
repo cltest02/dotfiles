@@ -133,6 +133,9 @@ if exists("+wildmenu")
   set wildmode=longest:full,list:full
 endif
 
+" (text) completion settings
+set completeopt=longest,menuone
+
 " Ignore compiled files
 set wildignore=*.o,*~,*.pyc
 if has("win16") || has("win32")
@@ -584,13 +587,18 @@ endif
 function! InsertTabWrapper()
   let col = col('.') - 1
   if !col || getline('.')[col - 1] !~ '\k'
-    return "\<tab>"
+    return "\<Tab>"
   else
-    return "\<c-p>"
+    return "\<C-p>"
   endif
 endfunction
-inoremap <tab> <c-r>=InsertTabWrapper()<cr>
-inoremap <s-tab> <c-n>
+inoremap <Tab> <C-r>=InsertTabWrapper()<CR>
+inoremap <s-tab> <C-n>
+inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+inoremap <expr> <C-n> pumvisible() ? '<C-n>' :
+  \ '<C-n><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
+inoremap <expr> <M-,> pumvisible() ? '<C-n>' :
+  \ '<C-x><C-o><C-n><C-p><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
 
 " Delete trailing white space on save, useful for Python and CoffeeScript ;)
 if has("autocmd")
