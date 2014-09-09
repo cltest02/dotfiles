@@ -2,13 +2,11 @@
 
 ############# INCLUDE ####################################
 
-# load the shell dotfiles, and then some:
-# * ~/.path can be used to extend `$PATH`.
 # * ~/.extra can be used for other settings you don’t want to commit.
 for file in ~/.{config_dotfiles,path,exports,colors,icons,aliases,functions,extra,zsh_prompt}; do
   [ -r "$file" ] && [ -f "$file" ] && source "$file"
 done
-unset file                                                                                             
+unset file
 
 
 ############# SETOPT ######################################
@@ -45,7 +43,6 @@ autoload -Uz promptinit
 promptinit
 prompt walters
 
-# moderne + bunte Vervollstaendigung aktivieren
 autoload colors ; colors
 autoload -Uz compinit
 compinit -C
@@ -89,7 +86,6 @@ zstyle ':completion:*' squeeze-shlashes 'yes'
 
 ############# BINDKEY ######################################
 
-# Tasten fest definieren
 bindkey -e
 bindkey '^i' expand-or-complete-prefix                  # Tab
 bindkey "^[[2~" yank                                    # Insert

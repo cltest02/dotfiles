@@ -251,6 +251,7 @@ htmlEntityToUTF8()
 {
   if [ $# -eq 0 ]; then
     echo "Usage: htmlEntityToUTF8 \"&#9661;\""
+    return 1
   else
     echo $1 | recode html..UTF8
   fi
@@ -262,6 +263,7 @@ UTF8toHtmlEntity()
 {
   if [ $# -eq 0 ]; then
     echo "Usage: UTF8toHtmlEntity \"♥\""
+    return 1
   else
     echo $1 | recode UTF8..html
   fi
@@ -281,10 +283,13 @@ optiImages()
 # lman: Open the manual page for the last command you executed.
 lman()
 {
+  local cmd
+
   set -- $(fc -nl -1)
   while [ $# -gt 0 -a '(' "sudo" = "$1" -o "-" = "${1:0:1}" ')' ]; do
     shift
   done
+
   cmd="$(basename "$1")"
   man "$cmd" || help "$cmd"
 }
@@ -450,21 +455,40 @@ cleanTheSystem()
 # extract: extract of compressed-files
 extract()
 {
+  local old_dirs current_dirs lower
+ 
   if [ -f $1 ] ; then
-    case $1 in
+    lower=$(lc $1)
+    old_dirs=( *(N/) )
+
+    case $lower in
       *.tar.bz2)   tar xvjf $1     ;;
       *.tar.gz)    tar xvzf $1     ;;
       *.bz2)       bunzip2 $1      ;;
-      *.rar)       unrar x $1      ;;
+      *.rar)       unrar e $1      ;;
       *.gz)        gunzip $1       ;;
       *.tar)       tar xvf $1      ;;
       *.tbz2)      tar xvjf $1     ;;
       *.tgz)       tar xvzf $1     ;;
+      *.lha)       lha e $1        ;;
       *.zip)       unzip $1        ;;
       *.Z)         uncompress $1   ;;
       *.7z)        7z x $1         ;;
-      *)           echo "'$1' cannot be extracted via >extract<" ;;
+      *)           echo "'$1' cannot be extracted via >extract<"
+                   return 1        ;;
     esac
+
+    # Change in to the newly created directory, and
+    # list the directory contents, if there is one.
+    current_dirs=( *(N/) )
+    for i in {1..${#current_dirs}}; do
+        if [[ $current_dirs[$i] != $old_dirs[$i] ]]; then
+            cd $current_dirs[$i]
+            ls
+            break
+        fi
+    done
+
   else
     echo "'$1' is not a valid file"
   fi
@@ -496,6 +520,7 @@ stripspace()
 {
   if [ $# -eq 0 ]; then
     echo "Usage: stripspace FILE"
+    exit 1
   else
     local tempfile=mktemp
     git stripspace < "$1" > tempfile
@@ -557,6 +582,7 @@ replace()
     find $1 -type f -exec sed -i 's/$2/$3/g' {} \;
   else
     echo "Missing argument"
+    exit 1
   fi
 }
 
@@ -699,7 +725,7 @@ fstr()
   shift $(( $OPTIND - 1 ))
   if [ "$#" -lt 1 ]; then
     echo "$usage"
-    return
+    return 1
   fi
 
   find . -type f -name "${2:-*}" -print0 \
@@ -709,11 +735,22 @@ fstr()
 
 # -------------------------------------------------------------------
 # file_backup_compressed: create a compressed backup (with date)
+# in the current dir
 #
-# usage: file_backup_simple test.txt
+# usage: file_backup_compressed test.txt
 file_backup_compressed()
 {
-  tar czvf "${1}-$(date +%y%m%d-%H%M%S).tar.gz" "$1"
+  if [ $1 ]; then
+    if [ -z $1 ]; then
+      echo "$1: not found"
+      return 1
+    fi
+
+    tar czvf "./$(basename $1)-$(date +%y%m%d-%H%M%S).tar.gz" "$1"
+  else
+    echo "Missing argument"
+    return 1
+  fi
 }
 
 # -------------------------------------------------------------------
@@ -732,7 +769,7 @@ file_information()
   if [ $1 ]; then
     if [ -z $1 ]; then
       echo "$1: not found"
-      return
+      return 1
     fi
 
     echo $1
@@ -741,6 +778,7 @@ file_information()
     ldd $1
   else
     echo "Missing argument"
+    return 1
   fi
 }
 
@@ -833,6 +871,7 @@ psgrep()
     ps aux | grep $1 | grep -v grep
   else
     echo "!! Need a process-name to grep for"
+    return 1
   fi
 }
 
@@ -962,7 +1001,7 @@ note()
 # usage: t /var/log/Xorg.0.log kHz
 t()
 {
-tail -f $1 | perl -pe "s/$2/${COLOR_LIGHT_RED}$&${COLOR_NO_COLOUR}/g"
+  tail -f $1 | perl -pe "s/$2/${COLOR_LIGHT_RED}$&${COLOR_NO_COLOUR}/g"
 }
 
 

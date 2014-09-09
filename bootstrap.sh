@@ -17,7 +17,7 @@ function doIt() {
         --exclude "LICENSE-MIT.txt" --exclude ".editorconfig" \
         --exclude "examples/" \
         -avhi --no-perms . ~
-  
+
   if [ ! -f ~/.config_dotfiles ]; then
     cp .config_dotfiles_default ~/.config_dotfiles
   fi
