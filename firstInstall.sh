@@ -206,7 +206,7 @@ fi
 sudo aptitude clean
 
 # update-fonts
-sudo cp -vr ~/dotfiles/.fonts/* /usr/share/fonts/truetype/
+sudo cp -vr $( dirname "${BASH_SOURCE[0]}" )/.fonts/* /usr/share/fonts/truetype/
 sudo dpkg-reconfigure fontconfig
 sudo fc-cache -fv
 
