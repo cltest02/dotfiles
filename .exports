@@ -32,7 +32,7 @@ HISTCONTROL=$HISTCONTROL${HISTCONTROL+:}ignoredups
 export HISTCONTROL=ignoredups
 
 # make some commands not show up in history
-export HISTIGNORE='clear:pwd:[bf]g:* --help:man *:shutdown*:halt*:poweroff*:rm -rf \*'
+export HISTIGNORE='clear:pwd:[bf]g:* --help:man *:shutdown*:halt*:poweroff*:hibernate*:rm -rf \*'
 
 # add the date to the historylog
 #

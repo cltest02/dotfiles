@@ -88,7 +88,7 @@ sudo aptitude install \
   ttf-larabie-deco \
   ttf-larabie-straight \
   ttf-larabie-uncommon \
-  msttcorefonts \
+  ttf-liberation \
   `# trace everything` \
   strace \
   `# get files from web` \
@@ -206,6 +206,7 @@ fi
 sudo aptitude clean
 
 # update-fonts
+sudo cp -vr ~/dotfiles/.fonts/* /usr/share/fonts/truetype/
 sudo dpkg-reconfigure fontconfig
 sudo fc-cache -fv
 
