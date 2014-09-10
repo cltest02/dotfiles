@@ -566,7 +566,7 @@ endif
 " stop opening man pages
 nmap K <nop>
 
-" strip trailing whitespace (,ss)
+" strip trailing whitespace (,sw)
 function! StripWhitespace()
   let save_cursor = getpos(".")
   let old_query = getreg('/')
@@ -574,7 +574,7 @@ function! StripWhitespace()
   call setpos('.', save_cursor)
   call setreg('/', old_query)
 endfunction
-noremap <leader>ss :call StripWhitespace()<CR>
+noremap <leader>sw :call StripWhitespace()<CR>
 " save a file as root (,W)
 noremap <leader>W :w !sudo tee % > /dev/null<CR>
 
