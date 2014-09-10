@@ -93,7 +93,7 @@ aptitude install \
   ttf-larabie-deco \
   ttf-larabie-straight \
   ttf-larabie-uncommon \
-  msttcorefonts \
+  ttf-liberation \
   `# trace everything` \
   strace \
   `# get files from web` \
@@ -194,13 +194,14 @@ if [[ $? -eq 1 ]]; then
   ln -s /usr/bin/composer.phar /usr/bin/composer
 fi
 
-
 # clean downloaded and already installed packages
 aptitude clean
 
 # update-fonts
+cp -vr $( dirname "${BASH_SOURCE[0]}" )/.fonts/* /usr/share/fonts/truetype/
 dpkg-reconfigure fontconfig
 fc-cache -fv
 
 # update-locate-db
 updatedb
+

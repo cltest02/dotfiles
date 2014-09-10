@@ -39,6 +39,10 @@ set nocompatible
 " set the shell
 set shell=bash
 
+if filereadable(expand("~/.vimrc.bundles"))
+  source ~/.vimrc.bundles
+endif
+
 " Sets how many lines of history VIM has to remember
 set history=100
 
@@ -73,6 +77,8 @@ filetype plugin on
 filetype indent on
 
 " pasting text unmodified from other applications
+" info: auto-complete via <tab> isn't working in INSERT (paste) mode,
+"       so you need to switch to INSERT mode via <F2> or use <c-n>
 set paste
 
 " decrease timeout for faster insert with 'O'
@@ -130,6 +136,9 @@ if exists("+wildmenu")
   " type of wildmenu
   set wildmode=longest:full,list:full
 endif
+
+" (text) completion settings
+set completeopt=longest,menuone
 
 " Ignore compiled files
 set wildignore=*.o,*~,*.pyc
@@ -542,9 +551,10 @@ vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
 vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 
 " copy between different vim sessions
-:nmap _Y :!echo “”> ~/.vim/tmp<CR><CR>:w! ~/.vim/tmp<CR>
-:vmap _Y :w! ~/.vim/tmp<CR>
-:nmap _P :r ~/.vim/tmp<CR>
+" TODO: find free keys for this mapping
+"nmap _Y :!echo “”> ~/.vim/tmp<CR><CR>:w! ~/.vim/tmp<CR>
+"vmap _Y :w! ~/.vim/tmp<CR>
+"nmap _P :r ~/.vim/tmp<CR>
 
 if has("mac") || has("macunix")
   nmap <D-j> <M-j>
@@ -554,7 +564,7 @@ if has("mac") || has("macunix")
 endif
 
 " stop opening man pages
-:nmap K <nop>
+nmap K <nop>
 
 " strip trailing whitespace (,ss)
 function! StripWhitespace()
@@ -582,13 +592,18 @@ endif
 function! InsertTabWrapper()
   let col = col('.') - 1
   if !col || getline('.')[col - 1] !~ '\k'
-    return "\<tab>"
+    return "\<Tab>"
   else
-    return "\<c-p>"
+    return "\<C-p>"
   endif
 endfunction
-inoremap <tab> <c-r>=InsertTabWrapper()<cr>
-inoremap <s-tab> <c-n>
+inoremap <Tab> <C-r>=InsertTabWrapper()<CR>
+inoremap <s-tab> <C-n>
+inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+inoremap <expr> <C-n> pumvisible() ? '<C-n>' :
+  \ '<C-n><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
+inoremap <expr> <M-,> pumvisible() ? '<C-n>' :
+  \ '<C-x><C-o><C-n><C-p><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
 
 " Delete trailing white space on save, useful for Python and CoffeeScript ;)
 if has("autocmd")
@@ -666,39 +681,39 @@ map <leader>pp :setlocal paste!<cr>
 " => Helper functions
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! CmdLine(str)
-    exe "menu Foo.Bar :" . a:str
-    emenu Foo.Bar
-    unmenu Foo
+  exe "menu Foo.Bar :" . a:str
+  emenu Foo.Bar
+  unmenu Foo
 endfunction 
 
 function! VisualSelection(direction, extra_filter) range
-    let l:saved_reg = @"
-    execute "normal! vgvy"
+  let l:saved_reg = @"
+  execute "normal! vgvy"
 
-    let l:pattern = escape(@", '\\/.*$^~[]')
-    let l:pattern = substitute(l:pattern, "\n$", "", "")
+  let l:pattern = escape(@", '\\/.*$^~[]')
+  let l:pattern = substitute(l:pattern, "\n$", "", "")
 
-    if a:direction == 'b'
-        execute "normal ?" . l:pattern . "^M"
-    elseif a:direction == 'gv'
-        call CmdLine("Ack \"" . l:pattern . "\" " )
-    elseif a:direction == 'replace'
-        call CmdLine("%s" . '/'. l:pattern . '/')
-    elseif a:direction == 'f'
-        execute "normal /" . l:pattern . "^M"
-    endif
+  if a:direction == 'b'
+    execute "normal ?" . l:pattern . "^M"
+  elseif a:direction == 'gv'
+    call CmdLine("Ack \"" . l:pattern . "\" " )
+  elseif a:direction == 'replace'
+    call CmdLine("%s" . '/'. l:pattern . '/')
+  elseif a:direction == 'f'
+    execute "normal /" . l:pattern . "^M"
+  endif
 
-    let @/ = l:pattern
-    let @" = l:saved_reg
+  let @/ = l:pattern
+  let @" = l:saved_reg
 endfunction
 
 
 " Returns true if paste mode is enabled
 function! HasPaste()
-    if &paste
-        return 'PASTE MODE  '
-    en
-    return ''
+  if &paste
+    return 'PASTE MODE  '
+  endif
+  return ''
 endfunction
 
 " Don't close window, when deleting a buffer

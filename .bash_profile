@@ -6,7 +6,7 @@ if [[ $- != *i* ]] || [ -z "$PS1" ]; then
   return 0
 fi
 
-#windows git bash is too minimal
+# windows git bash is too minimal
 if [[ "$(bash --version)" == *-pc-msys* ]]; then
   return 0
 fi
@@ -29,6 +29,7 @@ unset file
 for option in autocd globstar cmdhist dotglob extglob cdable_vars; do
   shopt -s "$option" 2> /dev/null
 done
+unset option
 
 # When the command contains an invalid history operation (for instance when
 # using an unescaped "!" (I get that a lot in quick e-mails and commit

@@ -17,12 +17,35 @@ function doIt() {
         --exclude "LICENSE-MIT.txt" --exclude ".editorconfig" \
         --exclude "examples/" \
         -avhi --no-perms . ~
-  
+
   if [ ! -f ~/.config_dotfiles ]; then
     cp .config_dotfiles_default ~/.config_dotfiles
   fi
 
-	source ~/.bash_profile
+  # install oh-my-zsh
+  if [ ! -d ~/.oh-my-zsh ]; then
+    git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
+
+    read -p "Do you want to use the zsh-shell? (y/n) " -n 1
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+      chsh -s $(which zsh)
+    fi
+
+  else
+    cd ~/.oh-my-zsh
+    git pull
+  fi
+
+  # install vim-plugin-manager
+  if [ ! -d ~/.vim/bundle/vundle ]; then
+    mkdir ~/.vim/bundle
+    git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
+    echo "run ':BundleInstall' or ':BundleUpdate' in vim command mode"
+  else
+    cd ~/.vim/bundle/vundle
+    git pull
+  fi
 }
 
 function dryRun() {
