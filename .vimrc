@@ -551,10 +551,9 @@ vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
 vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 
 " copy between different vim sessions
-" TODO: find free keys for this mapping
-"nmap _Y :!echo “”> ~/.vim/tmp<CR><CR>:w! ~/.vim/tmp<CR>
-"vmap _Y :w! ~/.vim/tmp<CR>
-"nmap _P :r ~/.vim/tmp<CR>
+nmap <s-Y> :!echo “”> ~/.vim/tmp<CR><CR>:w! ~/.vim/tmp<CR>
+vmap <s-Y> :w! ~/.vim/tmp<CR>
+nmap <s-P> :r ~/.vim/tmp<CR>
 
 if has("mac") || has("macunix")
   nmap <D-j> <M-j>
