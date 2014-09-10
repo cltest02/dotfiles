@@ -41,10 +41,15 @@ function doIt() {
   if [ ! -d ~/.vim/bundle/vundle ]; then
     mkdir ~/.vim/bundle
     git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
-    echo "run ':BundleInstall' or ':BundleUpdate' in vim command mode"
+    vim +BundleInstall +qall
   else
-    cd ~/.vim/bundle/vundle
-    git pull
+    read -p "Do you want to update vim-plugins? (y/n) " -n 1
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+      cd ~/.vim/bundle/vundle
+      git pull
+      vim +BundleUpdate +qall
+    fi
   fi
 }
 
