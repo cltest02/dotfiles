@@ -309,8 +309,8 @@ if &t_Co > 2 || has("gui_running")
     "set cursorline
   endif
 
-" highlight trailing spaces in annoying red
-if has('autocmd')
+  " highlight trailing spaces in annoying red
+  if has('autocmd')
     highlight ExtraWhitespace ctermbg=1 guibg=red
     match ExtraWhitespace /\s\+$/
     autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
@@ -318,6 +318,10 @@ if has('autocmd')
     autocmd InsertLeave * match ExtraWhitespace /\s\+$/
     autocmd BufWinLeave * call clearmatches()
   endif
+
+  " highlight conflict markers
+  match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
+
 endif
 
 " Set extra options when running in GUI mode
@@ -492,6 +496,9 @@ map <leader>tc :tabclose<cr>
 map <leader>tm :tabmove
 map <leader>t<leader> :tabnext
 
+" shortcut to jump to next conflict marker
+nnoremap <silent> <leader>c /^\(<\\|=\\|>\)\{7\}\([^=].\+\)\?$<CR>
+
 " Opens a new tab with the current buffer's path
 " Super useful when editing files in the same directory
 map <leader>te :tabedit <c-r>=expand("%:p:h")<cr>/
@@ -579,12 +586,10 @@ noremap <leader>W :w !sudo tee % > /dev/null<CR>
 
 " automatic commands
 if has("autocmd")
-  " enable file type detection
-  filetype on
-  " treat .json files as .js
+  " file type detection
   autocmd BufNewFile,BufRead *.json setfiletype json syntax=javascript
-  " Treat .md files as Markdown
   autocmd BufNewFile,BufRead *.md setlocal filetype=markdown
+  autocmd BufNewFile,BufRead *.less setfiletype=css syntax=css
 endif
 
 " multi-purpose tab key (auto-complete)
@@ -604,17 +609,23 @@ inoremap <expr> <C-n> pumvisible() ? '<C-n>' :
 inoremap <expr> <M-,> pumvisible() ? '<C-n>' :
   \ '<C-x><C-o><C-n><C-p><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
 
-" Delete trailing white space on save, useful for Python and CoffeeScript ;)
-if has("autocmd")
-  func! DeleteTrailingWS()
-    exe "normal mz"
-    %s/\s\+$//ge
-    exe "normal `z"
-  endfunc
-  autocmd BufWrite *.py :call DeleteTrailingWS()
-  autocmd BufWrite *.coffee :call DeleteTrailingWS()
-endif
+" Strip trailing white space.
+function! StripTrailingWhitespaces()
+    " Preparation: save last search, and cursor position.
+    let _s=@/
+    let l = line(".")
+    let c = col(".")
+    " Do the business:
+    %s/\s\+$//e
+    " Clean up: restore previous search history, and cursor position
+    let @/=_s
+    call cursor(l, c)
+endfunction
 
+" call the above function automatically when saving files of certain type.
+if has("autocmd")
+  autocmd BufWritePre *.py,*.js,*.php,*.gpx,*.rb,*.tpl :call StripTrailingWhitespaces()
+endif
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Ack searching and cope displaying
