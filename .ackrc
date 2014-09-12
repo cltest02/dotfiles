@@ -4,6 +4,13 @@
 # Like in Vim, ignore the case unless the pattern contains mixed case.
 --smart-case
 
+# CSS
+--type-set=scss=.scss
+--type-set=less=.less
+
+# JS
+--type-set=coffeescript=.coffee
+
 # HTML / PHP templates.
 --type-set=tpl=.tpl,.twig
 --type-add=html=.tpl,.twig

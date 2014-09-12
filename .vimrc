@@ -96,17 +96,15 @@ if exists("+clipboard")
   set clipboard=unnamed
 endif
 
-" With a map leader it's possible to do extra key combinations
-" like <leader>w saves the current file
-let mapleader = ","
-let g:mapleader = ","
-
 " enable per-directory .vimrc files and disable unsafe commands in them
 set exrc
 set secure
 
 " Disable the splash screen (and some various tweaks for messages).
 set shortmess=aTItoO
+
+" tell us about changes
+set report=0
 
 " Show the filename in the window titlebar.
 if exists("+title")
@@ -130,6 +128,12 @@ endif
 " Set 7 lines to the cursor - when moving vertically using j/k
 set so=7
 
+" turn off lazy redraw
+set nolazyredraw
+
+" always show all line numbers
+"set number
+
 " enhance command-line completion
 if exists("+wildmenu")
   set wildmenu
@@ -149,7 +153,7 @@ else
 endif
 
 " Height of the command bar
-set cmdheight=2
+set cmdheight=1
 
 " A buffer becomes hidden when it is abandoned
 set hid
@@ -338,6 +342,9 @@ set encoding=utf-8 nobomb
 " Use Unix as the standard file type
 set ffs=unix,dos,mac
 
+" none word dividers
+set isk+=_,$,@,%,#,-
+
 " Set font according to system
 if has("mac") || has("macunix")
   set gfn=Source\ Code\ Pro:h15,Menlo:h15
@@ -444,6 +451,9 @@ set softtabstop=2
 "set lbr
 "set tw=500
 
+" wrap at 80 chars by default
+"set textwidth=80
+
 " don't automatically wrap on load
 set nowrap
 
@@ -453,6 +463,8 @@ set fo-=t
 " show “invisible” characters
 set lcs=tab:▸\ ,trail:·,eol:¬,nbsp:_
 
+" support for numbered/bullet lists
+set formatoptions+=n
 
 """"""""""""""""""""""""""""""
 " => Visual mode related
@@ -462,6 +474,8 @@ set lcs=tab:▸\ ,trail:·,eol:¬,nbsp:_
 vnoremap <silent> * :call VisualSelection('f', '')<CR>
 vnoremap <silent> # :call VisualSelection('b', '')<CR>
 
+" allow virtual edit in visual block ..
+set virtualedit=block
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Moving around, tabs, windows and buffers
@@ -488,6 +502,9 @@ map <leader>bd :Bclose<cr>
 
 " Close all the buffers
 map <leader>ba :1,1000 bd!<cr>
+
+" open 50 tabs max
+set tabpagemax=50
 
 " Useful mappings for managing tabs
 map <leader>tn :tabnew<cr>
@@ -531,7 +548,6 @@ set viminfo^=%
 set laststatus=2
 
 " Format the status line
-"set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l
 set statusline=[%n]\ %<%f%m%r\ %w\ %y\ \ <%{&fileformat}>\ %{\"[\".(&fenc==\"\"?&enc:&fenc).((exists(\"+bomb\")\ &&\ &bomb)?\",B\":\"\").\"]\ \"}%=[%b\ 0x%02B]\ [%o]\ %l,%c%V\/%L\ \ %P
 
 " Show current mode in the status line.
@@ -545,11 +561,69 @@ if exists("+showcmd")
 endif
 
 
+" ---------------------------------------------------------------------------
+" File Types
+" ---------------------------------------------------------------------------
+" automatic commands
+if has("autocmd")
+  " file type detection
+  au BufRead,BufNewFile *.rpdf       set ft=ruby
+  au BufRead,BufNewFile *.rxls       set ft=ruby
+  au BufRead,BufNewFile *.ru         set ft=ruby
+  au BufRead,BufNewFile *.god        set ft=ruby
+  au BufRead,BufNewFile *.rtxt       set ft=html spell
+  au BufRead,BufNewFile *.sql        set ft=pgsql
+  au BufRead,BufNewFile *.rl         set ft=ragel
+  au BufRead,BufNewFile *.svg        set ft=svg
+  au BufRead,BufNewFile *.haml       set ft=haml
+  au BufRead,BufNewFile *.less       set tf=css syntax=css
+  au BufRead,BufNewFile *.md         set ft=markdown
+  au BufRead,BufNewFile *.markdown   set ft=markdown
+  au BufRead,BufNewFile *.ronn       set ft=markdown
+  au BufNewFile,BufRead *.json       set ft=json syntax=javascript
+  au BufNewFile,BufRead *.mustache   set tf=mustache
+
+  au Filetype gitcommit              set tw=68  spell
+  au Filetype ruby                   set tw=80
+endif
+
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Editing mappings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" With a map leader it's possible to do extra key combinations
+" like <leader>w saves the current file (instead of '\')
+let mapleader = ","
+let g:mapleader = ","
+
 " Remap VIM 0 to first non-blank character
 map 0 ^
+
+" Yank from the cursor to the end of the line, to be consistent with C and D
+nnoremap Y y$
+
+" Yank and put system pasteboard with <Leader>y/p.
+noremap <Leader>y "*y
+noremap <Leader>Y "*y$
+nnoremap <Leader>yy "*yy
+noremap <Leader>p "*p
+noremap <Leader>P "*P
+
+" select last put
+" src: http://vim.wikia.com/wiki/Selecting_your_pasted_text
+"nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]
+
+" select all
+map <Leader>a ggVG
+
+" gi moves to last insert mode (default)
+" gI moves to last modification
+nnoremap gI `.
+
+" Movement & wrapped long lines
+" This solves the problem that pressing down jumps your cursor 'over' the current line to the next line
+nnoremap j gj
+nnoremap k gk
 
 " Move a line of text using ALT+[jk] or Comamnd+[jk] on mac
 nmap <M-j> mz:m+<cr>`z
@@ -569,6 +643,17 @@ if has("mac") || has("macunix")
   vmap <D-k> <M-k>
 endif
 
+" quickfix mappings
+map <F7>  :cn<CR>
+map <S-F7> :cp<CR>
+map <A-F7> :copen<CR>
+
+" emacs movement keybindings in insert mode
+imap <C-a> <C-o>0
+imap <C-e> <C-o>$
+map <C-e> $
+map <C-a> 0
+
 " stop opening man pages
 nmap K <nop>
 
@@ -583,14 +668,6 @@ endfunction
 noremap <leader>sw :call StripWhitespace()<CR>
 " save a file as root (,W)
 noremap <leader>W :w !sudo tee % > /dev/null<CR>
-
-" automatic commands
-if has("autocmd")
-  " file type detection
-  autocmd BufNewFile,BufRead *.json setfiletype json syntax=javascript
-  autocmd BufNewFile,BufRead *.md setlocal filetype=markdown
-  autocmd BufNewFile,BufRead *.less setfiletype=css syntax=css
-endif
 
 " multi-purpose tab key (auto-complete)
 function! InsertTabWrapper()
@@ -631,6 +708,11 @@ endif
 " => Ack searching and cope displaying
 "    requires ack.vim - it's much better than vimgrep/grep
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Use Ack instead of Grep when available
+if executable("ack")
+  set grepprg=ack\ -H\ --nogroup\ --nocolor\ --ignore-dir=tmp\ --ignore-dir=coverage
+endif
+
 " When you press gv you Ack after the selected text
 vnoremap <silent> gv :call VisualSelection('gv', '')<CR>
 
@@ -640,17 +722,6 @@ map <leader>g :Ack
 " When you press <leader>r you can search and replace the selected text
 vnoremap <silent> <leader>r :call VisualSelection('replace', '')<CR>
 
-" Do :help cope if you are unsure what cope is. It's super useful!
-"
-" When you search with Ack, display your results in cope by doing:
-"   <leader>cc
-"
-" To go to the next search result do:
-"   <leader>n
-"
-" To go to the previous search results do:
-"   <leader>p
-"
 map <leader>cc :botright cope<cr>
 map <leader>co ggVGy:tabnew<cr>:set syntax=qf<cr>pgg
 map <leader>n :cn<cr>
@@ -715,15 +786,6 @@ function! VisualSelection(direction, extra_filter) range
 
   let @/ = l:pattern
   let @" = l:saved_reg
-endfunction
-
-
-" Returns true if paste mode is enabled
-function! HasPaste()
-  if &paste
-    return 'PASTE MODE  '
-  endif
-  return ''
 endfunction
 
 " Don't close window, when deleting a buffer

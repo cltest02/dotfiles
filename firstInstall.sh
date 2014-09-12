@@ -70,6 +70,7 @@ sudo aptitude install \
   vim \
   csstidy \
   recode \
+  exuberant-ctags \
   `# GNU bash` \
   bash \
   bash-completion \
