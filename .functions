@@ -337,14 +337,12 @@ netstat_used_local_ports()
 # netstat_free_local_port: get one free tcp-port
 netstat_free_local_port()
 {
-  read lowerPort upperPort < /proc/sys/net/ipv4/ip_local_port_range
+  # didn't work with zsh / bash is ok
+  #read lowerPort upperPort < /proc/sys/net/ipv4/ip_local_port_range
 
-  # create a local array of used ports
-  local all_used_ports=($(netstat_used_local_ports))
-
-  for port in $(seq $lowerPort $upperPort); do
-    for used_port in "${all_used_ports[@]}"; do
-      if [ $used_port -eq $port ]; then
+  for port in $(seq 32768 61000); do
+    for i in $(netstat_used_local_ports); do
+      if [[ $used_port -eq $port ]]; then
         continue
       else
         echo $port
@@ -352,6 +350,8 @@ netstat_free_local_port()
       fi
     done
   done
+
+  return 1
 }
 
 # -------------------------------------------------------------------
@@ -838,18 +838,27 @@ server()
 }
 
 # -------------------------------------------------------------------
-# phpserver: Start a PHP server from a directory, optionally specifying the port
+# phpserver: Start a PHP server from a directory, optionally specifying 2x $_ENV and ip:port
 # (Requires PHP 5.4.0+.)
 #
 # usage:
-# phpserver [port=4000] [ip=127.0.0.1]
+# phpserver [FOO=BAR] [FOO=BAR] [port=auto] [ip=127.0.0.1]
 phpserver()
 {
   local free_port=$(netstat_free_local_port)
-  local port="${1:-${free_port}}"
-  local ip="${2:-127.0.0.1}"
+  local port="${5:-${free_port}}"
+  local ip="${6:-127.0.0.1}"
+
+  if [ $1 ] && [ $2 ]; then
+    export ${1}=${2}
+  fi
+
+  if [ $3 ] && [ $4 ]; then
+    export ${3}=${4}
+  fi
+
   sleep 1 && xdg-open "http://${ip}:${port}/" &
-  php -S "${ip}:${port}"
+  php -d variables_order=EGPCS -S ${ip}:${port}
 }
 
 # php-parse-error-check: check for parse errors
@@ -1226,7 +1235,7 @@ __git_prompt()
       git rev-parse --short HEAD 2> /dev/null || \
       echo '(unknown)')"
 
-    [ -n "${s}" ] && s=" [${s}]"
+    [[ -n "${s}" ]] && s=" [${s}]"
 
     echo " (${branchName})${s}"
   else
