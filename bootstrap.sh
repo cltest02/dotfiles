@@ -47,7 +47,7 @@ function doIt()
 
   # install oh-my-zsh
   if [ ! -d ~/.oh-my-zsh ]; then
-    git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
+    git clone https://github.com/voku/oh-my-zsh.git ~/.oh-my-zsh
     read -p "Do you want to use the zsh-shell? (y/n) " -n 1 yesOrNo
     echo
     if [[ $yesOrNo =~ ^[Yy]$ ]]; then
