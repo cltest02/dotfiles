@@ -93,7 +93,7 @@ set fileformats=unix,dos,mac
 
 " use the OS clipboard by default (on versions compiled with `+clipboard`)
 if exists("+clipboard")
-  set clipboard=unnamed
+  set clipboard=unnamedplus
 endif
 
 " enable per-directory .vimrc files and disable unsafe commands in them
@@ -351,15 +351,15 @@ set ffs=unix,dos,mac
 set isk+=_,$,@,%,#,-
 
 " Set font according to system
-if has("mac") || has("macunix")
-  set gfn=Source\ Code\ Pro:h15,Menlo:h15
-elseif has("win16") || has("win32")
-  set gfn=Source\ Code\ Pro:h12,Bitstream\ Vera\ Sans\ Mono:h11
-elseif has("linux")
-  set gfn=Source\ Code\ Pro:h12,Bitstream\ Vera\ Sans\ Mono:h11
-elseif has("unix")
-  set gfn=Monospace\ 11
-endif
+"if has("mac") || has("macunix")
+"  set gfn=Source\ Code\ Pro:h15,Menlo:h15
+"elseif has("win16") || has("win32")
+"  set gfn=Source\ Code\ Pro:h12,Bitstream\ Vera\ Sans\ Mono:h11
+"elseif has("linux")
+"  set gfn=Source\ Code\ Pro:h12,Bitstream\ Vera\ Sans\ Mono:h11
+"elseif has("unix")
+"  set gfn=Monospace\ 11
+"endif
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
