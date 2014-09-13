@@ -161,7 +161,7 @@ alias partitions="cat /proc/partitions"
 alias speedtest="wget -O /dev/null http://speedtest.wdc01.softlayer.com/downloads/test100.zip"
 
 # search in files
-alias afind='ack-grep -iH'
+alias afind="ack-grep -iH"
 
 # displays a directory tree
 alias tree="tree -Csu"
@@ -170,7 +170,7 @@ alias tree="tree -Csu"
 alias ltree="tree -Csu | less -R"
 
 # Gzip-enabled `curl`
-alias gurl='curl --compressed'
+alias gurl="curl --compressed"
 
 # date
 alias date_iso_8601='date "+%Y%m%dT%H%M%S"'

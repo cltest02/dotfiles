@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 echo -e "${COLOR_GREEN}"
 
@@ -28,27 +28,13 @@ echo ""
 
 echo -e "${COLOR_NO_COLOUR}"
 
-cd "$(dirname "${BASH_SOURCE}")"
-
+sourceDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 git pull origin master
 
-function doIt() {
-
+function doIt()
+{
   if [ ! -f ~/.config_dotfiles ]; then
     cp .config_dotfiles_default ~/.config_dotfiles
-  fi
-
-  # install oh-my-zsh
-  if [ ! -d ~/.oh-my-zsh ]; then
-    git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
-    read -p "Do you want to use the zsh-shell? (y/n) " -n 1
-    echo
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-      chsh -s $(which zsh)
-    fi
-  else
-    cd ~/.oh-my-zsh
-    git pull
   fi
 
   # copy dotfiles
@@ -56,8 +42,22 @@ function doIt() {
         --exclude "README.md" --exclude "firstInstall.sh" --exclude "android_sdk_install.sh" \
         --exclude ".gitignore" --exclude ".gitattributes" \
         --exclude "LICENSE-MIT.txt" --exclude ".editorconfig" \
-        --exclude "examples/" \
-        -avhi --no-perms . ~
+        --exclude "examples/" --exclude ".oh-my-zsh/" \
+        -avhi --no-perms . ~/
+
+  # install oh-my-zsh
+  if [ ! -d ~/.oh-my-zsh ]; then
+    git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
+    read -p "Do you want to use the zsh-shell? (y/n) " -n 1 yesOrNo
+    echo
+    if [[ $yesOrNo =~ ^[Yy]$ ]]; then
+      chsh -s $(which zsh)
+    fi
+  else
+    cd ~/.oh-my-zsh
+    git pull
+  fi
+  cp -pvr $sourceDir/.oh-my-zsh/ ~/
 
   # install vim-plugin-manager
   if [ ! -d ~/.vim/bundle/vundle ]; then
@@ -65,9 +65,9 @@ function doIt() {
     git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
     vim +BundleInstall +qall
   else
-    read -p "Do you want to update vim-plugins? (y/n) " -n 1
+    read -p "Do you want to update vim-plugins? (y/n) " -n 1 yesOrNo
     echo
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
+    if [[ $yesOrNo =~ ^[Yy]$ ]]; then
       cd ~/.vim/bundle/vundle
       git pull
       vim +BundleUpdate +qall
@@ -75,13 +75,14 @@ function doIt() {
   fi
 }
 
-function dryRun() {
+function dryRun()
+{
 	rsync --exclude ".git/" --exclude ".DS_Store" --exclude "bootstrap.sh" \
         --exclude "README.md" --exclude "firstInstall.sh" --exclude "android_sdk_install.sh" \
         --exclude ".gitignore" --exclude ".gitattributes" \
         --exclude "LICENSE-MIT.txt" --exclude ".editorconfig" \
         --exclude "examples/" \
-        -avhni --no-perms . ~
+        -avhni --no-perms . ~/
 	source ~/.bash_profile
 }
 
@@ -94,12 +95,12 @@ else
   dryRun
   echo
   echo
-  read -p "The files listed above will overwritten in your home directory. Are you sure you want to continue? (y/n) " -n 1
+  read -p "The files listed above will overwritten in your home directory. Are you sure you want to continue? (y/n) " -n 1 yesOrNo
   echo
-  if [[ $REPLY =~ ^[Yy]$ ]]; then
+  if [[ $yesOrNo =~ ^[Yy]$ ]]; then
     doIt
   fi
 fi
 
-unset doIt
-unset dryRun
+unset -f doIt
+unset -f dryRun
