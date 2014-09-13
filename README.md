@@ -31,6 +31,7 @@ My `~/.config_dotfiles` looks something like this:
 CONFIG_DEFAULT_USER="lars"
 CONFIG_TMUX=false
 CONFIG_OH_MY_ZSH_PLUGINS="(git bower composer ruby bundler gem)"
+CONFIG_OH_MY_ZSH_THEME="voku"
 CONFIG_CHARSET_UTF8=true
 CONFIG_LANG="de_DE"
 ```

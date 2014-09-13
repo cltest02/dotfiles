@@ -8,7 +8,7 @@
 [alias]
   # same as git init but creates the git repository in the given path. In a cygwin environment path names are translated to dos style, otherwise the linking would not work in egit (eclipse). Cygwin's git and git-bash is also happy with this.
   initexternal = !"f() { WORKTREE=\"$(pwd)\"; GITDIR=\"$1\"; command -v cygpath >/dev/null 2>&1 && { WORKTREE=$(cygpath -m $WORKTREE); GITDIR=$(cygpath -m $1); }; git --work-tree=$WORKTREE --git-dir=\"$GITDIR\" init && echo \"gitdir: $GITDIR\" >> .git && git config --local core.worktree \"$WORKTREE\"; }; f"
- 
+
   # Shorthand for add
   a = add
 
@@ -133,14 +133,14 @@
   h = help
 
   # log
-  l = log --graph --date=short
+  l = log --graph --decorate --date=short
   changes = log --pretty=format:\"%h %cr %cn %Cgreen%s%Creset\" --name-status
   short = log --pretty=format:\"%h %cr %cn %Cgreen%s%Creset\"
   simple = log --pretty=format:\" * %s\"
   shortnocolor = log --pretty=format:\"%h %cr %cn %s\"
 
   # Pretty log of commits. Supports options of git log
-  log-pretty = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+  log-pretty = log --graph --decorate --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
 
   # last commit
   last = log -1 HEAD

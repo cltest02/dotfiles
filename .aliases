@@ -75,8 +75,17 @@ if [ "$TERM" != "dumb" ]; then
     alias g++='.cl g++'
     alias ld='.cl ld'
     alias netstat='.cl netstat'
-    alias ping='.cl ping -c 10'
+    alias ping='.cl ping'
     alias traceroute='.cl traceroute'
+    alias tail='.cl tail'
+    alias ps='.cl ps'
+    alias syslog='sudo .cl tail -f -n 100 /var/log/syslog'
+  fi
+
+  # replace top with htop
+  if command -v htop >/dev/null; then
+    alias top_orig='top'
+    alias top='htop'
   fi
 
   # Colorize the grep command output for ease of use (good for log files)

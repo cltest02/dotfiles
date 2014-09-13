@@ -323,6 +323,11 @@ if &t_Co > 2 || has("gui_running")
     autocmd BufWinLeave * call clearmatches()
   endif
 
+  " reload .vimrc when updating it
+  "if has("autocmd")
+  "  autocmd BufWritePost .vimrc nested source %
+  "endif
+
   " highlight conflict markers
   match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
 
@@ -382,7 +387,7 @@ endif
 if has('autocmd')
   augroup swapskip
     autocmd!
-    silent! autocmd BufNewFile,BufReadPre
+    silent! autocmd BufRead,BufNewFilePre
       \ /tmp/*,$TMPDIR/*,$TMP/*,$TEMP/*,*/shm/*
       \ setlocal noswapfile
   augroup END
@@ -403,7 +408,7 @@ if has('viminfo')
   if has('autocmd')
     augroup viminfoskip
       autocmd!
-      silent! autocmd BufNewFile,BufReadPre
+      silent! autocmd BufRead,BufNewFilePre
         \ /tmp/*,$TMPDIR/*,$TMP/*,$TEMP/*,*/shm/*
         \ setlocal viminfo=
     augroup END
@@ -567,23 +572,55 @@ endif
 " automatic commands
 if has("autocmd")
   " file type detection
-  au BufRead,BufNewFile *.rpdf       set ft=ruby
-  au BufRead,BufNewFile *.rxls       set ft=ruby
-  au BufRead,BufNewFile *.ru         set ft=ruby
-  au BufRead,BufNewFile *.god        set ft=ruby
-  au BufRead,BufNewFile *.rtxt       set ft=html spell
-  au BufRead,BufNewFile *.sql        set ft=pgsql
-  au BufRead,BufNewFile *.rl         set ft=ragel
-  au BufRead,BufNewFile *.svg        set ft=svg
-  au BufRead,BufNewFile *.haml       set ft=haml
-  au BufRead,BufNewFile *.less       set tf=css syntax=css
-  au BufRead,BufNewFile *.md         set ft=markdown
-  au BufRead,BufNewFile *.markdown   set ft=markdown
-  au BufRead,BufNewFile *.ronn       set ft=markdown
-  au BufNewFile,BufRead *.json       set ft=json syntax=javascript
-  au BufNewFile,BufRead *.mustache   set tf=mustache
 
-  au Filetype gitcommit              set tw=68  spell
+  " Ruby
+  au BufRead,BufNewFile *.rb,*.rbw,*.gem,*.gemspec set filetype=ruby
+
+  " Ruby on Rails
+  au BufRead,BufNewFile *.builder,*.rxml,*.rjs     set filetype=ruby
+
+  " Rakefile
+  au BufRead,BufNewFile [rR]akefile,*.rake         set filetype=ruby
+
+  " Rantfile
+  au BufRead,BufNewFile [rR]antfile,*.rant         set filetype=ruby
+
+  " IRB config
+  au BufRead,BufNewFile .irbrc,irbrc               set filetype=ruby
+
+  " eRuby
+  au BufRead,BufNewFile *.erb,*.rhtml              set filetype=eruby
+
+  " Thorfile
+  au BufRead,BufNewFile [tT]horfile,*.thor         set filetype=ruby
+
+  " css - preprocessor
+  au BufRead,BufNewFile *.less,*.scss,*.sass       set filetype=css syntax=css
+
+  " markdown
+  au BufRead,BufNewFile *.md,*.markdown,*.ronn     set filetype=markdown
+
+  " special text files
+  au BufRead,BufNewFile *.rtxt       set filetype=html spell
+  au BufRead,BufNewFile *.stxt       set filetype=markdown spell
+
+  au BufRead,BufNewFile *.sql        set filetype=pgsql
+
+  au BufRead,BufNewFile *.rl         set filetype=ragel
+
+  au BufRead,BufNewFile *.svg        set filetype=svg
+
+  au BufRead,BufNewFile *.haml       set filetype=haml
+
+  au BufRead,BufNewFile *.json       set filetype=json syntax=javascript
+
+  au BufRead,BufNewFile *.hbs        set syntax=handlebars
+
+  au BufRead,BufNewFile *.mustache   set filetype=mustache
+
+	au BufRead,BufNewFile *.zsh-theme  set filetype=zsh
+
+  au Filetype gitcommit              set tw=68 spell
   au Filetype ruby                   set tw=80
 endif
 

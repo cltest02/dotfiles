@@ -15,7 +15,7 @@ err()
   echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: $@" >&2
 }
 
-# ------------------------------------------------------------------- 
+# -------------------------------------------------------------------
 # lc: Convert the parameters or STDIN to lowercase.
 lc()
 {
@@ -54,7 +54,7 @@ wtfis()
 {
   local cmd=""
   local type=""
-  local i=1 
+  local i=1
   local ret=0
 
   if [ $# -eq 0 ]; then
@@ -456,7 +456,7 @@ cleanTheSystem()
 extract()
 {
   local old_dirs current_dirs lower
- 
+
   if [ -f $1 ] ; then
     lower=$(lc $1)
     old_dirs=( *(N/) )
@@ -809,7 +809,7 @@ gitio()
 
 # -------------------------------------------------------------------
 # shorturl: Create a short URL
-shorturl() 
+shorturl()
 {
   if [ -z "${1}" ]; then
     echo "Usage: \`shorturl url\`"
@@ -1149,3 +1149,84 @@ processenv()
   pidenv $(pidof $1)
 }
 
+__git_prompt()
+{
+  local s=''
+  local branchName=''
+
+  # Check if the current directory is in a Git repository.
+  if [[ $(git rev-parse --is-inside-work-tree &>/dev/null; echo "${?}") == "0" ]]; then
+
+    # check if the current directory is in .git before running git checks
+    if [[ "$(git rev-parse --is-inside-git-dir 2> /dev/null)" == "false" ]]; then
+
+      # Ensure the index is up to date.
+      git update-index --really-refresh -q &>/dev/null
+
+      # Check if we are ahead or behind our tracking branch (https://gist.github.com/HowlingMind/996093).
+      local git_status="$(git status 2> /dev/null)"
+      local remote_pattern="Your branch is (ahead|behind).*by ([[:digit:]]*) commit"
+      local remote_pattern_de="Ihr Branch ist (vor|hinter).*um ([[:digit:]]*) Commit"
+
+      if [[ $git_status =~ $remote_pattern ]] || [[ $git_status =~ $remote_pattern_de ]]; then
+        if [[ "${BASH_REMATCH[1]}" == "ahead" ]] || [[ "${BASH_REMATCH[1]}" == "vor" ]]; then
+          s+="${ICON_FOR_UP}${BASH_REMATCH[2]} "
+        else
+          s+="${ICON_FOR_DOWN}${BASH_REMATCH[2]} "
+        fi
+      fi
+
+      # Check for uncommitted changes in the index.
+      if ! $(git diff --quiet --ignore-submodules --cached); then
+        s+="+"
+      fi
+
+      # Check for unstaged changes.
+      if ! $(git diff-files --quiet --ignore-submodules --); then
+        s+="!"
+      fi
+
+      # Check for untracked files.
+      if [ -n "$(git ls-files --others --exclude-standard)" ]; then
+        s+="?"
+      fi
+
+      # Check for stashed files.
+      if $(git rev-parse --verify refs/stash &>/dev/null); then
+        s+="$"
+      fi
+
+      # The number of commits ahead/behind ends with a trailing space. If no other indicator was added, it will be lingering at the end of `s`.
+      s=$(echo "${s}" | sed 's/ *$//')
+
+    fi
+
+    # Get the short symbolic ref.
+    # If HEAD isn’t a symbolic ref, get the short SHA for the latest commit
+    # Otherwise, just give up.
+    branchName="$(git symbolic-ref --quiet --short HEAD 2> /dev/null || \
+      git rev-parse --short HEAD 2> /dev/null || \
+      echo '(unknown)')"
+
+    [ -n "${s}" ] && s=" [${s}]"
+
+    echo " (${branchName})${s}"
+  else
+    return
+  fi
+}
+
+__svn_branch()
+{
+  __svn_url | sed -e 's#^'"$(__svn_repository_root)"'##g' | awk '{print " ("$1")" }'
+}
+
+__svn_url()
+{
+  svn info 2>/dev/null | sed -ne 's#^URL: ##p'
+}
+
+__svn_repository_root()
+{
+  svn info 2>/dev/null | sed -ne 's#^Repository Root: ##p'
+}
