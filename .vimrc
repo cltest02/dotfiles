@@ -64,6 +64,11 @@ set noeol
 " look for embedded modelines at the top of the file
 set modeline
 
+" ignore whitespace in vimdiff
+if &diff
+  set diffopt+=iwhite
+endif
+
 " only look at this number of lines for modeline
 set modelines=10
 
@@ -93,7 +98,9 @@ set fileformats=unix,dos,mac
 
 " use the OS clipboard by default (on versions compiled with `+clipboard`)
 if exists("+clipboard")
-  set clipboard=unnamedplus
+  " here we always use the system-clipboard
+  "set clipboard=unnamedplus
+  set clipboard=unnamed
 endif
 
 " enable per-directory .vimrc files and disable unsafe commands in them
@@ -220,19 +227,20 @@ endif
 "endif
 
 " Start scrolling at this number of lines from the bottom.
-"set scrolloff=2
+set scrolloff=2
 
 " Start scrolling three lines before the horizontal window border.
-"set scrolloff=3
+set scrolloff=3
 
 " Start scrolling horizontally at this number of columns.
-"set sidescrolloff=5
+set sidescrolloff=4
 
 " disable line numbers
 set nonumber
 
 " no annoying sound on errors
 set noerrorbells
+"set vb t_vb=""
 set visualbell
 
 " no extra margin to the left
@@ -294,9 +302,10 @@ if &t_Co > 2 || has("gui_running")
   " turn on color syntax highlighting
   if exists("+syntax")
     syntax on
+    " increases syntax accuracy
+    syntax sync fromstart
   endif
 
-  syn sync fromstart
 
   " IMPORTANT: Uncomment one of the following lines to force
   " using 256 colors (or 88 colors) if your terminal supports it,
@@ -309,9 +318,9 @@ if &t_Co > 2 || has("gui_running")
   endif
 
   " highlight current line
-  if exists("+cursorline")
+  "if exists("+cursorline")
     "set cursorline
-  endif
+  "endif
 
   " highlight trailing spaces in annoying red
   if has('autocmd')
@@ -612,6 +621,9 @@ if has("autocmd")
 
   au BufRead,BufNewFile *.haml       set filetype=haml
 
+  " aura cmp files
+  au BufRead,BufNewFile *.cmp        set filetype=html
+
   au BufRead,BufNewFile *.json       set filetype=json syntax=javascript
 
   au BufRead,BufNewFile *.hbs        set syntax=handlebars
@@ -622,6 +634,10 @@ if has("autocmd")
 
   au Filetype gitcommit              set tw=68 spell
   au Filetype ruby                   set tw=80
+
+  " allow tabs on makefiles
+  au FileType make                   setlocal noexpandtab
+  au FileType go                     setlocal noexpandtab
 endif
 
 

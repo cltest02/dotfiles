@@ -46,6 +46,9 @@ alias g="git"
 alias h="history"
 alias j="jobs"
 
+# dmesg with readable time
+alias dmesg='dmesg -T'
+
 # command with color
 if [ "$TERM" != "dumb" ]; then
 
