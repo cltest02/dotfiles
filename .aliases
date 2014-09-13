@@ -67,24 +67,24 @@ if [ "$TERM" != "dumb" ]; then
 
   # colorize these commands if possible
   if which grc >/dev/null 2>&1; then
-    alias .cl='grc -es --colour=auto'
-    alias configure='.cl ./configure'
-    alias diff='.cl diff'
-    alias make='.cl make'
-    alias gcc='.cl gcc'
-    alias g++='.cl g++'
-    alias ld='.cl ld'
-    alias netstat='.cl netstat'
-    alias ping='.cl ping'
-    alias traceroute='.cl traceroute'
-    alias tail='.cl tail'
-    alias ps='.cl ps'
-    alias syslog='sudo .cl tail -f -n 100 /var/log/syslog'
+    alias colour='grc -es --colour=auto'
+    alias configure='colour ./configure'
+    alias diff='colour diff'
+    alias make='colour make'
+    alias gcc='colour gcc'
+    alias g++='colour g++'
+    alias ld='colour ld'
+    alias netstat='colour netstat'
+    alias ping='colour ping'
+    alias traceroute='colour traceroute'
+    alias tail='colour tail'
+    alias ps='colour ps'
+    alias syslog='sudo colour tail -f -n 100 /var/log/syslog'
   fi
 
   # replace top with htop
   if command -v htop >/dev/null; then
-    alias top_orig='top'
+    alias top_orig='/usr/bin/top'
     alias top='htop'
   fi
 
