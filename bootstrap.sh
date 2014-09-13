@@ -1,5 +1,24 @@
 #!/usr/bin/env bash
 
+echo -e "${COLOR_GREEN}"
+
+for z in {1..50}; do
+  for i in {1..16}; do
+    r="$(($RANDOM % 2))"
+    if [[ $(($RANDOM % 5)) == 1 ]]; then
+      if [[ $(($RANDOM % 4)) == 1 ]]; then
+        v+="\e[1m $r   "
+      else
+        v+="\e[2m $r   "
+      fi
+    else
+      v+="     "
+    fi
+  done
+  echo -e "$v"
+  v="";
+done
+
 echo "      _       _         __ _ _"
 echo "   __| | ___ | |_      / _(_) | ___  ___"
 echo "  / _\` |/ _ \| __|____| |_| | |/ _ \/ __|"
@@ -7,7 +26,10 @@ echo " | (_| | (_) | ||_____|  _| | |  __/\__ \\"
 echo "  \__,_|\___/ \__|    |_| |_|_|\___||___/"
 echo ""
 
+echo -e "${COLOR_NO_COLOUR}"
+
 cd "$(dirname "${BASH_SOURCE}")"
+
 git pull origin master
 
 function doIt() {

@@ -1182,7 +1182,7 @@ __git_prompt()
           fi
         fi
 
-      else
+      elif [ -n "$ZSH_VERSION" ]; then
 
         if [[ "$git_status" =~ $remote_pattern ]] || [[ "$git_status" =~ $remote_pattern_de ]]; then
           if [[ "${match[1]}" == "ahead" ]] || [[ "${match[1]}" == "vor" ]]; then
