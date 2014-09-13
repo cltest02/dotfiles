@@ -114,7 +114,8 @@ sudo aptitude install \
   python-pygments \
   locales \
   sysstat \
-  htop
+  htop \
+  tcpdump
 
 
 #

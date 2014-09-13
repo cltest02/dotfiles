@@ -242,7 +242,7 @@ whenis()
 box()
 {
   local t="$1xxxx"
-  local c=${2:-#}
+  local c=${2:-"#"}
 
   echo ${t//?/$c}
   echo "$c $1 $c"
@@ -534,7 +534,7 @@ stripspace()
 
 # -------------------------------------------------------------------
 # battery_life : Echo the percentage of battery life remaining
-battery_life ()
+battery_life()
 {
   local life=$(acpi -b | cut -d "," -f 2)
   # NOTE: the trailing % is stripped
@@ -592,6 +592,7 @@ replace()
 
 # -------------------------------------------------------------------
 # calc: Simple calculator
+# usage: e.g.: 3+3 || 6*6/2
 calc()
 {
   local result=""
@@ -733,7 +734,7 @@ fstr()
   fi
 
   find . -type f -name "${2:-*}" -print0 \
-    | xargs -0 egrep --color=auto -sn ${case} "$1" 2>&- \
+    | xargs -0 egrep --color=auto -Hsn ${case} "$1" 2>&- \
     | more
 }
 
@@ -881,7 +882,7 @@ psgrep()
 {
   if [ ! -z $1 ] ; then
     echo "Grepping for processes matching $1..."
-    ps aux | grep $1 | grep -v grep
+    ps aux | grep -i $1 | grep -v grep
   else
     echo "!! Need a process-name to grep for"
     return 1
@@ -1009,14 +1010,27 @@ note()
 }
 
 # -------------------------------------------------------------------
+# note_show: show your notes
+note_show()
+{
+  while read line; do
+    echo $line
+  done < ~/notes.txt
+}
+
+# -------------------------------------------------------------------
 # tail with search highlight
 #
 # usage: t /var/log/Xorg.0.log kHz
 t()
 {
-  tail -f $1 | perl -pe "s/$2/${COLOR_LIGHT_RED}$&${COLOR_NO_COLOUR}/g"
+  if [ $# -eq 0 ]; then
+    echo "Usage: t /var/log/Xorg.0.log kHz"
+    return 1
+  else
+    tail -f $1 | perl -pe "s/$2/${COLOR_LIGHT_RED}$&${COLOR_NO_COLOUR}/g"
+  fi
 }
-
 
 # -------------------------------------------------------------------
 # httpDebug: download a web page and show info on what took time
@@ -1027,9 +1041,8 @@ httpDebug()
   curl $@ -o /dev/null -w "dns: %{time_namelookup} connect: %{time_connect} pretransfer: %{time_pretransfer} starttransfer: %{time_starttransfer} total: %{time_total}\n"
 }
 
-
 # -------------------------------------------------------------------
-# gi: Install Grunt plugins and add them as `devDependencies` to `package.json`
+# gid: Install Grunt plugins and add them as `devDependencies` to `package.json`
 #
 # usage: gid contrib-watch contrib-uglify
 gid()
@@ -1038,7 +1051,7 @@ gid()
 }
 
 # -------------------------------------------------------------------
-# Install Grunt plugins and add them as `dependencies` to `package.json`
+# gi: Install Grunt plugins and add them as `dependencies` to `package.json`
 #
 # usage: gi contrib-watch contrib-uglify
 gi()
