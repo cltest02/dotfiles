@@ -47,7 +47,7 @@ setLocale()
     local i pattern localeOutput localeAll
 
     localeOutput=$(locale -a 2> /dev/null)
-		localeAll=($(locale -a 2> /dev/null))
+    localeAll=($(locale -a 2> /dev/null))
 
     # check if $CONFIG_LANG isset and available
     if [ "$CONFIG_LANG" != "" ] && [ -n "$(echo $localeOutput | grep $CONFIG_LANG)" ] ; then
