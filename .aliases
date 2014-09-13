@@ -6,6 +6,10 @@
 # command word following the alias is also checked for alias expansion."
 alias sudo='sudo '
 
+# Super user
+alias _='sudo'
+alias please='sudo'
+
 # use vim
 if which vim >/dev/null 2>&1; then
   alias vi="vim"
@@ -29,6 +33,10 @@ alias chown='chown --preserve-root'
 alias chmod='chmod --preserve-root'
 alias chgrp='chgrp --preserve-root'
 
+# Push and pop directories on directory stack
+alias pu='pushd'
+alias po='popd'
+
 # Easier navigation: .., ..., ...., ....., ~ and -
 alias ..="cd .."
 alias ...="cd ../.."
@@ -37,11 +45,13 @@ alias .....="cd ../../../.."
 alias ~="cd ~" # `cd` is probably faster to type though
 alias -- -="cd -"
 
-# Shortcuts
-alias d="cd ~/Documents/Dropbox"
-alias dl="cd ~/Downloads"
-alias dt="cd ~/Desktop"
-alias p="cd ~/projects"
+# personal shortcuts (add something like thin in ~/.extra)
+#alias d="cd ~/Documents/Dropbox"
+#alias dl="cd ~/Downloads"
+#alias dt="cd ~/Desktop"
+#alias p="cd ~/projects"
+
+# global shortcuts
 alias g="git"
 alias h="history"
 alias j="jobs"
@@ -104,6 +114,7 @@ if [ "$TERM" != "dumb" ]; then
   alias ls="ls -F --color=auto"
   # displays all files and directories in detail
   alias la="ls -laFh --color=auto"
+  alias lsa="la"
   # displays all files and directories in detail with newest-files at bottom
   alias lr="ls -laFhtr --color=auto"
   # show last 10 recently changed files
@@ -120,6 +131,14 @@ if [ "$TERM" != "dumb" ]; then
   alias dir="ls --color=auto --format=vertical"
   # displays more information about files and directories
   alias vdir="ls --color=auto --format=long"
+else
+  # only some default-"ls"-commands as fallback
+  alias l='ls -lFh'
+  alias l.='ls -dlFh .*'
+  alias la='ls -laFh'
+  alias lr='ls -laFhtr'
+  alias lsa='la'
+  alias ll='ls -lFh'
 fi
 
 # Clipboard access. I created these aliases to have the same command on
@@ -140,6 +159,9 @@ alias partitions="cat /proc/partitions"
 
 # speedtest: get a 100MB file via wget
 alias speedtest="wget -O /dev/null http://speedtest.wdc01.softlayer.com/downloads/test100.zip"
+
+# search in files
+alias afind='ack-grep -iH'
 
 # displays a directory tree
 alias tree="tree -Csu"
@@ -174,13 +196,15 @@ alias mkdir="mkdir -p"
 alias mkdd='mkdir $(date +%Y%m%d)'
 
 # get / check for updates
+# TODO: check for debian-based
 alias updates='sudo apt-get update'
 
-# IP addresses
+# external ip address
 alias myip_dns="dig +short myip.opendns.com @resolver1.opendns.com"
 alias myip_http="GET http://ipecho.net/plain && echo"
 
 # becoming root + executing last command
+# TODO: check if we use "zsh" and "SHARE_HISTORY"?
 alias sulast='su -c $(history -p !-1) root'
 
 # Canonical hex dump; some systems have this symlinked
@@ -209,9 +233,6 @@ alias rot13='tr a-zA-Z n-za-mN-ZA-M'
 
 # empty the your trash-dir
 alias emptytrash="rm -rfv ~/.local/share/Trash/*"
-
-# URL-encode strings
-alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1]);"'
 
 # ring the terminal bell, and put a badge on Terminal.app’s Dock icon
 # (useful when executing time-consuming commands)
@@ -290,7 +311,7 @@ alias composer-install="composer install --optimize-autoloader"
 # add ssh-key to clipboard
 alias sshkey="cat ~/.ssh/id_rsa.pub | putclip && echo 'Copied to clipboard.'"
 
-# add sshi-key to ssh-agent when key exist
+# add ssh-key to ssh-agent when key exist
 if [ "$SSH_AUTH_SOCK" != "" ] && [ -f ~/.ssh/id_rsa ] && [ -x /usr/bin/ssh-add  ]; then
   ssh-add -l >/dev/null || alias ssh='(ssh-add -l >/dev/null || ssh-add) && unalias ssh; ssh'
 fi
