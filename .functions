@@ -1168,12 +1168,26 @@ __git_prompt()
       local remote_pattern="Your branch is (ahead|behind).*by ([[:digit:]]*) commit"
       local remote_pattern_de="Ihr Branch ist (vor|hinter).*um ([[:digit:]]*) Commit"
 
-      if [[ $git_status =~ $remote_pattern ]] || [[ $git_status =~ $remote_pattern_de ]]; then
-        if [[ "${BASH_REMATCH[1]}" == "ahead" ]] || [[ "${BASH_REMATCH[1]}" == "vor" ]]; then
-          s+="${ICON_FOR_UP}${BASH_REMATCH[2]} "
-        else
-          s+="${ICON_FOR_DOWN}${BASH_REMATCH[2]} "
+      if [ -n "$BASH_VERSION" ]; then
+
+        if [[ "$git_status" =~ $remote_pattern ]] || [[ "$git_status" =~ $remote_pattern_de ]]; then
+          if [[ "${BASH_REMATCH[1]}" == "ahead" ]] || [[ "${BASH_REMATCH[1]}" == "vor" ]]; then
+            s+="${ICON_FOR_UP}${BASH_REMATCH[2]} "
+          else
+            s+="${ICON_FOR_DOWN}${BASH_REMATCH[2]} "
+          fi
         fi
+
+      else
+
+        if [[ "$git_status" =~ $remote_pattern ]] || [[ "$git_status" =~ $remote_pattern_de ]]; then
+          if [[ "${match[1]}" == "ahead" ]] || [[ "${match[1]}" == "vor" ]]; then
+            s+="${ICON_FOR_UP}${match[2]} "
+          else
+            s+="${ICON_FOR_DOWN}${match[2]} "
+          fi
+        fi
+
       fi
 
       # Check for uncommitted changes in the index.
