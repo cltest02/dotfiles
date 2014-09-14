@@ -19,7 +19,7 @@ err()
 # cd: this will overwrite the default "cd"-command
 cd ()
 {
-  if   [[ "x$*" == "x..." ]]; then
+  if [[ "x$*" == "x..." ]]; then
     cd ../..
   elif [[ "x$*" == "x...." ]]; then
     cd ../../..
