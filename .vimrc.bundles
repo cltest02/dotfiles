@@ -30,7 +30,8 @@ nnoremap <leader>- :NERDTreeToggle<CR>
 
 " ----------------------------------------
 
-Bundle 'tpope/vim-surround'
+"Bundle 'tpope/vim-surround'
+
 " usage
 " - e.g.: cs'" -> for ' -> "
 " - e.g.: cs"' -> for " -> '
@@ -41,7 +42,7 @@ Bundle 'ervandew/supertab'
 
 " ----------------------------------------
 
-Bundle 'tpope/vim-repeat'
+"Bundle 'tpope/vim-repeat'
 
 " ----------------------------------------
 
@@ -64,23 +65,23 @@ endif
 
 " ----------------------------------------
 
-Bundle 'tacahiroy/ctrlp-funky'
+"Bundle 'tacahiroy/ctrlp-funky'
 
 " ----------------------------------------
 
-Bundle 'FelikZ/ctrlp-py-matcher'
+"Bundle 'FelikZ/ctrlp-py-matcher'
 
-if has('python')
-  let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
-endif
-nnoremap <silent> <leader>b :CtrlPBuffer<cr>
-nnoremap <silent> <leader>t :CtrlPTag<cr>
-nnoremap <silent> <leader>q :CtrlPQuickfix<cr>
-nnoremap <silent> <leader>f :CtrlPFunky<cr>
+"if has('python')
+"  let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
+"endif
+"nnoremap <silent> <leader>b :CtrlPBuffer<cr>
+"nnoremap <silent> <leader>t :CtrlPTag<cr>
+"nnoremap <silent> <leader>q :CtrlPQuickfix<cr>
+"nnoremap <silent> <leader>f :CtrlPFunky<cr>
 
 " ----------------------------------------
 
-Bundle 'terryma/vim-multiple-cursors'
+"Bundle 'terryma/vim-multiple-cursors'
 
 " ----------------------------------------
 
@@ -88,7 +89,7 @@ Bundle 'terryma/vim-multiple-cursors'
 
 " ----------------------------------------
 
-Bundle 'vim-scripts/sessionman.vim'
+"Bundle 'vim-scripts/sessionman.vim'
 
 " ----------------------------------------
 
@@ -96,9 +97,9 @@ Bundle 'matchit.zip'
 
 " ----------------------------------------
 
-Bundle 'bling/vim-bufferline'
+"Bundle 'bling/vim-bufferline'
 
-let g:bufferline_echo = 0
+"let g:bufferline_echo = 0
 
 " ----------------------------------------
 
@@ -108,7 +109,7 @@ Bundle 'gregsexton/gitv'
 
 " ----------------------------------------
 
-Bundle 'Lokaltog/vim-easymotion'
+"Bundle 'Lokaltog/vim-easymotion'
 
 " ----------------------------------------
 
@@ -116,63 +117,63 @@ Bundle 'flazz/vim-colorschemes'
 
 " ----------------------------------------
 
-Bundle 'mbbill/undotree'
+"Bundle 'mbbill/undotree'
 
 " ----------------------------------------
 
-Bundle 'nathanaelkane/vim-indent-guides'
+"Bundle 'nathanaelkane/vim-indent-guides'
 
 " ----------------------------------------
 
-Bundle 'vim-scripts/restore_view.vim'
+"Bundle 'vim-scripts/restore_view.vim'
 
 " ----------------------------------------
 
-Bundle 'mhinz/vim-signify'
+"Bundle 'mhinz/vim-signify'
 
 " ----------------------------------------
 
-Bundle 'tpope/vim-abolish.git'
+"Bundle 'tpope/vim-abolish.git'
 
 " ----------------------------------------
 
-Bundle 'osyo-manga/vim-over'
+"Bundle 'osyo-manga/vim-over'
 
 " ----------------------------------------
 
-Bundle 'kana/vim-textobj-user'
+"Bundle 'kana/vim-textobj-user'
 
 " ----------------------------------------
 
-Bundle 'kana/vim-textobj-indent'
+"Bundle 'kana/vim-textobj-indent'
 
 " ----------------------------------------
 
-Bundle 'gcmt/wildfire.vim'
+"Bundle 'gcmt/wildfire.vim'
 
 " ----------------------------------------
 
-Bundle 'scrooloose/syntastic'
+"Bundle 'scrooloose/syntastic'
 
 " ----------------------------------------
 
-Bundle 'tpope/vim-fugitive'
+"Bundle 'tpope/vim-fugitive'
 
 " ----------------------------------------
 
-Bundle 'mattn/webapi-vim'
+"Bundle 'mattn/webapi-vim'
 
 " ----------------------------------------
 
-Bundle 'mattn/gist-vim'
+"Bundle 'mattn/gist-vim'
 
 " ----------------------------------------
 
-Bundle 'scrooloose/nerdcommenter'
+"Bundle 'scrooloose/nerdcommenter'
 
 " ----------------------------------------
 
-Bundle 'tpope/vim-commentary'
+"Bundle 'tpope/vim-commentary'
 
 " ----------------------------------------
 
@@ -194,30 +195,30 @@ Bundle 'Shougo/neocomplcache'
 
 " ----------------------------------------
 
-Bundle 'Shougo/neosnippet'
+"Bundle 'Shougo/neosnippet'
 
 " ----------------------------------------
 
-Bundle 'Shougo/neosnippet-snippets'
+"Bundle 'Shougo/neosnippet-snippets'
 
 " ----------------------------------------
 
-Bundle 'honza/vim-snippets'
+"Bundle 'honza/vim-snippets'
 
 " ----------------------------------------
 
-Bundle 'arnaud-lb/vim-php-namespace'
+"Bundle 'arnaud-lb/vim-php-namespace'
 
-inoremap <Leader>ns <c-o>:call PhpInsertUse()<cr>
-noremap <Leader>ns :call PhpInsertUse()<cr>
-inoremap <Leader>ex <c-o>:call PhpExpandClass()<cr>
-noremap <Leader>ex :call PhpExpandClass()<cr>
+"inoremap <Leader>ns <c-o>:call PhpInsertUse()<cr>
+"noremap <Leader>ns :call PhpInsertUse()<cr>
+"inoremap <Leader>ex <c-o>:call PhpExpandClass()<cr>
+"noremap <Leader>ex :call PhpExpandClass()<cr>
 
 " ----------------------------------------
 
-Bundle 'shawncplus/phpcomplete.vim'
+"Bundle 'shawncplus/phpcomplete.vim'
 
-let g:phpcomplete_parse_docblock_comments = 1
+"let g:phpcomplete_parse_docblock_comments = 1
 
 " ----------------------------------------
 
@@ -229,7 +230,7 @@ let g:phpcomplete_parse_docblock_comments = 1
 
 " ----------------------------------------
 
-Bundle 'docteurklein/vim-symfony'
+"Bundle 'docteurklein/vim-symfony'
 
 " ----------------------------------------
 
@@ -325,11 +326,11 @@ Bundle 'pangloss/vim-javascript'
 
 " ----------------------------------------
 
-Bundle 'mattn/emmet-vim'
+"Bundle 'mattn/emmet-vim'
 
 " ----------------------------------------
 
-Bundle 'amirh/HTML-AutoCloseTag'
+"Bundle 'amirh/HTML-AutoCloseTag'
 
 " ----------------------------------------
 
@@ -345,7 +346,7 @@ Bundle 'hail2u/vim-css3-syntax'
 
 " ----------------------------------------
 
-Bundle 'stephpy/vim-yaml'
+"Bundle 'stephpy/vim-yaml'
 
 " ----------------------------------------
 
@@ -410,6 +411,6 @@ Bundle 'tpope/vim-markdown'
 
 " ----------------------------------------
 
-Bundle 'xolox/vim-misc'
+"Bundle 'xolox/vim-misc'
 
 " ----------------------------------------

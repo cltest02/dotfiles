@@ -528,7 +528,7 @@ map <leader>tm :tabmove
 map <leader>t<leader> :tabnext
 
 " shortcut to jump to next conflict marker
-nnoremap <silent> <leader>c /^\(<\\|=\\|>\)\{7\}\([^=].\+\)\?$<CR>
+"nnoremap <silent> <leader>c /^\(<\\|=\\|>\)\{7\}\([^=].\+\)\?$<CR>
 
 " Opens a new tab with the current buffer's path
 " Super useful when editing files in the same directory
