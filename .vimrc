@@ -528,6 +528,7 @@ map <leader>tm :tabmove
 map <leader>t<leader> :tabnext
 
 " shortcut to jump to next conflict marker
+" WARNING: this isn't working, it prints map-string in files
 "nnoremap <silent> <leader>c /^\(<\\|=\\|>\)\{7\}\([^=].\+\)\?$<CR>
 
 " Opens a new tab with the current buffer's path
