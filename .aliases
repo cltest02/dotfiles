@@ -146,6 +146,7 @@ if [ "$TERM" != "dumb" ]; then
   alias l="ls -lhF --color=auto"
   # Show hidden files
   alias l.="ls -dlhF .* --color=auto"
+  alias ldot="l."
   # use colors
   alias ls="ls -F --color=auto"
   # displays all files and directories in detail
@@ -163,6 +164,8 @@ if [ "$TERM" != "dumb" ]; then
   alias llr="ls -lartFh --color=auto --group-directories-first"
   # list only directories
   alias lsd="ls -lFh --color=auto | grep --color=never '^d'"
+  # sort by file-size
+  alias lS="ls -1FSshr --color=auto"
   # displays files and directories
   alias dir="ls --color=auto --format=vertical"
   # displays more information about files and directories
@@ -177,6 +180,11 @@ else
   alias lsd="ls -lFh | grep --color=never '^d'"
   alias ll="ls -lFh"
 fi
+
+# quick edit
+alias zshrc="vim ~/.zshrc"
+alias bashrc="vim ~/.bashrc"
+alias vimrc="vim ~/.vimrc"
 
 # Clipboard access. I created these aliases to have the same command on
 # Cygwin, Linux and OS X.
@@ -196,6 +204,9 @@ alias partitions="cat /proc/partitions"
 
 # speedtest: get a 100MB file via wget
 alias speedtest="wget -O /dev/null http://speedtest.wdc01.softlayer.com/downloads/test100.zip"
+
+# super-grep ;)
+alias sgrep='grep -R -n -H -C 5 --exclude-dir={.git,.svn,CVS} '
 
 # search in files
 alias afind="ack-grep -iH"

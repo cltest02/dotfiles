@@ -1044,14 +1044,18 @@ note_show()
 # -------------------------------------------------------------------
 # tail with search highlight
 #
-# usage: t /var/log/Xorg.0.log kHz
+# usage: t /var/log/Xorg.0.log [kHz]
 t()
 {
   if [ $# -eq 0 ]; then
-    echo "Usage: t /var/log/Xorg.0.log kHz"
+    echo "Usage: t /var/log/Xorg.0.log [kHz]"
     return 1
   else
-    tail -f $1 | perl -pe "s/$2/${COLOR_LIGHT_RED}$&${COLOR_NO_COLOUR}/g"
+    if [ $2 ]; then
+      tail -f $1 | perl -pe "s/$2/${COLOR_LIGHT_RED}$&${COLOR_NO_COLOUR}/g"
+    else
+      tail -f $1
+    fi
   fi
 }
 
