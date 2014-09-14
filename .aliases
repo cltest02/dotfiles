@@ -248,7 +248,6 @@ alias myip_dns="dig +short myip.opendns.com @resolver1.opendns.com"
 alias myip_http="GET http://ipecho.net/plain && echo"
 
 # becoming root + executing last command
-# TODO: check if we use "zsh" and "SHARE_HISTORY"?
 alias sulast='su -c $(history -p !-1) root'
 
 # Canonical hex dump; some systems have this symlinked
