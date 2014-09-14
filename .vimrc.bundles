@@ -93,19 +93,23 @@ endif
 
 " ----------------------------------------
 
-Bundle 'matchit.zip'
+"Bundle 'matchit.zip'
 
 " ----------------------------------------
 
-"Bundle 'bling/vim-bufferline'
+Bundle 'bling/vim-bufferline'
 
-"let g:bufferline_echo = 0
+let g:bufferline_echo = 0
 
 " ----------------------------------------
 
-Bundle 'gregsexton/gitv'
+"Bundle 'gregsexton/gitv'
 
 " usage: ":Gitv"
+
+" ----------------------------------------
+
+Bundle 'airblade/vim-gitgutter'
 
 " ----------------------------------------
 
@@ -177,17 +181,17 @@ Bundle 'flazz/vim-colorschemes'
 
 " ----------------------------------------
 
-Bundle 'godlygeek/tabular'
+"Bundle 'godlygeek/tabular'
 
 " ----------------------------------------
 
-Bundle 'majutsushi/tagbar'
+"Bundle 'majutsushi/tagbar'
 
-nnoremap <silent> <leader>= :TagbarToggle<cr>
-let g:tagbar_autofocus = 1
-let g:tagbar_left = 1
-let g:tagbar_compact = 1
-let g:tagbar_indent = 1
+"nnoremap <silent> <leader>= :TagbarToggle<cr>
+"let g:tagbar_autofocus = 1
+"let g:tagbar_left = 1
+"let g:tagbar_compact = 1
+"let g:tagbar_indent = 1
 
 " ----------------------------------------
 
@@ -411,6 +415,6 @@ Bundle 'tpope/vim-markdown'
 
 " ----------------------------------------
 
-"Bundle 'xolox/vim-misc'
+Bundle 'xolox/vim-misc'
 
 " ----------------------------------------

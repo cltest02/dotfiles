@@ -46,6 +46,9 @@ endif
 " Sets how many lines of history VIM has to remember
 set history=100
 
+" open 50 tabs max
+set tabpagemax=50
+
 if v:version >= 500
   " try reducing the number of lines stored in a register
   set viminfo='500,f1,:100,/100
@@ -494,9 +497,14 @@ set virtualedit=block
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Moving around, tabs, windows and buffers
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Treat long lines as break lines (useful when moving around in them)
-map j gj
-map k gk
+" gi moves to last insert mode (default)
+" gI moves to last modification
+nnoremap gI `.
+
+" Movement & wrapped long lines
+" This solves the problem that pressing down jumps your cursor 'over' the curren
+nnoremap j gj
+nnoremap k gk
 
 " Map <Space> to / (search) and Ctrl-<Space> to ? (backwards search)
 map <space> /
@@ -516,9 +524,6 @@ map <leader>bd :Bclose<cr>
 
 " Close all the buffers
 map <leader>ba :1,1000 bd!<cr>
-
-" open 50 tabs max
-set tabpagemax=50
 
 " Useful mappings for managing tabs
 map <leader>tn :tabnew<cr>
@@ -669,15 +674,6 @@ noremap <Leader>P "*P
 
 " select all
 map <Leader>a ggVG
-
-" gi moves to last insert mode (default)
-" gI moves to last modification
-nnoremap gI `.
-
-" Movement & wrapped long lines
-" This solves the problem that pressing down jumps your cursor 'over' the current line to the next line
-nnoremap j gj
-nnoremap k gk
 
 " Move a line of text using ALT+[jk] or Comamnd+[jk] on mac
 nmap <M-j> mz:m+<cr>`z
