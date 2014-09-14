@@ -1069,6 +1069,20 @@ httpDebug()
 }
 
 # -------------------------------------------------------------------
+# dnsInfo: show dns-settings from a domain e.g. MX, IP
+#
+# usage: dnsInfo moelleken.org
+dnsInfo()
+{
+  if [ $# -eq 0 ]; then
+    echo "Usage: dnsInfo moelleken.org"
+    return 1
+  else
+    dig $1 ANY
+  fi
+}
+
+# -------------------------------------------------------------------
 # gid: Install Grunt plugins and add them as `devDependencies` to `package.json`
 #
 # usage: gid contrib-watch contrib-uglify
