@@ -16,6 +16,26 @@ err()
 }
 
 # -------------------------------------------------------------------
+# cd: this will overwrite the default "cd"-command
+cd ()
+{
+  if   [[ "x$*" == "x..." ]]; then
+    cd ../..
+  elif [[ "x$*" == "x...." ]]; then
+    cd ../../..
+  elif [[ "x$*" == "x....." ]]; then
+    cd ../../../..
+  elif [[ "x$*" == "x......" ]]; then
+    cd ../../../../..
+  elif [ -d ~/.autoenv ]; then
+    source ~/.autoenv/activate.sh
+    autoenv_cd "$@"
+  else
+    builtin cd "$@"
+  fi
+}
+
+# -------------------------------------------------------------------
 # lc: Convert the parameters or STDIN to lowercase.
 lc()
 {
@@ -57,6 +77,10 @@ wtfis()
   local i=1
   local ret=0
 
+  # TODO: "type -p" has different output with zsh / bash
+  #
+  # so this function is bash-only for now :/
+
   if [ $# -eq 0 ]; then
     # Use "fc" to get the last command, and use that when no command
     # was given as a parameter to "wtfis".
@@ -78,7 +102,6 @@ wtfis()
     if [ $ret -eq 0 ]; then
       # Try to get the physical path. This works for hashes and
       # "normal" binaries.
-      # TODO: "type -p" has different output with zsh / bash
       local path_tmp=$(type -p "$cmd")
 
       if [ -z "$path_tmp" ]; then

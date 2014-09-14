@@ -45,6 +45,26 @@ alias .....="cd ../../../.."
 alias ~="cd ~" # `cd` is probably faster to type though
 alias -- -="cd -"
 
+# fallback by typo
+alias cd..='cd ..'
+alias cd...='cd ../..'
+alias cd....='cd ../../..'
+alias cd.....='cd ../../../..'
+
+# TODO: only for zsh
+#alias cd/='cd /'
+
+# TODO: only for zsh
+alias 1='cd -'
+alias 2='cd -2'
+alias 3='cd -3'
+alias 4='cd -4'
+alias 5='cd -5'
+alias 6='cd -6'
+alias 7='cd -7'
+alias 8='cd -8'
+alias 9='cd -9'
+
 # personal shortcuts (add something like thin in ~/.extra)
 #alias d="cd ~/Documents/Dropbox"
 #alias dl="cd ~/Downloads"
@@ -133,12 +153,13 @@ if [ "$TERM" != "dumb" ]; then
   alias vdir="ls --color=auto --format=long"
 else
   # only some default-"ls"-commands as fallback
-  alias l='ls -lFh'
-  alias l.='ls -dlFh .*'
-  alias la='ls -laFh'
-  alias lr='ls -laFhtr'
-  alias lsa='la'
-  alias ll='ls -lFh'
+  alias l="ls -lFh"
+  alias l.="ls -dlFh .*"
+  alias la="ls -laFh"
+  alias lr="ls -laFhtr"
+  alias lsa="la"
+  alias lsd="ls -lFh | grep --color=never '^d'"
+  alias ll="ls -lFh"
 fi
 
 # Clipboard access. I created these aliases to have the same command on
@@ -191,6 +212,13 @@ alias dec2hex='printf "%x\n" $1'
 
 # mkdir: always create parent-dirs, if needed
 alias mkdir="mkdir -p"
+alias md="mkdir"
+
+# dirs
+alias d='dirs -v | head -10'
+
+# rmdir
+alias rd="rmdir"
 
 # create a dir with date from today
 alias mkdd='mkdir $(date +%Y%m%d)'
