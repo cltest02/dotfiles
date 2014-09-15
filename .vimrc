@@ -526,11 +526,12 @@ map <leader>bd :Bclose<cr>
 map <leader>ba :1,1000 bd!<cr>
 
 " Useful mappings for managing tabs
+nnoremap <C-Left> :tabprevious<cr>
+nnoremap <C-Right> :tabnext<cr>
 map <leader>tn :tabnew<cr>
 map <leader>to :tabonly<cr>
 map <leader>tc :tabclose<cr>
-map <leader>tm :tabmove
-map <leader>t<leader> :tabnext
+map <leader>tm :tabmove<cr>
 
 " shortcut to jump to next conflict marker
 " WARNING: this isn't working, it prints map-string in files
