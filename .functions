@@ -970,6 +970,13 @@ codepoint()
 }
 
 # -------------------------------------------------------------------
+# history_top_used: show your most used commands in your history
+history_top_used()
+{
+  history | awk '{a[$2]++}END{for(i in a){print a[i] " " i}}' | sort -rn | head
+}
+
+# -------------------------------------------------------------------
 # getcertnames: Show all the names (CNs and SANs) listed in the SSL certificate
 # for a given domain
 getcertnames()
