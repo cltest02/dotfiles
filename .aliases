@@ -107,7 +107,7 @@ if [ "$TERM" != "dumb" ]; then
 
   # Use "colordiff" or "highlight" to colour diffs.
   if command -v colordiff > /dev/null; then
-    alias difflight='colordiff | less -XFIRd'
+    alias difflight='colordiff'
   elif command -v highlight > /dev/null; then
     alias difflight='highlight --dark-red ^-.* | highlight --dark-green ^+.* | highlight --yellow ^Only.* | highlight --yellow ^Files.*differ$ | less -XFIRd'
   else
