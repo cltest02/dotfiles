@@ -17,7 +17,7 @@ err()
 
 # -------------------------------------------------------------------
 # cd: this will overwrite the default "cd"-command
-cd ()
+cd()
 {
   if [[ "x$*" == "x..." ]]; then
     cd ../..
@@ -937,13 +937,6 @@ json()
 }
 
 # -------------------------------------------------------------------
-# digga: All the dig info
-digga()
-{
-  dig +nocmd "$1" any +multiline +noall +answer
-}
-
-# -------------------------------------------------------------------
 # escape: Escape UTF-8 characters into their 3-byte format
 escape()
 {
@@ -1069,16 +1062,16 @@ httpDebug()
 }
 
 # -------------------------------------------------------------------
-# dnsInfo: show dns-settings from a domain e.g. MX, IP
+# digga: show dns-settings from a domain e.g. MX, IP
 #
-# usage: dnsInfo moelleken.org
-dnsInfo()
+# usage: digga moelleken.org
+digga()
 {
   if [ $# -eq 0 ]; then
-    echo "Usage: dnsInfo moelleken.org"
+    echo "Usage: digga moelleken.org"
     return 1
   else
-    dig $1 ANY
+    dig +nocmd "$1" ANY +multiline +noall +answer
   fi
 }
 

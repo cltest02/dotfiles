@@ -258,8 +258,12 @@ alias updates='sudo apt-get update'
 alias myip_dns="dig +short myip.opendns.com @resolver1.opendns.com"
 alias myip_http="GET http://ipecho.net/plain && echo"
 
+# show dns info via "dig"
+alias dnsInfo="digga"
+
 # becoming root + executing last command
-alias sulast='su -c $(history -p !-1) root'
+# TODO: need some testing (with bash + zsh)
+#alias sulast='su -c $(history -p !-1) root'
 
 # Canonical hex dump; some systems have this symlinked
 command -v hd > /dev/null || alias hd="hexdump -C"
