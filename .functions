@@ -1045,9 +1045,9 @@ t()
     return 1
   else
     if [ $2 ]; then
-      tail -f $1 | perl -pe "s/$2/${COLOR_LIGHT_RED}$&${COLOR_NO_COLOUR}/g"
+      tail -n 50 -f $1 | perl -pe "s/$2/${COLOR_LIGHT_RED}$&${COLOR_NO_COLOUR}/g"
     else
-      tail -f $1
+      tail -n 50 -f $1
     fi
   fi
 }
@@ -1209,6 +1209,8 @@ processenv()
   pidenv $(pidof $1)
 }
 
+# -------------------------------------------------------------------
+# git_prompt for PS1
 __git_prompt()
 {
   local s=''
@@ -1290,16 +1292,22 @@ __git_prompt()
   fi
 }
 
+# -------------------------------------------------------------------
+# svn_branch: helper for PS1
 __svn_branch()
 {
   __svn_url | sed -e 's#^'"$(__svn_repository_root)"'##g' | awk '{print " ("$1")" }'
 }
 
+# -------------------------------------------------------------------
+# svn_url: helper for PS1
 __svn_url()
 {
   svn info 2>/dev/null | sed -ne 's#^URL: ##p'
 }
 
+# -------------------------------------------------------------------
+# svn_repository_root: helper for PS1
 __svn_repository_root()
 {
   svn info 2>/dev/null | sed -ne 's#^Repository Root: ##p'
