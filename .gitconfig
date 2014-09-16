@@ -203,6 +203,9 @@
   # grep alias
   search = grep
 
+  # find a String in the Entire Git History
+  search-git-history = "!r() { git rev-list --all | xargs git grep -F $1; }; r"
+
   # reset
   unstage = reset HEAD              # remove files from index (tracking)
   uncommit = reset --soft HEAD^     # go back before last commit, with files in uncommitted state
