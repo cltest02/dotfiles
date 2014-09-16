@@ -10,13 +10,12 @@
 You can clone the repository wherever you want. (I like to keep it in `~/Projects/dotfiles`, with `~/dotfiles` as a symlink.) The bootstrapper script will pull in the latest version and copy the files to your home folder.
 
 ```bash
-cd ~ && git clone https://github.com/voku/dotfiles.git && cd dotfiles && source bootstrap.sh
+cd ~ ; git clone https://github.com/voku/dotfiles.git ; cd dotfiles ; ./firstInstall.sh ; ./bootstrap.sh 
 ```
 
 To update, `cd` into your local `dotfiles` repository and then:
 
 ```bash
-git pull
 ./bootstrap.sh
 ```
 
@@ -66,17 +65,6 @@ export PATH=$ANDROID_SDK_ROOT/tools/:$ANDROID_SDK_ROOT/platform-tools/:$ANDROID_
 ```
 
 You could also use `~/.extra` to override settings, functions and aliases from my dotfiles repository. It’s probably better to [fork this repository](https://github.com/voku/dotfiles/fork) instead, though.
-
-```bash
-```
-
-### Install needed packages
-
-When setting up a new Debian, you may want to install some extra packages:
-
-```bash
-bash ~/dotfiles/.firstInstall.sh
-```
 
 
 ## Screenshot
