@@ -916,6 +916,17 @@ psgrep()
 }
 
 # -------------------------------------------------------------------
+# cpuinfo: get info about your cpu
+cpuinfo()
+{
+  if lscpu > /dev/null 2>&1; then
+    lscpu
+  else
+    cat /proc/cpuinfo
+  fi
+}
+
+# -------------------------------------------------------------------
 # gz: Compare original and gzipped file size
 gz()
 {
