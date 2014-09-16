@@ -112,7 +112,6 @@ sudo aptitude install \
   lynx \
   nmap \
   pv \
-  rename \
   ucspi-tcp \
   xpdf \
   `# nstall python-pygments for json print` \
