@@ -318,7 +318,7 @@ command -v grunt > /dev/null && alias grunt="grunt --stack"
 alias meminfo='free -m -l -t'
 
 # get top process eating memory
-alias psmem="ps aux -o time,ppid,pid,nice,pcpu,pmem,user,comm -A | sort -n -k 6"
+alias psmem="ps -o time,ppid,pid,nice,pcpu,pmem,user,comm -A | sort -n -k 6"
 alias psmem5="psmem | tail -5"
 alias psmem10="psmem | tail -10"
 
