@@ -255,8 +255,8 @@ alias rd="rmdir"
 alias mkdd='mkdir $(date +%Y%m%d)'
 
 # get / check for updates
-# TODO: check for debian-based
-alias updates='sudo apt-get update'
+alias apt-update="sudo apt-get update"
+alias apt-upgrade="sudo apt-get update && sudo apt-get upgrade && sudo apt-get clean"
 
 # external ip address
 alias myip_dns="dig +short myip.opendns.com @resolver1.opendns.com"
