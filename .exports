@@ -1,9 +1,12 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # make vim the default editor
 export PAGER="less"
 export EDITOR="vim"
 export VISUAL=$EDITOR
+
+# don't check mail when opening terminal.
+#unset MAILCHECK
 
 # make the "sudo" prompt more useful, without requiring access to "visudo"
 export SUDO_PROMPT="[sudo] password for %u on %h: "

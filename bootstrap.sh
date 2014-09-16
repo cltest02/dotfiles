@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 echo -e "${COLOR_GREEN}"
 
@@ -31,7 +31,7 @@ echo -e "${COLOR_NO_COLOUR}"
 sourceDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 git pull origin master
 
-function doIt()
+doIt()
 {
   if [ ! -f ~/.config_dotfiles ]; then
     cp .config_dotfiles_default ~/.config_dotfiles
@@ -42,22 +42,15 @@ function doIt()
         --exclude "README.md" --exclude "firstInstall.sh" --exclude "android_sdk_install.sh" \
         --exclude ".gitignore" --exclude ".gitattributes" \
         --exclude "LICENSE-MIT.txt" --exclude ".editorconfig" \
-        --exclude "examples/" --exclude ".oh-my-zsh/" \
+        --exclude "examples/" \
         -avhi --no-perms . ~/
 
-  # install oh-my-zsh
-  if [ ! -d ~/.oh-my-zsh ]; then
-    git clone https://github.com/voku/oh-my-zsh.git ~/.oh-my-zsh
-    read -p "Do you want to use the zsh-shell? (y/n) " -n 1 yesOrNo
-    echo
-    if [[ $yesOrNo =~ ^[Yy]$ ]]; then
-      chsh -s $(which zsh)
-    fi
-  else
-    cd ~/.oh-my-zsh
-    git pull
+  # try zsh?
+  read -p "Do you want to use the zsh-shell? (y/n) " -n 1 yesOrNo
+  echo
+  if [[ $yesOrNo =~ ^[Yy]$ ]]; then
+    chsh -s $(which zsh)
   fi
-  cp -pvr $sourceDir/.oh-my-zsh/ ~/
 
   # install vim-plugin-manager
   if [ ! -d ~/.vim/bundle/vundle ]; then
@@ -75,7 +68,7 @@ function doIt()
   fi
 }
 
-function dryRun()
+dryRun()
 {
 	rsync --exclude ".git/" --exclude ".DS_Store" --exclude "bootstrap.sh" \
         --exclude "README.md" --exclude "firstInstall.sh" --exclude "android_sdk_install.sh" \

@@ -1,4 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+# use the bash as default "sh", fixed some problems
+# with e.g. third-party scripts
+#sudo ln -sf /bin/bash /bin/sh
 
 ask_install()
 {

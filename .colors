@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Reset
 export COLOR_NO_COLOUR='\e[0m'

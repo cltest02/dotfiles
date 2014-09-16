@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Enable simple aliases to be sudo'ed. ("sudone"?)
 # http://www.gnu.org/software/bash/manual/bashref.html#Aliases says: "If the
@@ -185,6 +185,10 @@ fi
 alias zshrc="vim ~/.zshrc"
 alias bashrc="vim ~/.bashrc"
 alias vimrc="vim ~/.vimrc"
+
+# quick reload
+alias reload_bash_profile='source ~/.bash_profile'
+alias reload_zsh_profile='source ~/.zprofile'
 
 # Clipboard access. I created these aliases to have the same command on
 # Cygwin, Linux and OS X.

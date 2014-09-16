@@ -16,7 +16,7 @@ fi
 # load the shell dotfiles, and then some:
 # * ~/.path can be used to extend `$PATH`.
 # * ~/.extra can be used for other settings you don’t want to commit.
-for file in ~/.{config_dotfiles,path,exports,colors,icons,aliases,bash_complete,functions,extra,bash_prompt}; do
+for file in ~/.{config_dotfiles,path,load,exports,colors,icons,aliases,bash_complete,functions,extra}; do
   [ -r "$file" ] && [ -f "$file" ] && source "$file"
 done
 unset file
@@ -61,3 +61,13 @@ shopt -s no_empty_cmd_completion;
 # Do not overwrite files when redirecting using ">".
 # Note that you can still override this with ">|".
 #set -o noclobber;
+
+############# EXTRA ####################################
+
+if [ -d $HOME/.redpill ]; then
+
+  # define the path from "red-pill"
+  export REDPILL=$HOME/.redpill
+
+  source $HOME/.redpill/redpill-init-bash.sh
+fi

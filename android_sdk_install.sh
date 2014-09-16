@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # This script is designed to install the Android SDK, NDK, and Eclipse in
 # Linux Mint 11 and make it easier for people that want to develop for
