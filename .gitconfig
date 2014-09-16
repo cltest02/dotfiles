@@ -149,7 +149,8 @@
   shortnocolor = log --pretty=format:\"%h %cr %cn %s\"
 
   # Pretty log of commits. Supports options of git log
-  log-pretty = log --graph --decorate --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+  # https://www.kernel.org/pub/software/scm/git/docs/git-log.html#_pretty_formats
+  log-pretty = log --graph --decorate --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an - %aE>%Creset' --abbrev-commit
 
   # last commit
   last = log -1 HEAD
