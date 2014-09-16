@@ -74,12 +74,15 @@ wtfis()
 {
   local cmd=""
   local type_tmp=""
+  local type_command=""
   local i=1
   local ret=0
 
-  # TODO: "type -p" has different output with zsh / bash
-  #
-  # so this function is bash-only for now :/
+  if [ -n "$BASH_VERSION" ]; then
+    type_command="type -p"
+  else
+    type_command=( whence -p ) # changes variable type as well
+  fi
 
   if [ $# -eq 0 ]; then
     # Use "fc" to get the last command, and use that when no command
@@ -102,9 +105,9 @@ wtfis()
     if [ $ret -eq 0 ]; then
       # Try to get the physical path. This works for hashes and
       # "normal" binaries.
-      local path_tmp=$(type -p "$cmd")
+      local path_tmp=$(${type_command} "$cmd" 2> /dev/null)
 
-      if [ -z "$path_tmp" ]; then
+      if (( ? )) || ! test -x $path_tmp; then
         # Show the output from "type" without ANSI escapes.
         echo "${type_tmp//$'\e'/\\033}"
 
