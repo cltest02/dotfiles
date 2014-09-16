@@ -28,7 +28,13 @@ echo ""
 
 echo -e "${COLOR_NO_COLOUR}"
 
-sourceDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+if [[ "$1" == "--force" ]] || [[ "$1" == "-f" ]]; then
+  FORCE=1
+else
+  FORCE=0
+fi
+
 git pull origin master
 
 doIt()
@@ -44,6 +50,11 @@ doIt()
         --exclude "LICENSE-MIT.txt" --exclude ".editorconfig" \
         --exclude "examples/" \
         -avhi --no-perms . ~/
+
+  # check for "force"
+  if [[ "$FORCE" == "1" ]]; then
+    return 0
+  fi
 
   # try zsh?
   read -p "Do you want to use the zsh-shell? (y/n) " -n 1 yesOrNo
@@ -79,7 +90,7 @@ dryRun()
 	source ~/.bash_profile
 }
 
-if [ "$1" == "--force" -o "$1" == "-f" ]; then
+if [[ "$FORCE" == "1" ]]; then
 	doIt
 else
   echo "Executing dry run..."
