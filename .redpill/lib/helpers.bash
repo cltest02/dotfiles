@@ -83,15 +83,15 @@ red-pill()
   $func $*
 }
 
-_is_function ()
+_is_function()
 {
   _about 'sets $? to true if parameter is the name of a function'
   _param '1: name of alleged function'
   _group 'lib'
-  [ -n "$(type -a $1 2>/dev/null | grep 'is a function')" ]
+  [ -n "$(LANG=C LANGUAGE=C type -a $1 2>/dev/null | grep 'is a function')" ]
 }
 
-_red-pill-aliases ()
+_red-pill-aliases()
 {
   _about 'summarizes available red_pill aliases'
   _group 'lib'
@@ -99,7 +99,7 @@ _red-pill-aliases ()
   _red-pill-describe "aliases" "an" "alias" "Alias"
 }
 
-_red-pill-completions ()
+_red-pill-completions()
 {
   _about 'summarizes available red_pill completions'
   _group 'lib'
@@ -107,7 +107,7 @@ _red-pill-completions ()
   _red-pill-describe "completion" "a" "completion" "Completion"
 }
 
-_red-pill-plugins ()
+_red-pill-plugins()
 {
   _about 'summarizes available red_pill plugins'
   _group 'lib'
@@ -115,7 +115,7 @@ _red-pill-plugins ()
   _red-pill-describe "plugins" "a" "plugin" "Plugin"
 }
 
-_red-pill-describe ()
+_red-pill-describe()
 {
   _about 'summarizes available red_pill components'
   _param '1: subdirectory'
