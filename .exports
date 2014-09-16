@@ -5,6 +5,11 @@ export PAGER="less"
 export EDITOR="vim"
 export VISUAL=$EDITOR
 
+PREVIEW="less"
+[ -s /usr/bin/gloobus-preview ] && PREVIEW="gloobus-preview"
+[ -s /Applications/Preview.app ] && PREVIEW="/Applications/Preview.app"
+export PREVIEW
+
 # don't check mail when opening terminal.
 #unset MAILCHECK
 

@@ -43,12 +43,6 @@ if [[ $PROMPT ]]; then
   export PS1=$PROMPT
 fi
 
-# adding Support for other OSes
-# TODO: move to ".export"
-PREVIEW="less"
-[ -s /usr/bin/gloobus-preview ] && PREVIEW="gloobus-preview"
-[ -s /Applications/Preview.app ] && PREVIEW="/Applications/Preview.app"
-
 # load all the Jekyll stuff
 # TODO: move this to global zsh & bash
 if [ -e $HOME/.jekyllconfig ]; then
