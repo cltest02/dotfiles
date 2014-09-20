@@ -11,13 +11,12 @@ alias l1='ls -1'
 
 alias _="sudo"
 
-if [ $(uname) = "Linux" ]
-then
+if [ $(uname) = "Linux" ]; then
   alias ls="ls --color=auto"
 fi
+
 which gshuf &> /dev/null
-if [ $? -eq 1 ]
-then
+if [ $? -eq 0 ]; then
   alias shuf=gshuf
 fi
 
@@ -47,8 +46,7 @@ alias -- -='cd -'        # Go back
 alias h='history'
 
 # Tree
-if [ ! -x "$(which tree 2>/dev/null)" ]
-then
+if [ ! -x "$(which tree 2>/dev/null)" ]; then
   alias tree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'"
 fi
 
