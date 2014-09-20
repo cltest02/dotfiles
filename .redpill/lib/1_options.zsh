@@ -46,8 +46,6 @@ setopt \
   GLOB_COMPLETE \
   `# more patterns for filename generation` \
   EXTENDED_GLOB \
-  `# do not require a leading ‘.’ in a filename to be matched explicitly` \
-  GLOB_DOTS \
   `# extra completion` \
   COMPLETE_ALIASES \
   `# append a trailing ‘/’ to all directory names resulting from filename generation` \
