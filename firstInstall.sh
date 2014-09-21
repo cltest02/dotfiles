@@ -114,6 +114,7 @@ sudo aptitude install \
   pv \
   ucspi-tcp \
   xpdf \
+  sqlite3 \
   `# nstall python-pygments for json print` \
   python-pygments \
   locales \
