@@ -149,44 +149,38 @@ if [ "$TERM" != "dumb" ]; then
   alias egrep="egrep $COLORFLAG"
   alias fgrep="fgrep $COLORFLAG"
 
-  # list all files colorized in long format
-  alias l="ls -lhF $COLORFLAG"
-  # Show hidden files
-  alias l.="ls -dlhF .* $COLORFLAG"
-  alias ldot="l."
-  # use colors
-  alias ls="ls -F $COLORFLAG"
-  # displays all files and directories in detail
-  alias la="ls -laFh $COLORFLAG"
-  alias lsa="la"
-  # displays all files and directories in detail with newest-files at bottom
-  alias lr="ls -laFhtr $COLORFLAG"
-  # show last 10 recently changed files
-  alias lt="ls -altr | grep -v '^d' | tail -n 10"
-  # show files and directories (also in sub-dir) that was touched in the last hour
-  alias lf="find ./* -ctime -1 | xargs ls -ltr $COLORFLAG"
-  # displays files and directories in detail
-  alias ll="ls -lFh --group-directories-first $COLORFLAG"
-  # shows the most recently modified files at the bottom of
-  alias llr="ls -lartFh --group-directories-first $COLORFLAG"
-  # list only directories
-  alias lsd="ls -lFh $COLORFLAG | grep --color=never '^d'"
-  # sort by file-size
-  alias lS="ls -1FSshr $COLORFLAG"
-  # displays files and directories
-  alias dir="ls --format=vertical $COLORFLAG"
-  # displays more information about files and directories
-  alias vdir="ls --format=long $COLORFLAG"
-else
-  # only some default-"ls"-commands as fallback
-  alias l="ls -lFh"
-  alias l.="ls -dlFh .*"
-  alias la="ls -laFh"
-  alias lr="ls -laFhtr"
-  alias lsa="la"
-  alias lsd="ls -lFh | grep --color=never '^d'"
-  alias ll="ls -lFh"
 fi
+
+# list all files colorized in long format
+alias l="ls -lhF $COLORFLAG"
+# Show hidden files
+alias l.="ls -dlhF .* $COLORFLAG"
+alias ldot="l."
+# use colors
+alias ls="ls -F $COLORFLAG"
+# display only files & dir in a v-aling view
+alias l1="ls -1 $COLORFLAG"
+# displays all files and directories in detail
+alias la="ls -laFh $COLORFLAG"
+alias lsa="la"
+# displays all files and directories in detail with newest-files at bottom
+alias lr="ls -laFhtr $COLORFLAG"
+# show last 10 recently changed files
+alias lt="ls -altr | grep -v '^d' | tail -n 10"
+# show files and directories (also in sub-dir) that was touched in the last hour
+alias lf="find ./* -ctime -1 | xargs ls -ltr $COLORFLAG"
+# displays files and directories in detail
+alias ll="ls -lFh --group-directories-first $COLORFLAG"
+# shows the most recently modified files at the bottom of
+alias llr="ls -lartFh --group-directories-first $COLORFLAG"
+# list only directories
+alias lsd="ls -lFh $COLORFLAG | grep --color=never '^d'"
+# sort by file-size
+alias lS="ls -1FSshr $COLORFLAG"
+# displays files and directories
+alias dir="ls --format=vertical $COLORFLAG"
+# displays more information about files and directories
+alias vdir="ls --format=long $COLORFLAG"
 
 # quick edit
 alias zshrc="vim ~/.zshrc"
@@ -222,11 +216,16 @@ alias sgrep='grep -R -n -H -C 5 --exclude-dir={.git,.svn,CVS} '
 # search in files
 alias afind="ack-grep -iH"
 
-# displays a directory tree
-alias tree="tree -Csu"
-
-# displays a directory tree - paginated
-alias ltree="tree -Csu | less -R"
+# tree (fallback)
+if [ ! -x "$(which tree 2>/dev/null)" ]; then
+  alias tree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'"
+  alias ltree="tree | less -R"
+else
+  # displays a directory tree
+  alias tree="tree -Csu"
+  # displays a directory tree - paginated
+  alias ltree="tree -Csu | less -R"
+fi
 
 # Gzip-enabled `curl`
 alias gurl="curl --compressed"
