@@ -83,25 +83,30 @@ alias dmesg='dmesg -T'
 if [ "$TERM" != "dumb" ]; then
 
   # dircolors
-  if [ -s "$HOME/.dircolors" ]; then
-    eval "$(dircolors -b $HOME/.dircolors)"
-  else
-    eval "$(dircolors -b)"
+  if [[ "$SYSTEM_TYPE" == "LINUX" ]]; then
+    if [ -s "$HOME/.dircolors" ]; then
+      eval "$(dircolors -b $HOME/.dircolors)"
+    else
+      eval "$(dircolors -b)"
+    fi
   fi
 
-  # Enable ls colors
-  if [ "$DISABLE_LS_COLORS" != "true" ]; then
-    # Find the option for using colors in ls, depending on the version: Linux or BSD
-    if [[ "$(uname -s)" == "NetBSD" ]]; then
+  # enable ls colors
+  if [[ "$DISABLE_LS_COLORS" != "true" ]]; then
+    if [[ "$SYSTEM_TYPE" == "NET_BSD" ]]; then
       # On NetBSD, test if "gls" (GNU ls) is installed (this one supports colors);
       # otherwise, leave ls as is, because NetBSD's ls doesn't support -G
-      gls --color -d . &>/dev/null 2>&1 && alias ls='gls --color=tty'
-    elif [[ "$(uname -s)" == "OpenBSD" ]]; then
+      gls --color -d . &>/dev/null 2>&1 && COLORFLAG="--color=tty"
+    elif [[ "$SYSTEM_TYPE" == "OPEN_BSD" ]]; then
       # On OpenBSD, test if "colorls" is installed (this one supports colors);
       # otherwise, leave ls as is, because OpenBSD's ls doesn't support -G
-      colorls -G -d . &>/dev/null 2>&1 && alias ls='colorls -G'
-    else
-      ls --color -d . &>/dev/null 2>&1 && alias ls='ls --color=tty' || alias ls='ls -G'
+      colorls -G -d . &>/dev/null 2>&1 && COLORFLAG="-G"
+    elif [[ "$SYSTEM_TYPE" == "OSX" ]]; then
+      # on OS X use "-G"
+      COLORFLAG="-G"
+    elif ls --color -d . &>/dev/null 2>&1; then
+      # on Linux use "--color='auto'"
+      COLORFLAG="--color=auto"
     fi
   fi
 
@@ -138,38 +143,38 @@ if [ "$TERM" != "dumb" ]; then
   fi
 
   # Colorize the grep command output for ease of use (good for log files)
-  alias grep='grep --color=auto'
-  alias egrep='egrep --color=auto'
-  alias fgrep='fgrep --color=auto'
+  alias grep="grep $COLORFLAG"
+  alias egrep="egrep $COLORFLAG"
+  alias fgrep="fgrep $COLORFLAG"
 
   # list all files colorized in long format
-  alias l="ls -lhF --color=auto"
+  alias l="ls -lhF $COLORGLAG"
   # Show hidden files
-  alias l.="ls -dlhF .* --color=auto"
+  alias l.="ls -dlhF .* $COLORFLAG"
   alias ldot="l."
   # use colors
-  alias ls="ls -F --color=auto"
+  alias ls="ls -F $COLORFLAG"
   # displays all files and directories in detail
-  alias la="ls -laFh --color=auto"
+  alias la="ls -laFh $COLORFLAG"
   alias lsa="la"
   # displays all files and directories in detail with newest-files at bottom
-  alias lr="ls -laFhtr --color=auto"
+  alias lr="ls -laFhtr $COLORFLAG"
   # show last 10 recently changed files
   alias lt="ls -altr | grep -v '^d' | tail -n 10"
   # show files and directories (also in sub-dir) that was touched in the last hour
-  alias lf='find ./* -ctime -1 | xargs ls -ltr --color'
+  alias lf="find ./* -ctime -1 | xargs ls -ltr $COLORFLAG"
   # displays files and directories in detail
-  alias ll="ls -lFh --color=auto --group-directories-first"
+  alias ll="ls -lFh --group-directories-first $COLORFLAG"
   # shows the most recently modified files at the bottom of
-  alias llr="ls -lartFh --color=auto --group-directories-first"
+  alias llr="ls -lartFh --group-directories-first $COLORFLAG"
   # list only directories
-  alias lsd="ls -lFh --color=auto | grep --color=never '^d'"
+  alias lsd="ls -lFh $COLORFLAG | grep --color=never '^d'"
   # sort by file-size
-  alias lS="ls -1FSshr --color=auto"
+  alias lS="ls -1FSshr $COLORFLAG"
   # displays files and directories
-  alias dir="ls --color=auto --format=vertical"
+  alias dir="ls --format=vertical $COLORFLAG"
   # displays more information about files and directories
-  alias vdir="ls --color=auto --format=long"
+  alias vdir="ls --format=long $COLORFLAG"
 else
   # only some default-"ls"-commands as fallback
   alias l="ls -lFh"
