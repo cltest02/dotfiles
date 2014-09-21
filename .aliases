@@ -105,8 +105,10 @@ if [ "$TERM" != "dumb" ]; then
       # on OS X use "-G"
       COLORFLAG="-G"
     elif ls --color -d . &>/dev/null 2>&1; then
-      # on Linux use "--color='auto'"
-      COLORFLAG="--color=auto"
+      COLORFLAG="--color"
+      if [[ "$SYSTEM_TYPE" == "LINUX" ]]; then
+        COLORFLAG="--color=auto"
+      fi
     fi
   fi
 
@@ -121,25 +123,25 @@ if [ "$TERM" != "dumb" ]; then
 
   # colorize these commands if possible
   if which grc >/dev/null 2>&1; then
-    alias colour='grc -es --colour=auto'
-    alias configure='colour ./configure'
-    alias diff='colour diff'
-    alias make='colour make'
-    alias gcc='colour gcc'
-    alias g++='colour g++'
-    alias ld='colour ld'
-    alias netstat='colour netstat'
-    alias ping='colour ping'
-    alias traceroute='colour traceroute'
-    alias tail='colour tail'
-    alias ps='colour ps'
-    alias syslog='sudo colour tail -f -n 100 /var/log/syslog'
+    alias colour="grc -es $COLORFLAG"
+    alias configure="colour ./configure"
+    alias diff="colour diff"
+    alias make="colour make"
+    alias gcc="colour gcc"
+    alias g++="colour g++"
+    alias ld="colour ld"
+    alias netstat="colour netstat"
+    alias ping="colour ping"
+    alias traceroute="colour traceroute"
+    alias tail="colour tail"
+    alias ps="colour ps"
+    alias syslog="sudo colour tail -f -n 100 /var/log/syslog"
   fi
 
   # replace top with htop
   if command -v htop >/dev/null; then
-    alias top_orig='/usr/bin/top'
-    alias top='htop'
+    alias top_orig="/usr/bin/top"
+    alias top="htop"
   fi
 
   # Colorize the grep command output for ease of use (good for log files)
@@ -148,7 +150,7 @@ if [ "$TERM" != "dumb" ]; then
   alias fgrep="fgrep $COLORFLAG"
 
   # list all files colorized in long format
-  alias l="ls -lhF $COLORGLAG"
+  alias l="ls -lhF $COLORFLAG"
   # Show hidden files
   alias l.="ls -dlhF .* $COLORFLAG"
   alias ldot="l."
