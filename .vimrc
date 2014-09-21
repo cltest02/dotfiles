@@ -39,6 +39,9 @@ set nocompatible
 " set the shell
 set shell=bash
 
+" Tell vim to use the .vim path first (colors and so)
+set runtimepath=~/.vim,$VIMRUNTIME
+
 if filereadable(expand("~/.vimrc.bundles"))
   source ~/.vimrc.bundles
 endif
@@ -109,6 +112,11 @@ endif
 " enable per-directory .vimrc files and disable unsafe commands in them
 set exrc
 set secure
+
+" automatically safe files when switchin between them / leaving vim
+"set autowriteall
+"autocmd FocusLost * silent! :wa
+"autocmd TabLeave * silent! :wa
 
 " Disable the splash screen (and some various tweaks for messages).
 set shortmess=aTItoO
@@ -291,6 +299,11 @@ if &t_Co > 2 || has("gui_running")
     " not available
   endtry
 
+  " Visual line marking 80 characters (vim 7.3)
+  if v:version >= 703
+    set colorcolumn=80
+  endif
+
   " Enable coloring for dark background terminals.
   if has('gui_running')
     set background=light
@@ -353,6 +366,7 @@ if has("gui_running")
 endif
 
 " use UTF-8 without BOM
+scriptencoding utf-8 nobomb
 set termencoding=utf-8 nobomb
 set encoding=utf-8 nobomb
 
@@ -415,6 +429,11 @@ if has('persistent_undo') && has('autocmd')
   augroup END
 endif
 
+" Enable vim to remember undo chains between sessions (vim 7.3)
+if v:version >= 703
+  set undofile
+endif
+
 " don't keep viminfo for files in temp directories or shm
 if has('viminfo')
   if has('autocmd')
@@ -427,9 +446,12 @@ if has('viminfo')
   endif
 endif
 
+" disable folding
+set nofoldenable
+
 " Turn backup off, if most stuff is in SVN, git etc ...
 "set nobackup
-"set nowb
+"set nowritebackup
 "set noswapfile
 
 
@@ -478,7 +500,8 @@ set nowrap
 set fo-=t
 
 " show “invisible” characters
-set lcs=tab:▸\ ,trail:·,eol:¬,nbsp:_
+set listchars=tab:▸\ ,trail:·,eol:¬,nbsp:_
+"set list
 
 " support for numbered/bullet lists
 set formatoptions+=n
@@ -672,6 +695,9 @@ noremap <Leader>P "*P
 " select last put
 " src: http://vim.wikia.com/wiki/Selecting_your_pasted_text
 "nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]
+
+" show current file as HTML (to paste into Keynote)
+nmap <Leader>h :TOhtml<CR>:w<cr>:!open %<CR>:q<CR>
 
 " select all
 map <Leader>a ggVG
