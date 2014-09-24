@@ -213,18 +213,22 @@ alias speedtest="wget -O /dev/null http://speedtest.wdc01.softlayer.com/download
 # super-grep ;)
 alias sgrep='grep -R -n -H -C 5 --exclude-dir={.git,.svn,CVS} '
 
-# search in files
-alias afind="ack-grep -iH"
-
-# tree (fallback)
-if [ ! -x "$(which tree 2>/dev/null)" ]; then
-  alias tree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'"
-  alias ltree="tree | less -R"
+# search in files (with fallback)
+if which ack-grep >/dev/null 2>&1; then
+  alias afind="ack-grep -iH"
 else
+  alias afind="ack -iH"
+fi
+
+# tree (with fallback)
+if which tree >/dev/null 2>&1; then
   # displays a directory tree
   alias tree="tree -Csu"
   # displays a directory tree - paginated
   alias ltree="tree -Csu | less -R"
+else
+  alias tree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'"
+  alias ltree="tree | less -R"
 fi
 
 # Gzip-enabled `curl`
