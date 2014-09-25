@@ -123,7 +123,7 @@ if [ "$TERM" != "dumb" ]; then
 
   # colorize these commands if possible
   if which grc >/dev/null 2>&1; then
-    alias colour="grc -es $COLORFLAG"
+    alias colour="grc -es --colour=auto"
     alias configure="colour ./configure"
     alias diff="colour diff"
     alias make="colour make"
