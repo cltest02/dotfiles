@@ -1231,6 +1231,13 @@ processenv()
 }
 
 # -------------------------------------------------------------------
+# shellShockCheck: http://www.openwall.com/lists/oss-security/2014/09/24/11
+shellShockCheck()
+{
+  env x='() { :;}; echo vulnerable' bash -c "echo if you see vulnerable, then you need a update";
+}
+
+# -------------------------------------------------------------------
 # git_prompt for PS1
 __git_prompt()
 {
