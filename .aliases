@@ -245,6 +245,8 @@ alias sgrep='grep -R -n -H -C 5 --exclude-dir={.git,.svn,CVS} '
 
 # search in files (with fallback)
 if which ack-grep >/dev/null 2>&1; then
+  alias ack=ack-grep
+
   alias afind="ack-grep -iH"
 else
   alias afind="ack -iH"
