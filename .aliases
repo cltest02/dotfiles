@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+
+# ------------------------------------------------------------------------------
+# | Defaults                                                                   |
+# ------------------------------------------------------------------------------
+
 # Enable simple aliases to be sudo'ed. ("sudone"?)
 # http://www.gnu.org/software/bash/manual/bashref.html#Aliases says: "If the
 # last character of the alias value is a space or tab character, then the next
@@ -15,8 +20,13 @@ if which vim >/dev/null 2>&1; then
   alias vi="vim"
 fi
 
+# add ssh-key to ssh-agent when key exist
+if [ "$SSH_AUTH_SOCK" != "" ] && [ -f ~/.ssh/id_rsa ] && [ -x /usr/bin/ssh-add  ]; then
+  ssh-add -l >/dev/null || alias ssh='(ssh-add -l >/dev/null || ssh-add) && unalias ssh; ssh'
+fi
+
 # Confirm before overwriting
-# -----------------------------------------------------------------------------
+# --------------------------
 # I know it is bad practice to override the default commands, but this is for
 # my own safety. If you really want the original "instakill" versions, you can
 # use "command rm", "\rm", or "/bin/rm" inside your own commands, aliases, or
@@ -26,12 +36,42 @@ fi
 #alias mv='mv -i'
 #alias ln='ln -i'
 
-alias rm='rm -I'                    # 'rm -i' prompts for every file
+alias rm='rm -I'     # 'rm -i' prompts for every file
 
 # safety features
 alias chown='chown --preserve-root'
 alias chmod='chmod --preserve-root'
 alias chgrp='chgrp --preserve-root'
+
+# dmesg with readable time
+alias dmesg='dmesg -T'
+
+
+# ------------------------------------------------------------------------------
+# | Global Quick Commands                                                      |
+# ------------------------------------------------------------------------------
+
+# quick & short
+alias g="git"
+alias h="history"
+alias j="jobs"
+
+# quick edit
+alias zshrc="vim ~/.zshrc"
+alias bashrc="vim ~/.bashrc"
+alias vimrc="vim ~/.vimrc"
+
+# quick reload
+alias reload_bash_profile='source ~/.bash_profile'
+alias reload_zsh_profile='source ~/.zprofile'
+
+# Reload the shell (i.e. invoke as a login shell)
+alias reload="exec $SHELL -l"
+
+
+# ------------------------------------------------------------------------------
+# | Navigation                                                                 |
+# ------------------------------------------------------------------------------
 
 # Push and pop directories on directory stack
 alias pu='pushd'
@@ -42,7 +82,7 @@ alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
-alias ~="cd ~" # `cd` is probably faster to type though
+alias ~="cd ~"       # `cd` is probably faster to type though
 alias -- -="cd -"
 
 # fallback by typo
@@ -51,35 +91,29 @@ alias cd...='cd ../..'
 alias cd....='cd ../../..'
 alias cd.....='cd ../../../..'
 
-# TODO: only for zsh
-#alias cd/='cd /'
 
-# TODO: only for zsh
-alias 1='cd -'
-alias 2='cd -2'
-alias 3='cd -3'
-alias 4='cd -4'
-alias 5='cd -5'
-alias 6='cd -6'
-alias 7='cd -7'
-alias 8='cd -8'
-alias 9='cd -9'
+# ------------------------------------------------------------------------------
+# | Directories Commands (create / remove)                                     |
+# ------------------------------------------------------------------------------
 
-# personal shortcuts (add something like thin in ~/.extra)
-#alias d="cd ~/Documents/Dropbox"
-#alias dl="cd ~/Downloads"
-#alias dt="cd ~/Desktop"
-#alias p="cd ~/projects"
+# mkdir: always create parent-dirs, if needed
+alias mkdir="mkdir -p"
+alias md="mkdir"
 
-# global shortcuts
-alias g="git"
-alias h="history"
-alias j="jobs"
+# dirs
+alias d='dirs -v | head -10'
 
-# dmesg with readable time
-alias dmesg='dmesg -T'
+# rmdir
+alias rd="rmdir"
 
-# command with color
+# create a dir with date from today
+alias mkdd='mkdir $(date +%Y%m%d)'
+
+
+# ------------------------------------------------------------------------------
+# | Colors                                                                     |
+# ------------------------------------------------------------------------------
+
 if [ "$TERM" != "dumb" ]; then
 
   # dircolors
@@ -114,11 +148,15 @@ if [ "$TERM" != "dumb" ]; then
 
   # Use "colordiff" or "highlight" to colour diffs.
   if command -v colordiff > /dev/null; then
-    alias difflight='colordiff'
+    alias difflight="colordiff"
   elif command -v highlight > /dev/null; then
-    alias difflight='highlight --dark-red ^-.* | highlight --dark-green ^+.* | highlight --yellow ^Only.* | highlight --yellow ^Files.*differ$ | less -XFIRd'
+    alias difflight="highlight --dark-red ^-.* \
+    	| highlight --dark-green ^+.* \
+    	| highlight --yellow ^Only.* \
+    	| highlight --yellow ^Files.*differ$ \
+    	| less -XFIRd"
   else
-    alias difflight='less -XFIRd'
+    alias difflight="less -XFIRd"
   fi
 
   # colorize these commands if possible
@@ -151,6 +189,11 @@ if [ "$TERM" != "dumb" ]; then
 
 fi
 
+
+# ------------------------------------------------------------------------------
+# | List Directory Contents (ls)                                               |
+# ------------------------------------------------------------------------------
+
 # list all files colorized in long format
 alias l="ls -lhF $COLORFLAG"
 # Show hidden files
@@ -182,44 +225,6 @@ alias dir="ls --format=vertical $COLORFLAG"
 # displays more information about files and directories
 alias vdir="ls --format=long $COLORFLAG"
 
-# quick edit
-alias zshrc="vim ~/.zshrc"
-alias bashrc="vim ~/.bashrc"
-alias vimrc="vim ~/.vimrc"
-
-# quick reload
-alias reload_bash_profile='source ~/.bash_profile'
-alias reload_zsh_profile='source ~/.zprofile'
-
-# Clipboard access. I created these aliases to have the same command on
-# Cygwin, Linux and OS X.
-if command -v pbpaste >/dev/null; then
-  alias getclip="pbpaste"
-  alias putclip="pbcopy"
-elif command -v xclip >/dev/null; then
-  alias getclip="xclip -o"
-  alias putclip="xclip -i"
-fi
-
-# the load-avg
-alias loadavg="cat /proc/loadavg"
-
-# show all partitions
-alias partitions="cat /proc/partitions"
-
-# speedtest: get a 100MB file via wget
-alias speedtest="wget -O /dev/null http://speedtest.wdc01.softlayer.com/downloads/test100.zip"
-
-# super-grep ;)
-alias sgrep='grep -R -n -H -C 5 --exclude-dir={.git,.svn,CVS} '
-
-# search in files (with fallback)
-if which ack-grep >/dev/null 2>&1; then
-  alias afind="ack-grep -iH"
-else
-  alias afind="ack -iH"
-fi
-
 # tree (with fallback)
 if which tree >/dev/null 2>&1; then
   # displays a directory tree
@@ -231,8 +236,60 @@ else
   alias ltree="tree | less -R"
 fi
 
+# ------------------------------------------------------------------------------
+# | Search and Find                                                            |
+# ------------------------------------------------------------------------------
+
+# super-grep ;)
+alias sgrep='grep -R -n -H -C 5 --exclude-dir={.git,.svn,CVS} '
+
+# search in files (with fallback)
+if which ack-grep >/dev/null 2>&1; then
+  alias afind="ack-grep -iH"
+else
+  alias afind="ack -iH"
+fi
+
+
+# ------------------------------------------------------------------------------
+# | Package Managers                                                           |
+# ------------------------------------------------------------------------------
+
+# get / check for updates
+alias apt-update="sudo apt-get update"
+alias apt-upgrade="sudo apt-get update && sudo apt-get upgrade && sudo apt-get clean"
+
+
+# ------------------------------------------------------------------------------
+# | Network                                                                    |
+# ------------------------------------------------------------------------------
+
+# external ip address
+alias myip_dns="dig +short myip.opendns.com @resolver1.opendns.com"
+alias myip_http="GET http://ipecho.net/plain && echo"
+
+# show dns info via "dig"
+alias dnsInfo="digga"
+
+# speedtest: get a 100MB file via wget
+alias speedtest="wget -O /dev/null http://speedtest.wdc01.softlayer.com/downloads/test100.zip"
+
 # Gzip-enabled `curl`
 alias gurl="curl --compressed"
+
+# displays the ports that use the applications
+alias lsport='sudo lsof -i -T -n'
+
+# shows more about the ports on which the applications use
+alias llport='netstat -nape --inet --inet6'
+
+# show only active network listeners
+alias netlisteners='sudo lsof -i -P | grep LISTEN'
+
+
+# ------------------------------------------------------------------------------
+# | Date & Time                                                                |
+# ------------------------------------------------------------------------------
 
 # date
 alias date_iso_8601='date "+%Y%m%dT%H%M%S"'
@@ -248,84 +305,13 @@ alias date_second='date "+%S"'
 # stopwatch
 alias timer='echo "Timer started. Stop with Ctrl-D." && date && time cat && date'
 
-# decimal to hexadecimal value
-alias dec2hex='printf "%x\n" $1'
 
-# mkdir: always create parent-dirs, if needed
-alias mkdir="mkdir -p"
-alias md="mkdir"
-
-# dirs
-alias d='dirs -v | head -10'
-
-# rmdir
-alias rd="rmdir"
-
-# create a dir with date from today
-alias mkdd='mkdir $(date +%Y%m%d)'
-
-# get / check for updates
-alias apt-update="sudo apt-get update"
-alias apt-upgrade="sudo apt-get update && sudo apt-get upgrade && sudo apt-get clean"
-
-# external ip address
-alias myip_dns="dig +short myip.opendns.com @resolver1.opendns.com"
-alias myip_http="GET http://ipecho.net/plain && echo"
-
-# show dns info via "dig"
-alias dnsInfo="digga"
-
-# becoming root + executing last command
-# TODO: need some testing (with bash + zsh)
-#alias sulast='su -c $(history -p !-1) root'
-
-# Canonical hex dump; some systems have this symlinked
-command -v hd > /dev/null || alias hd="hexdump -C"
-
-# OS X has no `md5sum`, so use `md5` as a fallback
-command -v md5sum > /dev/null || alias md5sum="md5"
-
-# OS X has no `sha1sum`, so use `shasum` as a fallback
-command -v sha1sum > /dev/null || alias sha1sum="shasum"
-
-# Trim new lines and copy to clipboard
-alias c="tr -d '\n' | pbcopy"
-
-# Recursively delete `.DS_Store` files
-alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
-
-# urldecode - url http network decode
-alias urldecode='python -c "import sys, urllib as ul; print ul.unquote_plus(sys.argv[1])"'
-
-# urlencode - url encode network http
-alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1])"'
-
-# ROT13-encode text. Works for decoding, too! ;)
-alias rot13='tr a-zA-Z n-za-mN-ZA-M'
-
-# empty the your trash-dir
-alias emptytrash="rm -rfv ~/.local/share/Trash/*"
-
-# ring the terminal bell, and put a badge on Terminal.app’s Dock icon
-# (useful when executing time-consuming commands)
-alias badge="tput bel"
-
-# intuitive map function
-#
-# For example, to list all directories that contain a certain file:
-# find . -name .gitattributes | map dirname
-alias map="xargs -n1"
-
-# one of @janmoesen’s ProTip™s
-for method in GET HEAD POST PUT DELETE TRACE OPTIONS; do
-  alias "$method"="lwp-request -m '$method'"
-done
-
-# make Grunt print stack traces by default
-command -v grunt > /dev/null && alias grunt="grunt --stack"
+# ------------------------------------------------------------------------------
+# | Hard- & Software Infos                                                     |
+# ------------------------------------------------------------------------------
 
 # pass options to free
-alias meminfo='free -m -l -t'
+alias meminfo="free -m -l -t"
 
 # get top process eating memory
 alias psmem="ps -o time,ppid,pid,nice,pcpu,pmem,user,comm -A | sort -n -k 6"
@@ -338,22 +324,19 @@ alias pscpu5="pscpu5 | tail -5"
 alias pscpu10="pscpu | tail -10"
 
 # shows the corresponding process to ...
-alias psx='ps auxwf | grep '
+alias psx="ps auxwf | grep "
 
 # shows the process structure to clearly
-alias pst='pstree -Alpha'
+alias pst="pstree -Alpha"
 
 # shows all your processes
-alias psmy='ps -ef | grep $USER'
+alias psmy="ps -ef | grep $USER"
 
-# displays the ports that use the applications
-alias lsport='sudo lsof -i -T -n'
+# the load-avg
+alias loadavg="cat /proc/loadavg"
 
-# shows more about the ports on which the applications use
-alias llport='netstat -nape --inet --inet6'
-
-# show only active network listeners
-alias netlisteners='sudo lsof -i -P | grep LISTEN'
+# show all partitions
+alias partitions="cat /proc/partitions"
 
 # shows the disk usage of a directory legibly
 alias du='du -kh'
@@ -364,12 +347,75 @@ alias du_overview='du -h | grep "^[0-9,]*[MG]" | sort -hr | less'
 # shows the complete disk usage to legibly
 alias df='df -kTh'
 
+
+# ------------------------------------------------------------------------------
+# | System Utilities                                                           |
+# ------------------------------------------------------------------------------
+
+# becoming root + executing last command
+alias sulast='su -c !-1 root'
+
+# Recursively delete `.DS_Store` files
+alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
+
+# empty the your trash-dir
+alias emptytrash="rm -rfv ~/.local/share/Trash/*"
+
+# Clipboard access. I created these aliases to have the same command on
+# Cygwin, Linux and OS X.
+if command -v pbpaste >/dev/null; then
+  alias getclip="pbpaste"
+  alias putclip="pbcopy"
+elif command -v xclip >/dev/null; then
+  alias getclip="xclip -o"
+  alias putclip="xclip -i"
+fi
+
+# Trim new lines and copy to clipboard
+alias c="tr -d '\n' | putclip"
+
+# ring the terminal bell, and put a badge on Terminal.app’s Dock icon
+# (useful when executing time-consuming commands)
+alias badge="tput bel"
+
+
+# ------------------------------------------------------------------------------
+# | Other                                                                      |
+# ------------------------------------------------------------------------------
+
+# decimal to hexadecimal value
+alias dec2hex='printf "%x\n" $1'
+
+# Canonical hex dump; some systems have this symlinked
+command -v hd > /dev/null || alias hd="hexdump -C"
+
+# OS X has no `md5sum`, so use `md5` as a fallback
+command -v md5sum > /dev/null || alias md5sum="md5"
+
+# OS X has no `sha1sum`, so use `shasum` as a fallback
+command -v sha1sum > /dev/null || alias sha1sum="shasum"
+
+# urldecode - url http network decode
+alias urldecode='python -c "import sys, urllib as ul; print ul.unquote_plus(sys.argv[1])"'
+
+# urlencode - url encode network http
+alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1])"'
+
+# ROT13-encode text. Works for decoding, too! ;)
+alias rot13='tr a-zA-Z n-za-mN-ZA-M'
+
+# intuitive map function
+#
+# For example, to list all directories that contain a certain file:
+# find . -name .gitattributes | map dirname
+alias map="xargs -n1"
+
+# make Grunt print stack traces by default
+command -v grunt > /dev/null && alias grunt="grunt --stack"
+
 # Kill all the tabs in Chrome to free up memory
 # [C] explained: http://www.commandlinefu.com/commands/view/402/exclude-grep-from-your-grepped-output-of-ps-alias-included-in-description
 alias chromekill="ps ux | grep '[C]hrome Helper --type=renderer' | grep -v extension-process | tr -s ' ' | cut -d ' ' -f2 | xargs kill"
-
-# Reload the shell (i.e. invoke as a login shell)
-alias reload="exec $SHELL -l"
 
 # faster npm for europeans
 command -v npm > /dev/null && alias npme="npm --registry http://registry.npmjs.eu"
@@ -380,10 +426,10 @@ alias composer-install="composer install --optimize-autoloader"
 # add ssh-key to clipboard
 alias sshkey="cat ~/.ssh/id_rsa.pub | putclip && echo 'Copied to clipboard.'"
 
-# add ssh-key to ssh-agent when key exist
-if [ "$SSH_AUTH_SOCK" != "" ] && [ -f ~/.ssh/id_rsa ] && [ -x /usr/bin/ssh-add  ]; then
-  ssh-add -l >/dev/null || alias ssh='(ssh-add -l >/dev/null || ssh-add) && unalias ssh; ssh'
-fi
+
+# ------------------------------------------------------------------------------
+# | auto-completion (for bash)                                                 |
+# ------------------------------------------------------------------------------
 
 # Automatically add completion for all aliases to commands having completion functions
 # source: http://superuser.com/questions/436314/how-can-i-get-bash-to-perform-tab-completion-for-my-aliases
@@ -441,3 +487,5 @@ alias_completion()
 if [ -n "$BASH_VERSION" ]; then
   alias_completion
 fi
+unset -f alias_completion
+
