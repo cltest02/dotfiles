@@ -239,6 +239,11 @@
   # Use colors in Git commands that are capable of colored output when
   # outputting to the terminal. (This is the default setting in Git ≥ 1.8.4.)
   ui = auto
+  diff = auto
+  status = auto
+  branch = auto
+  interactive = auto
+  pager  = true
 
 [color "branch"]
   # Highlight current. Yellow local branches; Green remotes.
@@ -322,10 +327,6 @@
 [help]
   # Automatically correct and execute mistyped commands
   #autocorrect = 1
-
-[pager]
-  # Use colors when paging regardless of default color setting.
-  color = true
 
 [push]
   # See `git help config` and search for "push.default"
