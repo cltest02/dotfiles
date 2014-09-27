@@ -29,7 +29,12 @@
 
 #--ignore-dir=
 --ignore-dir=log
+--ignore-dir=logs
 --ignore-dir=tmp
+--ignore-dir=.tmp
+--ignore-dir=.sass-cache
+--ignore-dir=.idea
 --ignore-dir=vendor
 --ignore-dir=coverage
 --ignore-dir=public/generated
+--ignore-dir=cache
