@@ -61,3 +61,5 @@ shopt -s no_empty_cmd_completion;
 # Do not overwrite files when redirecting using ">".
 # Note that you can still override this with ">|".
 #set -o noclobber;
+
+source ~/.shellrc
