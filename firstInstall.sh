@@ -38,6 +38,7 @@ sudo aptitude install \
   `# default for many other things` \
   tmux \
   build-essential \
+  autoconf \
   mktemp \
   dialog \
   `# unzip, unrar etc.` \
@@ -59,6 +60,8 @@ sudo aptitude install \
   gifsicle \
   optipng \
   pngcrush \
+  pngnq \
+  pngquant \
   jpegoptim \
   libjpeg-progs \
   `# utilities` \
