@@ -5,12 +5,12 @@ export PAGER="less"
 
 # use sublime text for local changes
 if [[ -n $SSH_CONNECTION ]]; then
-  EDITOR='vim'
+  EDITOR="vim"
 else
   if which subl >/dev/null 2>&1; then
     EDITOR="subl"
   else
-    EDITOR='vim'
+    EDITOR="vim"
   fi
 fi
 export EDITOR
@@ -76,7 +76,7 @@ HISTCONTROL=$HISTCONTROL${HISTCONTROL+:}ignoredups
 export HISTCONTROL=ignoredups
 
 # make some commands not show up in history
-export HISTIGNORE='clear:pwd:[bf]g:* --help:man *:shutdown*:halt*:poweroff*:hibernate*:rm -rf \*'
+export HISTIGNORE="clear:pwd:[bf]g:* --help:man *:shutdown*:halt*:poweroff*:hibernate*:rm -rf \*"
 
 # add the date to the historylog
 #
@@ -211,15 +211,96 @@ fi
 
 export LSCOLORS LS_COLORS LS_OPTIONS GREP_COLOR GREP_OPTIONS
 
-# java - example
-#export JAVA_HOME=/usr/lib/jvm/java-7-oracle
-#export JDK_HOME=$JAVA_HOME
-#export JRE_HOME=$JAVA_HOME
-#export PATH=$JAVA_HOME/bin:$PATH
+# lazy add local bin
+LOCAL_BIN="$HOME/.local/bin"
+if [ -d $LOCAL_BIN ]; then
+  export PATH="$PATH:$LOCAL_BIN"
+fi
 
-# android - example
-#export ANDROID_SDK_ROOT=/opt/android-sdk-linux/
-#export ANDROID_NDK=/opt/android-ndk/
-#export ANDROID_HOME=$ANDROID_SDK_ROOT
-#export PATH=$ANDROID_SDK_ROOT/tools/:$ANDROID_SDK_ROOT/platform-tools/:$PATH
+# lazy add chromium
+if [ -f "/usr/bin/chromium" ]; then
+  export CHROME_BIN="/usr/bin/chromium"
+fi
+if [ -f "/usr/bin/google-chrome" ]; then
+  export CHROME_BIN="/usr/bin/google-chrome"
+fi
+if [ -f "/usr/bin/chromium-browser" ]; then
+  export CHROME_BIN="/usr/bin/chromium-browser"
+fi
 
+# lazy add firefox
+if [ -f "/usr/bin/firefox" ]; then
+  export FIREFOX_BIN="/usr/bin/firefox"
+fi
+
+# lazy add JAVA_HOME
+if [ -d "/usr/lib/jvm/java-7-openjdk" ]; then
+  export JAVA_HOME="/usr/lib/jvm/java-7-openjdk"
+fi
+if [ -d "/usr/lib/jvm/java-7-oracle/jre" ]; then
+  export JAVA_HOME="/usr/lib/jvm/java-7-oracle/jre"
+fi
+if [ -d "/usr/lib/jvm/java-7-oracle" ]; then
+  export JAVA_HOME="/usr/lib/jvm/java-7-oracle"
+fi
+if [ -d "/usr/lib/jvm/java-8-oracle" ]; then
+  export JAVA_HOME="/usr/lib/jvm/java-8-oracle"
+fi
+if [ -d "/usr/lib/jvm/oraclejdk8-64" ]; then
+  export JAVA_HOME="/usr/lib/jvm/oraclejdk8-64"
+fi
+if [ -n "$JAVA_HOME" ]; then
+  export JDK_HOME=$JAVA_HOME
+  export JRE_HOME=$JAVA_HOME
+  export PATH="$JAVA_HOME/bin:$PATH"
+fi
+
+# lazy add M2_HOME
+if [ -d "/opt/maven" ]; then
+  export M2_HOME="/opt/maven"
+fi
+if [ -d "/usr/share/maven" ]; then
+  export M2_HOME="/usr/share/maven"
+fi
+if [ -n "$M2_HOME" ]; then
+  export PATH="$M2_HOME/bin:$PATH"
+fi
+
+# lazy add ANDROID_SDK_ROOT
+if [ -d "/opt/android-sdk-linux/" ]; then
+  export ANDROID_SDK_ROOT="/opt/android-sdk-linux/"
+fi
+if [ -d "/android-sdk-linux/" ]; then
+  export ANDROID_SDK_ROOT="/android-sdk-linux/"
+fi
+if [ -n "$ANDROID_SDK_ROOT" ]; then
+  export ANDROID_NDK=/opt/android-ndk/
+  export ANDROID_HOME=$ANDROID_SDK_ROOT
+  export PATH="$ANDROID_SDK_ROOT/tools/:$ANDROID_SDK_ROOT/platform-tools/:$PATH"
+fi
+
+# ruby version management with rbenv
+if [ -d "$HOME/.rbenv" ]; then
+  export RBENV_ROOT="$HOME/.rbenv"
+  export PATH="$RBENV_ROOT/bin:$PATH"
+  eval "$(rbenv init -)"
+fi
+
+# ndenv variable
+if [ -d "$HOME/.ndenv" ]; then
+  export NDENV_HOME="$HOME/.ndenv"
+  export PATH="$NDENV_HOME/bin:$PATH"
+  eval "$(ndenv init -)"
+fi
+
+# jenv settings
+if [ -f "$HOME/.jenv/bin/jenv-init.sh" ]; then
+  source $HOME/.jenv/bin/jenv-init.sh
+fi
+
+# pyenv settings
+if [ -d "$HOME/.pyenv/bin" ]; then
+  export PATH="$HOME/.pyenv/bin:$PATH"
+  eval "$(pyenv init -)"
+  eval "$(pyenv virtualenv-init -)"
+fi
