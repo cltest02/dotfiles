@@ -63,9 +63,11 @@ set ttyfast
 " add the g flag to search/replace by default
 set gdefault
 
+" http://stackoverflow.com/questions/16222530/why-do-i-need-vim-in-binary-mode-for-noeol-to-work
+"set binary
+
 " don’t add empty newlines at the end of files
-set binary
-set noeol
+"set noeol
 
 " look for embedded modelines at the top of the file
 set modeline
