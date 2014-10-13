@@ -34,7 +34,7 @@ CONFIG_ZSH_PLUGINS="(git bower composer ruby bundler gem)"
 CONFIG_ZSH_THEME="voku"
 CONFIG_BASH_THEME="voku"
 CONFIG_CHARSET_UTF8=true
-CONFIG_LANG="de_DE"
+CONFIG_LANG="en_US"
 ```
 
 If `~/.extra` exists, it will be sourced along with the other files. You can use this to add a few custom commands without the need to fork this entire repository, or to add commands you don’t want to commit to a public repository.
@@ -50,18 +50,6 @@ GIT_AUTHOR_EMAIL="lars@moelleken.org"
 GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"
 git config --global user.email "$GIT_AUTHOR_EMAIL"
 git config --global push.default simple
-
-# java - example
-export JAVA_HOME=/usr/lib/jvm/java-7-oracle
-export JDK_HOME=$JAVA_HOME
-export JRE_HOME=$JAVA_HOME
-export PATH=$JAVA_HOME/bin:$PATH
-
-# android - example
-export ANDROID_SDK_ROOT=/usr/local/android-sdk/
-#export ANDROID_NDK=/usr/local/android-ndk/
-export ANDROID_HOME=$ANDROID_SDK_ROOT
-export PATH=$ANDROID_SDK_ROOT/tools/:$ANDROID_SDK_ROOT/platform-tools/:$ANDROID_SDK_ROOT/build-tools/19.1.0/:$PATH
 ```
 
 You could also use `~/.extra` to override settings, functions and aliases from my dotfiles repository. It’s probably better to [fork this repository](https://github.com/voku/dotfiles/fork) instead, though.
