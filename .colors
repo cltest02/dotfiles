@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Reset
 export COLOR_NO_COLOUR='\e[0m'
@@ -80,6 +80,7 @@ export COLOR_BG_HI_BLUE='\e[0;104m'    # Blue
 export COLOR_BG_HI_PURPLE='\e[10;95m'  # Purple
 export COLOR_BG_HI_CYAN='\e[0;106m'    # Cyan
 export COLOR_BG_HI_WHITE='\e[0;107m'   # White
+
 
 if [ "$TERM" = "linux" ]; then
     echo -en "\e]P0000000" #black

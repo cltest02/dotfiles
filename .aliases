@@ -1,4 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+
+# ------------------------------------------------------------------------------
+# | Defaults                                                                   |
+# ------------------------------------------------------------------------------
 
 # Enable simple aliases to be sudo'ed. ("sudone"?)
 # http://www.gnu.org/software/bash/manual/bashref.html#Aliases says: "If the
@@ -6,13 +11,22 @@
 # command word following the alias is also checked for alias expansion."
 alias sudo='sudo '
 
+# Super user
+alias _='sudo'
+alias please='sudo'
+
 # use vim
 if which vim >/dev/null 2>&1; then
   alias vi="vim"
 fi
 
+# add ssh-key to ssh-agent when key exist
+if [ "$SSH_AUTH_SOCK" != "" ] && [ -f ~/.ssh/id_rsa ] && [ -x /usr/bin/ssh-add  ]; then
+  ssh-add -l >/dev/null || alias ssh='(ssh-add -l >/dev/null || ssh-add) && unalias ssh; ssh'
+fi
+
 # Confirm before overwriting
-# -----------------------------------------------------------------------------
+# --------------------------
 # I know it is bad practice to override the default commands, but this is for
 # my own safety. If you really want the original "instakill" versions, you can
 # use "command rm", "\rm", or "/bin/rm" inside your own commands, aliases, or
@@ -22,103 +36,303 @@ fi
 #alias mv='mv -i'
 #alias ln='ln -i'
 
-#alias rm='rm -I'                    # 'rm -i' prompts for every file  
+alias rm='rm -I'     # 'rm -i' prompts for every file
 
 # safety features
-alias chown='chown --preserve-root'  
-alias chmod='chmod --preserve-root'  
-alias chgrp='chgrp --preserve-root'  
+alias chown='chown --preserve-root'
+alias chmod='chmod --preserve-root'
+alias chgrp='chgrp --preserve-root'
+
+# dmesg with readable time
+alias dmesg='dmesg -T'
+
+
+# ------------------------------------------------------------------------------
+# | Global Quick Commands                                                      |
+# ------------------------------------------------------------------------------
+
+# quick & short
+alias g="git"
+alias h="history"
+alias j="jobs"
+
+# quick edit
+alias zshrc="vim ~/.zshrc"
+alias bashrc="vim ~/.bashrc"
+alias vimrc="vim ~/.vimrc"
+
+# quick reload
+alias reload_bash_profile='source ~/.bash_profile'
+alias reload_zsh_profile='source ~/.zprofile'
+
+# Reload the shell (i.e. invoke as a login shell)
+alias reload="exec $SHELL -l"
+
+
+# ------------------------------------------------------------------------------
+# | Navigation                                                                 |
+# ------------------------------------------------------------------------------
+
+# Push and pop directories on directory stack
+alias pu='pushd'
+alias po='popd'
 
 # Easier navigation: .., ..., ...., ....., ~ and -
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
-alias ~="cd ~" # `cd` is probably faster to type though
+alias ~="cd ~"       # `cd` is probably faster to type though
 alias -- -="cd -"
 
-# Shortcuts
-alias d="cd ~/Documents/Dropbox"
-alias dl="cd ~/Downloads"
-alias dt="cd ~/Desktop"
-alias p="cd ~/projects"
-alias g="git"
-alias h="history"
-alias j="jobs"
+# fallback by typo
+alias cd..='cd ..'
+alias cd...='cd ../..'
+alias cd....='cd ../../..'
+alias cd.....='cd ../../../..'
 
-# command with color
+
+# ------------------------------------------------------------------------------
+# | Directories Commands (create / remove)                                     |
+# ------------------------------------------------------------------------------
+
+# mkdir: always create parent-dirs, if needed
+alias mkdir="mkdir -p"
+alias md="mkdir"
+
+# dirs
+alias d='dirs -v | head -10'
+
+# rmdir
+alias rd="rmdir"
+
+# create a dir with date from today
+alias mkdd='mkdir $(date +%Y%m%d)'
+
+
+# ------------------------------------------------------------------------------
+# | Colors                                                                     |
+# ------------------------------------------------------------------------------
+
 if [ "$TERM" != "dumb" ]; then
 
   # dircolors
-  if [ -s "$HOME/.dircolors" ]; then
-    eval "`dircolors -b $HOME/.dircolors`"
-  else
-    eval "`dircolors -b`"
+  if [[ "$SYSTEM_TYPE" == "LINUX" ]]; then
+    if [ -s "$HOME/.dircolors" ]; then
+      eval "$(dircolors -b $HOME/.dircolors)"
+    else
+      eval "$(dircolors -b)"
+    fi
+  fi
+
+  # enable ls colors
+  if [[ "$DISABLE_LS_COLORS" != "true" ]]; then
+    if [[ "$SYSTEM_TYPE" == "NET_BSD" ]]; then
+      # On NetBSD, test if "gls" (GNU ls) is installed (this one supports colors);
+      # otherwise, leave ls as is, because NetBSD's ls doesn't support -G
+      gls --color -d . &>/dev/null 2>&1 && COLORFLAG="--color=tty"
+    elif [[ "$SYSTEM_TYPE" == "OPEN_BSD" ]]; then
+      # On OpenBSD, test if "colorls" is installed (this one supports colors);
+      # otherwise, leave ls as is, because OpenBSD's ls doesn't support -G
+      colorls -G -d . &>/dev/null 2>&1 && COLORFLAG="-G"
+    elif [[ "$SYSTEM_TYPE" == "OSX" ]]; then
+      # on OS X use "-G"
+      COLORFLAG="-G"
+    elif ls --color -d . &>/dev/null 2>&1; then
+      COLORFLAG="--color"
+      if [[ "$SYSTEM_TYPE" == "LINUX" ]]; then
+        COLORFLAG="--color=auto"
+      fi
+    fi
   fi
 
   # Use "colordiff" or "highlight" to colour diffs.
   if command -v colordiff > /dev/null; then
-    alias difflight='colordiff | less -XFIRd'
+    alias difflight="colordiff"
   elif command -v highlight > /dev/null; then
-    alias difflight='highlight --dark-red ^-.* | highlight --dark-green ^+.* | highlight --yellow ^Only.* | highlight --yellow ^Files.*differ$ | less -XFIRd'
+    alias difflight="highlight --dark-red ^-.* \
+    	| highlight --dark-green ^+.* \
+    	| highlight --yellow ^Only.* \
+    	| highlight --yellow ^Files.*differ$ \
+    	| less -XFIRd"
   else
-    alias difflight='less -XFIRd'
+    alias difflight="less -XFIRd"
   fi
 
   # colorize these commands if possible
-  if which grc &>/dev/null; then
-    alias .cl='grc -es --colour=auto'
-    alias configure='.cl ./configure'
-    alias diff='.cl diff'
-    alias make='.cl make'
-    alias gcc='.cl gcc'
-    alias g++='.cl g++'
-    #alias as='.cl as'
-    #alias gas='.cl gas'
-    alias ld='.cl ld'
-    alias netstat='.cl netstat'
-    alias ping='.cl ping -c 10'
-    alias traceroute='.cl traceroute'
+  if which grc >/dev/null 2>&1; then
+    alias colour="grc -es --colour=auto"
+    alias configure="colour ./configure"
+    alias diff="colour diff"
+    alias make="colour make"
+    alias gcc="colour gcc"
+    alias g++="colour g++"
+    alias ld="colour ld"
+    alias netstat="colour netstat"
+    alias ping="colour ping"
+    alias traceroute="colour traceroute"
+    alias tail="colour tail"
+    alias ps="colour ps"
+    alias syslog="sudo colour tail -f -n 100 /var/log/syslog"
+  fi
+
+  # replace top with htop
+  if command -v htop >/dev/null; then
+    alias top_orig="/usr/bin/top"
+    alias top="htop"
   fi
 
   # Colorize the grep command output for ease of use (good for log files)
-  alias grep='grep --color=auto'
-  alias egrep='egrep --color=auto'
-  alias fgrep='fgrep --color=auto'
-  
-  # list all files colorized in long format
-  alias l="ls -lhF --color=auto"
-  # Show hidden files
-  alias l.="ls -dlhF .* --color=auto"
-  # use colors
-  alias ls="ls -F --color=auto"
-  # displays all files and directories in detail
-  alias la="ls -laFh --color=auto"
-  # displays all files and directories in detail with newest-files at bottom
-  alias lr="ls -laFhtr --color=auto"
-  # show files and directories (also in sub-dir) that was touched in the last hour
-  alias lf='find ./* -ctime -1 | xargs ls -ltr --color'
-  # displays files and directories in detail
-  alias ll="ls -lFh --color=auto --group-directories-first"
-  # shows the most recently modified files at the bottom of
-  alias llr="ls -lartFh --color=auto --group-directories-first"
-  # list only directories
-  alias lsd="ls -lFh --color=auto | grep --color=never '^d'"
-  # displays files and directories
-  alias dir="ls --color=auto --format=vertical"
-  # displays more information about files and directories
-  alias vdir="ls --color=auto --format=long"
+  alias grep="grep $COLORFLAG"
+  alias egrep="egrep $COLORFLAG"
+  alias fgrep="fgrep $COLORFLAG"
+
 fi
 
-# Clipboard access. I created these aliases to have the same command on
-# Cygwin, Linux and OS X.
-if command -v pbpaste >/dev/null; then
-  alias getclip="pbpaste"
-  alias putclip="pbcopy"
-elif command -v xclip >/dev/null; then
-  alias getclip="xclip --out"
-  alias putclip="xclip --in"
+
+# ------------------------------------------------------------------------------
+# | List Directory Contents (ls)                                               |
+# ------------------------------------------------------------------------------
+
+# list all files colorized in long format
+alias l="ls -lhF $COLORFLAG"
+# Show hidden files
+alias l.="ls -dlhF .* $COLORFLAG"
+alias ldot="l."
+# use colors
+alias ls="ls -F $COLORFLAG"
+# display only files & dir in a v-aling view
+alias l1="ls -1 $COLORFLAG"
+# displays all files and directories in detail
+alias la="ls -laFh $COLORFLAG"
+alias lsa="la"
+# displays all files and directories in detail with newest-files at bottom
+alias lr="ls -laFhtr $COLORFLAG"
+# show last 10 recently changed files
+alias lt="ls -altr | grep -v '^d' | tail -n 10"
+# show files and directories (also in sub-dir) that was touched in the last hour
+alias lf="find ./* -ctime -1 | xargs ls -ltr $COLORFLAG"
+# displays files and directories in detail
+alias ll="ls -lFh --group-directories-first $COLORFLAG"
+# shows the most recently modified files at the bottom of
+alias llr="ls -lartFh --group-directories-first $COLORFLAG"
+# list only directories
+alias lsd="ls -lFh $COLORFLAG | grep --color=never '^d'"
+# sort by file-size
+alias lS="ls -1FSshr $COLORFLAG"
+# displays files and directories
+alias dir="ls --format=vertical $COLORFLAG"
+# displays more information about files and directories
+alias vdir="ls --format=long $COLORFLAG"
+
+# tree (with fallback)
+if which tree >/dev/null 2>&1; then
+  # displays a directory tree
+  alias tree="tree -Csu"
+  # displays a directory tree - paginated
+  alias ltree="tree -Csu | less -R"
+else
+  alias tree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'"
+  alias ltree="tree | less -R"
 fi
+
+# ------------------------------------------------------------------------------
+# | Search and Find                                                            |
+# ------------------------------------------------------------------------------
+
+# super-grep ;)
+alias sgrep='grep -R -n -H -C 5 --exclude-dir={.git,.svn,CVS} '
+
+# search in files (with fallback)
+if which ack-grep >/dev/null 2>&1; then
+  alias ack=ack-grep
+
+  alias afind="ack-grep -iH"
+else
+  alias afind="ack -iH"
+fi
+
+
+# ------------------------------------------------------------------------------
+# | Package Managers                                                           |
+# ------------------------------------------------------------------------------
+
+# get / check for updates
+alias apt-update="sudo apt-get update"
+alias apt-upgrade="sudo apt-get update && sudo apt-get upgrade && sudo apt-get clean"
+
+
+# ------------------------------------------------------------------------------
+# | Network                                                                    |
+# ------------------------------------------------------------------------------
+
+# external ip address
+alias myip_dns="dig +short myip.opendns.com @resolver1.opendns.com"
+alias myip_http="GET http://ipecho.net/plain && echo"
+
+# show dns info via "dig"
+alias dnsInfo="digga"
+
+# speedtest: get a 100MB file via wget
+alias speedtest="wget -O /dev/null http://speedtest.wdc01.softlayer.com/downloads/test100.zip"
+
+# Gzip-enabled `curl`
+alias gurl="curl --compressed"
+
+# displays the ports that use the applications
+alias lsport='sudo lsof -i -T -n'
+
+# shows more about the ports on which the applications use
+alias llport='netstat -nape --inet --inet6'
+
+# show only active network listeners
+alias netlisteners='sudo lsof -i -P | grep LISTEN'
+
+
+# ------------------------------------------------------------------------------
+# | Date & Time                                                                |
+# ------------------------------------------------------------------------------
+
+# date
+alias date_iso_8601='date "+%Y%m%dT%H%M%S"'
+alias date_clean='date "+%Y-%m-%d"'
+alias date_year='date "+%Y"'
+alias date_month='date "+%m"'
+alias date_week='date "+%V"'
+alias date_day='date "+%d"'
+alias date_hour='date "+%H"'
+alias date_minute='date "+%M"'
+alias date_second='date "+%S"'
+
+# stopwatch
+alias timer='echo "Timer started. Stop with Ctrl-D." && date && time cat && date'
+
+
+# ------------------------------------------------------------------------------
+# | Hard- & Software Infos                                                     |
+# ------------------------------------------------------------------------------
+
+# pass options to free
+alias meminfo="free -m -l -t"
+
+# get top process eating memory
+alias psmem="ps -o time,ppid,pid,nice,pcpu,pmem,user,comm -A | sort -n -k 6"
+alias psmem5="psmem | tail -5"
+alias psmem10="psmem | tail -10"
+
+# get top process eating cpu
+alias pscpu="ps -o time,ppid,pid,nice,pcpu,pmem,user,comm -A | sort -n -k 5"
+alias pscpu5="pscpu5 | tail -5"
+alias pscpu10="pscpu | tail -10"
+
+# shows the corresponding process to ...
+alias psx="ps auxwf | grep "
+
+# shows the process structure to clearly
+alias pst="pstree -Alpha"
+
+# shows all your processes
+alias psmy="ps -ef | grep $USER"
 
 # the load-avg
 alias loadavg="cat /proc/loadavg"
@@ -126,48 +340,53 @@ alias loadavg="cat /proc/loadavg"
 # show all partitions
 alias partitions="cat /proc/partitions"
 
-# speedtest: get a 100MB file via wget
-alias speedtest="wget -O /dev/null http://speedtest.wdc01.softlayer.com/downloads/test100.zip"
+# shows the disk usage of a directory legibly
+alias du='du -kh'
 
-# displays a directory tree
-alias tree="tree -Csu"
+# show the biggest files in a folder first
+alias du_overview='du -h | grep "^[0-9,]*[MG]" | sort -hr | less'
 
-# Gzip-enabled `curl`
-alias gurl='curl --compressed'
+# shows the complete disk usage to legibly
+alias df='df -kTh'
 
-# get week number
-alias week='date +%V'
 
-# show the timestamp in the ISO 8601 format
-alias timestamp_iso_8601='date "+%Y%m%dT%H%M%S"'
+# ------------------------------------------------------------------------------
+# | System Utilities                                                           |
+# ------------------------------------------------------------------------------
 
-#show a clean date: YYYY-MM-DD
-alias date_clean='date "+%Y-%m-%d"'
+# becoming root + executing last command
+alias sulast='su -c !-1 root'
 
-# stopwatch
-alias timer='echo "Timer started. Stop with Ctrl-D." && date && time cat && date'
+# Recursively delete `.DS_Store` files
+alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
 
-# mkdir: always create parent-dirs, if needed
-alias mkdir="mkdir -p"
+# empty the your trash-dir
+alias emptytrash="rm -rfv ~/.local/share/Trash/*"
 
-# create a dir with date from today
-alias mkdd='mkdir $(date +%Y%m%d)'
+# Clipboard access. I created these aliases to have the same command on
+# Cygwin, Linux and OS X.
+if command -v pbpaste >/dev/null; then
+  alias getclip="pbpaste"
+  alias putclip="pbcopy"
+elif command -v xclip >/dev/null; then
+  alias getclip="xclip -o"
+  alias putclip="xclip -i"
+fi
 
-# get / check for updates
-alias updates='sudo apt-get update'
+# Trim new lines and copy to clipboard
+alias c="tr -d '\n' | putclip"
 
-# IP addresses
-alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
-alias myip="GET http://ipecho.net/plain && echo"
-alias localip="ipconfig getifaddr en0"
-alias ips="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[0-9]\+\)\|[a-fA-F0-9:]\+\)' | awk '{ sub(/inet6? (addr:)? ?/, \"\"); print }'"
+# ring the terminal bell, and put a badge on Terminal.app’s Dock icon
+# (useful when executing time-consuming commands)
+alias badge="tput bel"
 
-# Enhanced WHOIS lookups
-alias whois="whois -h whois-servers.net"
 
-# View HTTP traffic
-alias sniff="sudo ngrep -d 'en1' -t '^(GET|POST) ' 'tcp and port 80'"
-alias httpdump="sudo tcpdump -i en1 -n -s 0 -w - | grep -a -o -E \"Host\: .*|GET \/.*\""
+# ------------------------------------------------------------------------------
+# | Other                                                                      |
+# ------------------------------------------------------------------------------
+
+# decimal to hexadecimal value
+alias dec2hex='printf "%x\n" $1'
 
 # Canonical hex dump; some systems have this symlinked
 command -v hd > /dev/null || alias hd="hexdump -C"
@@ -178,84 +397,27 @@ command -v md5sum > /dev/null || alias md5sum="md5"
 # OS X has no `sha1sum`, so use `shasum` as a fallback
 command -v sha1sum > /dev/null || alias sha1sum="shasum"
 
-# Trim new lines and copy to clipboard
-alias c="tr -d '\n' | pbcopy"
+# urldecode - url http network decode
+alias urldecode='python -c "import sys, urllib as ul; print ul.unquote_plus(sys.argv[1])"'
 
-# Recursively delete `.DS_Store` files
-alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
+# urlencode - url encode network http
+alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1])"'
 
 # ROT13-encode text. Works for decoding, too! ;)
 alias rot13='tr a-zA-Z n-za-mN-ZA-M'
 
-# empty the your trash-dir 
-alias emptytrash="rm -rfv ~/.local/share/Trash/*"
-
-# URL-encode strings
-alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1]);"'
-
-# ring the terminal bell, and put a badge on Terminal.app’s Dock icon
-# (useful when executing time-consuming commands)
-alias badge="tput bel"
-
 # intuitive map function
-# 
+#
 # For example, to list all directories that contain a certain file:
 # find . -name .gitattributes | map dirname
 alias map="xargs -n1"
 
-# one of @janmoesen’s ProTip™s
-for method in GET HEAD POST PUT DELETE TRACE OPTIONS; do
-  alias "$method"="lwp-request -m '$method'"
-done
-
 # make Grunt print stack traces by default
 command -v grunt > /dev/null && alias grunt="grunt --stack"
-
-# pass options to free
-alias meminfo='free -m -l -t'
-
-# get top process eating memory
-alias psmem='ps auxf | sort -nr -k 4'
-alias psmem10='ps auxf | sort -nr -k 4 | head -10'
- 
-# get top process eating cpu
-alias pscpu='ps auxf | sort -nr -k 3'
-alias pscpu10='ps auxf | sort -nr -k 3 | head -10'
-
-# Get server cpu info
-alias cpuinfo='lscpu'
-# older system use /proc/cpuinfo
-#alias cpuinfo='less /proc/cpuinfo'
-
-# shows the corresponding process to ...
-alias psx='ps auxwf | grep '
-
-# shows the process structure to clearly
-alias pst='pstree -Alpha'
-
-# shows all your processes
-alias psmy='ps -ef | grep $USER'
-
-# displays the ports that use the applications
-alias lsport='sudo lsof -i -T -n'
-
-# shows more about the ports on which the applications use
-alias llport='netstat -nape --inet'
-
-# shows the disk usage of a directory legibly
-alias du='du -kh'
-
-alias du_overview='du -h | grep "^[0-9,]*[MG]" | sort -hr | less'
-
-# shows the complete disk usage to legibly
-alias df='df -kTh'
 
 # Kill all the tabs in Chrome to free up memory
 # [C] explained: http://www.commandlinefu.com/commands/view/402/exclude-grep-from-your-grepped-output-of-ps-alias-included-in-description
 alias chromekill="ps ux | grep '[C]hrome Helper --type=renderer' | grep -v extension-process | tr -s ' ' | cut -d ' ' -f2 | xargs kill"
-
-# Reload the shell (i.e. invoke as a login shell)
-alias reload="exec $SHELL -l"
 
 # faster npm for europeans
 command -v npm > /dev/null && alias npme="npm --registry http://registry.npmjs.eu"
@@ -263,8 +425,78 @@ command -v npm > /dev/null && alias npme="npm --registry http://registry.npmjs.e
 # php - package-manager - composer
 alias composer-install="composer install --optimize-autoloader"
 
-#add ssh key to ssh-agent when key exist
-if [ "$SSH_AUTH_SOCK" != "" ] && [ -f ~/.ssh/id_rsa ] && [ -x /usr/bin/ssh-add  ]; then 
-  ssh-add -l >/dev/null || alias ssh='(ssh-add -l >/dev/null || ssh-add) && unalias ssh; ssh'
+# add ssh-key to clipboard
+alias sshkey="cat ~/.ssh/id_rsa.pub | putclip && echo 'Copied to clipboard.'"
+
+
+# ------------------------------------------------------------------------------
+# | Fun                                                                        |
+# ------------------------------------------------------------------------------
+
+#alias nyancat="telnet miku.acm.uiuc.edu"  # offline
+
+alias starwars="telnet towel.blinkenlights.nl"
+
+
+# ------------------------------------------------------------------------------
+# | auto-completion (for bash)                                                 |
+# ------------------------------------------------------------------------------
+
+# Automatically add completion for all aliases to commands having completion functions
+# source: http://superuser.com/questions/436314/how-can-i-get-bash-to-perform-tab-completion-for-my-aliases
+alias_completion()
+{
+  local namespace="alias_completion"
+
+  # parse function based completion definitions, where capture group 2 => function and 3 => trigger
+  local compl_regex='complete( +[^ ]+)* -F ([^ ]+) ("[^"]+"|[^ ]+)'
+  # parse alias definitions, where capture group 1 => trigger, 2 => command, 3 => command arguments
+  local alias_regex="alias ([^=]+)='(\"[^\"]+\"|[^ ]+)(( +[^ ]+)*)'"
+
+  # create array of function completion triggers, keeping multi-word triggers together
+  eval "local completions=($(complete -p | sed -Ene "/$compl_regex/s//'\3'/p"))"
+  (( ${#completions[@]} == 0 )) && return 0
+
+  # create temporary file for wrapper functions and completions
+  rm -f "/tmp/${namespace}-*.XXXXXXXXXX" # preliminary cleanup
+  local tmp_file="$(mktemp "/tmp/${namespace}-${RANDOM}.XXXXXXXXXX")" || return 1
+
+  # read in "<alias> '<aliased command>' '<command args>'" lines from defined aliases
+  local line; while read line; do
+    eval "local alias_tokens=($line)" 2>/dev/null || continue # some alias arg patterns cause an eval parse error
+    local alias_name="${alias_tokens[0]}" alias_cmd="${alias_tokens[1]}" alias_args="${alias_tokens[2]# }"
+
+    # skip aliases to pipes, boolan control structures and other command lists
+    # (leveraging that eval errs out if $alias_args contains unquoted shell metacharacters)
+    eval "local alias_arg_words=($alias_args)" 2>/dev/null || continue
+
+    # skip alias if there is no completion function triggered by the aliased command
+    [[ " ${completions[*]} " =~ " $alias_cmd " ]] || continue
+    local new_completion="$(complete -p "$alias_cmd")"
+
+    # create a wrapper inserting the alias arguments if any
+    if [[ -n $alias_args ]]; then
+     local compl_func="${new_completion/#* -F /}"; compl_func="${compl_func%% *}"
+     # avoid recursive call loops by ignoring our own functions
+     if [[ "${compl_func#_$namespace::}" == $compl_func ]]; then
+       local compl_wrapper="_${namespace}::${alias_name}"
+         echo "function $compl_wrapper {
+           (( COMP_CWORD += ${#alias_arg_words[@]} ))
+           COMP_WORDS=($alias_cmd $alias_args \${COMP_WORDS[@]:1})
+           $compl_func
+         }" >> "$tmp_file"
+         new_completion="${new_completion/ -F $compl_func / -F $compl_wrapper }"
+     fi
+    fi
+
+    # replace completion trigger by alias
+    new_completion="${new_completion% *} $alias_name"
+    echo "$new_completion" >> "$tmp_file"
+  done < <(alias -p | sed -Ene "s/$alias_regex/\1 '\2' '\3'/p")
+  source "$tmp_file" && rm -f "$tmp_file"
+}
+if [ -n "$BASH_VERSION" ]; then
+  alias_completion
 fi
+unset -f alias_completion
 

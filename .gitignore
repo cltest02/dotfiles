@@ -24,7 +24,6 @@ nb-configuration.xml
 *.pydevproject
 .metadata
 .gradle
-bin/
 tmp/
 *.tmp
 *.bak
@@ -46,7 +45,7 @@ local.properties
 # PDT-specific
 .buildpath
 
-# sbteclipse plugin 
+# sbteclipse plugin
 .target
 
 # TeXlipse plugin

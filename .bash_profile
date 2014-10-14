@@ -6,7 +6,7 @@ if [[ $- != *i* ]] || [ -z "$PS1" ]; then
   return 0
 fi
 
-#windows git bash is too minimal
+# windows git bash is too minimal
 if [[ "$(bash --version)" == *-pc-msys* ]]; then
   return 0
 fi
@@ -16,7 +16,7 @@ fi
 # load the shell dotfiles, and then some:
 # * ~/.path can be used to extend `$PATH`.
 # * ~/.extra can be used for other settings you don’t want to commit.
-for file in ~/.{path,colors,icons,exports,aliases,bash_complete,functions,extra,bash_prompt}; do
+for file in ~/.{config_dotfiles,path,load,exports,colors,icons,aliases,bash_complete,functions,extra}; do
   [ -r "$file" ] && [ -f "$file" ] && source "$file"
 done
 unset file
@@ -29,10 +29,7 @@ unset file
 for option in autocd globstar cmdhist extglob cdable_vars; do
   shopt -s "$option" 2> /dev/null
 done
-
-# Do not autocomplete when accidentally pressing Tab on an empty line. (It takes
-# forever and yields "Display all 15 gazillion possibilites?")
-shopt -s no_empty_cmd_completion;
+unset option
 
 # When the command contains an invalid history operation (for instance when
 # using an unescaped "!" (I get that a lot in quick e-mails and commit
@@ -60,3 +57,17 @@ fi
 # Do not autocomplete when accidentally pressing Tab on an empty line. (It takes
 # forever and yields "Display all 15 gazillion possibilites?")
 shopt -s no_empty_cmd_completion;
+
+# Do not overwrite files when redirecting using ">".
+# Note that you can still override this with ">|".
+#set -o noclobber;
+
+############# EXTRA ####################################
+
+if [ -d $HOME/.redpill ]; then
+
+  # define the path from "red-pill"
+  export REDPILL=$HOME/.redpill
+
+  source $HOME/.redpill/redpill-init-bash.sh
+fi

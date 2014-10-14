@@ -1,7 +1,7 @@
 # TAKE A LOOK AT THIS SOURCES
 #
 # - http://www.commandlinefu.com/commands/browse/sort-by-votes
-# - https://twitter.com/climagic  
+# - https://twitter.com/climagic
 
 # This might seem backwards when you look at the "Bash startup files" reference
 # <http://www.gnu.org/software/bash/manual/bashref.html#Bash-Startup-Files> or
@@ -39,7 +39,7 @@
 # README: If you write Bash, read this before you write another line of code ->
 #           http://www.kfirlavi.com/blog/2012/11/14/defensive-bash-programming/
 
-# If not running interactively: exit immediately.                               
+# If not running interactively: exit immediately.
 # Note that 'return' works because the file is sourced, not executed.
 
 if [[ $- != *i* ]] || [ -z "$PS1" ]; then
@@ -51,4 +51,5 @@ if [ -f /etc/bashrc ]; then
   . /etc/bashrc
 fi
 
-source ~/.bash_profile;
+source ~/.bash_profile
+source ~/.shellrc

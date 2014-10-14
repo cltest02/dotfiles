@@ -1,35 +1,44 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-function ask_install() {
-  echo
-  echo
+# use the bash as default "sh", fixed some problems
+# with e.g. third-party scripts
+#sudo ln -sf /bin/bash /bin/sh
+
+ask_install()
+{
+  echo ""
+  echo ""
   read -p"$1 (y/n) " -n 1
-  echo
+  echo ""
   if [[ $REPLY =~ ^[Yy]$ ]]; then
     return 1
   else
     return 0
   fi
-
 }
 
-
 # use aptitude in the next steps ...
-if [ \! -f `whereis aptitude | cut -f 2 -d ' '` ] ; then
+if [ \! -f $(whereis aptitude | cut -f 2 -d ' ') ] ; then
   sudo apt-get install aptitude
 fi
 
-# update && upgrade 
-sudo aptitude update
-sudo aptitude upgrade
+# update && upgrade
+ask_install "upgrade your system?"
+if [[ $? -eq 1 ]]; then
+  sudo aptitude update
+  sudo aptitude upgrade
+fi
 
+# install default-stuff
 sudo aptitude install \
   `# read-write NTFS driver for Linux` \
   ntfs-3g \
   `# do not delete main-system-dirs` \
   safe-rm \
   `# default for many other things` \
+  tmux \
   build-essential \
+  autoconf \
   mktemp \
   dialog \
   `# unzip, unrar etc.` \
@@ -49,9 +58,10 @@ sudo aptitude install \
   xz-utils \
   `# optimize image-size` \
   gifsicle \
-  svgo \
   optipng \
   pngcrush \
+  pngnq \
+  pngquant \
   jpegoptim \
   libjpeg-progs \
   `# utilities` \
@@ -59,12 +69,15 @@ sudo aptitude install \
   moreutils \
   findutils  \
   colordiff \
-  ack \
+  ack-grep \
+  ngrep \
   atop \
   tree \
   rsync \
   vim \
   csstidy \
+  recode \
+  exuberant-ctags \
   `# GNU bash` \
   bash \
   bash-completion \
@@ -74,6 +87,7 @@ sudo aptitude install \
   grc \
   `# fonts also "non-free"-fonts` \
   `# -- you need "multiverse" || "non-free" sources in your "source.list" -- ` \
+  fontconfig \
   ttf-freefont \
   ttf-mscorefonts-installer \
   ttf-bitstream-vera \
@@ -83,7 +97,8 @@ sudo aptitude install \
   ttf-larabie-deco \
   ttf-larabie-straight \
   ttf-larabie-uncommon \
-  msttcorefonts \
+  ttf-liberation \
+  xfonts-jmk \
   `# trace everything` \
   strace \
   `# get files from web` \
@@ -100,11 +115,16 @@ sudo aptitude install \
   lynx \
   nmap \
   pv \
-  rename \
   ucspi-tcp \
   xpdf \
-  python-pygments \ #install python-pygments for json print
-  locales
+  sqlite3 \
+  `# nstall python-pygments for json print` \
+  python-pygments \
+  locales \
+  sysstat \
+  htop \
+  tcpdump
+
 
 #
 # install java / ubuntu
@@ -152,11 +172,23 @@ sudo aptitude install \
 #aptitude upgrade git
 #exit
 
-# 
+
+#
+# install Sublime Text 3
+#
+
+#sudo add-apt-repository -y ppa:webupd8team/sublime-text-3
+#sudo aptitude update
+#sudo aptitude install sublime-text-installer
+#sudo ln -sf /opt/sublime_text/sublime_text /usr/local/bin/sublime
+
+
+#
 # install node.js without deb-files e.g. for Debian - stable
 #
 
 #curl https://www.npmjs.org/install.sh | sudo sh
+
 
 #
 # only for webworker
@@ -164,28 +196,31 @@ sudo aptitude install \
 
 ask_install "install webworker tools"
 if [[ $? -eq 1 ]]; then
-  sudo gem install sass
-  sudo gem install compass
-  sudo gem install autoprefixer-rails
-  
+  sudo gem install sass --pre
+  sudo gem install compass --pre
+  sudo gem install autoprefixer-rails --pre
+  sudo gem install compass-rgbapng --pre
+  sudo gem install oily_png
+
   sudo npm install -g bower
   sudo npm install -g psi
   sudo npm install -g grunt-cli
   sudo npm install -g grunt-init
   sudo npm install -g yo
 
-  sudo aptitude install php5-cli php5-mysql php5-curl php5-gd php5-intl php-pear php5-imagick php5-imap php5-mcrypt php5-memcached php5-ming php5-ps php5-pspell php5-recode php5-snmp php5-sqlite php5-tidy php5-xmlrpc php5-xsl php5-xdebug php5-apcu
+  sudo aptitude install php5-cli php5-mysql php5-curl php5-gd php5-intl php-pear php5-imagick php5-imap php5-mcrypt php5-memcached php5-ming php5-ps php5-pspell php5-recode php5-snmp php5-sqlite php5-tidy php5-xmlrpc php5-xsl php5-xdebug php5-apcu php5-geoip
   curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/bin
   sudo ln -s /usr/bin/composer.phar /usr/bin/composer
 fi
-
 
 # clean downloaded and already installed packages
 sudo aptitude clean
 
 # update-fonts
-sudo dpkg-reconfigure fontconfig                                                                       
+sudo cp -vr $( dirname "${BASH_SOURCE[0]}" )/.fonts/* /usr/share/fonts/truetype/
+sudo dpkg-reconfigure fontconfig
 sudo fc-cache -fv
 
 # update-locate-db
 sudo updatedb
+

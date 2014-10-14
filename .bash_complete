@@ -23,5 +23,43 @@ complete -W "$(echo `cat ~/.bash_history | egrep '^ssh ' | sort | uniq | sed 's/
 # add tab completion for SSH hostnames based on ~/.ssh/config, ignoring wildcards
 [ -e "~/.ssh/config" ] && complete -o "default" -o "nospace" -W "$(grep "^Host" ~/.ssh/config | grep -v "[?*]" | cut -d " " -f2 | tr ' ' '\n')" scp sftp ssh
 
+# Add tab completion for openvpn configs based on ~/.openvpn/config, ignoring wildcards
+[ -e "~/.openvpn/config/" ] && complete -o "default" -o "nospace" -W "$(find ~/.openvpn/config/ -name "*.ovpn" )" openvpn
+
 # try to use tab auto-completion for Grunt
-#[ -x /usr/bin/grunt ] && eval "$(grunt --completion=bash)"
+
+# Search the current directory and all parent directories for a gruntfile.
+_grunt_gruntfile()
+{
+  local curpath="$PWD"
+  while [[ "$curpath" ]]; do
+    for gruntfile in "$curpath/"{G,g}runtfile.{js,coffee}; do
+      if [[ -e "$gruntfile" ]]; then
+        echo "$gruntfile"
+        return
+      fi
+    done
+    curpath="${curpath%/*}"
+  done
+  return 1
+}
+
+# Enable bash autocompletion.
+_grunt_completions()
+{
+  # The currently-being-completed word.
+  local cur="${COMP_WORDS[COMP_CWORD]}"
+  # The current gruntfile, if it exists.
+  local gruntfile="$(_grunt_gruntfile)"
+  # The current grunt version, available tasks, options, etc.
+  local gruntinfo="$(grunt --version --verbose 2>/dev/null)"
+  # Options and tasks.
+  local opts="$(echo "$gruntinfo" | awk '/Available options: / {$1=$2=""; print $0}')"
+  local compls="$(echo "$gruntinfo" | awk '/Available tasks: / {$1=$2=""; print $0}')"
+  # Only add -- or - options if the user has started typing -
+  [[ "$cur" == -* ]] && compls="$compls $opts"
+  # Tell complete what stuff to show.
+  COMPREPLY=($(compgen -W "$compls" -- "$cur"))
+}
+
+[ -x /usr/bin/grunt ] && complete -o default -F _grunt_completions grunt
