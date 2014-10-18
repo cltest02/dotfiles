@@ -56,6 +56,7 @@ sudo aptitude install \
   bzip2 \
   gzip \
   xz-utils \
+  advancecomp \
   `# optimize image-size` \
   gifsicle \
   optipng \
@@ -64,6 +65,7 @@ sudo aptitude install \
   pngquant \
   jpegoptim \
   libjpeg-progs \
+  jhead \
   `# utilities` \
   coreutils  \
   moreutils \

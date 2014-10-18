@@ -117,17 +117,17 @@ search_quality()
       cp -p "$use" "$tmpfile"
       return
     elif [ ".jpeg" = ${src_ext:(-5)} ] || [ ".jpg" = ${src_ext:(-4)} ] ; then
-      jpegoptim $src
+      jpegoptim -m 90 -s $src
 
       local tmp_file_new=$(mktemp);
       cp -p $src $tmp_file_new
-      jpegtran -copy  none -optimize -perfect "$tmp_file_new" > "$src"
+      jpegtran -copy  none -optimize "$tmp_file_new" > "$src"
       rm $tmp_file_new;
     fi
   fi
 
-  local qmin=60
-  local qmax=100
+  local qmin=50
+  local qmax=90
   local q=""
   local cmppct=""
   local cmpthreshold=""
