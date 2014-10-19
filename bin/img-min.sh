@@ -87,10 +87,10 @@ do_png()
   done
 
   local file_new=${pngs[$smalli]}
-  local tmp_file_new=$(mktemp);
-  cp -p $file_new $tmp_file_new
-  pngcrush -q -rem alla -reduce -brute "$tmp_file_new" "$file_new"
-  rm $tmp_file_new;
+  local tmpfile_new=$(mktemp);
+  cp -p $file_new $tmpfile_new
+  pngcrush -q -rem alla -reduce -brute "$tmpfile_new" "$file_new"
+  rm $tmpfile_new;
 
   optipng -quiet -o7 "$file_new"
 
@@ -111,18 +111,18 @@ search_quality()
     echo "$uc < $MIN_UNIQUE_COLORS"
     src_ext=$(echo "${src}" | tr '[:upper:]' '[:lower:]')
     if [ ".png" = ${src_ext:(-4)} ]; then
-      cp -p "$src" "$tmpfile"
+      cp -p $src $tmpfile
       use=$(do_png "$src" "$tmpfile")
       echo "use:$use"
-      cp -p "$use" "$tmpfile"
+      cp -p $use $tmpfile
       return
     elif [ ".jpeg" = ${src_ext:(-5)} ] || [ ".jpg" = ${src_ext:(-4)} ] ; then
-      jpegoptim -m 90 -s $src
+      jpegoptim -m 90 -s $src -d $tmpfile
 
-      local tmp_file_new=$(mktemp);
-      cp -p $src $tmp_file_new
-      jpegtran -copy  none -optimize "$tmp_file_new" > "$src"
-      rm $tmp_file_new;
+      local tmpfile_new=$(mktemp);
+      cp -p $tmpfile $tmpfile_new
+      jpegtran -copy  none -optimize "$tmpfile_new" > "$tmpfile"
+      rm $tmpfile_new;
     fi
   fi
 
@@ -175,5 +175,5 @@ tmpfile="/tmp/imgmin$$.$ext"
 search_quality "$src" "$tmpfile"
 convert -strip "$tmpfile" "$dst"
 kdiff=print_stats
-cp -p "$tmpfile" "$dst"
+cp -p $tmpfile $dst
 rm -f $tmpfile
