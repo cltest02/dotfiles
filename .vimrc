@@ -92,7 +92,7 @@ filetype indent on
 " pasting text unmodified from other applications
 " info: auto-complete via <tab> isn't working in INSERT (paste) mode,
 "       so you need to switch to INSERT mode via <F2> or use <c-n>
-set paste
+" set paste
 
 " decrease timeout for faster insert with 'O'
 set ttimeoutlen=100
