@@ -82,7 +82,7 @@ export HISTIGNORE="clear:pwd:[bf]g:* --help:man *:shutdown*:halt*:poweroff*:hibe
 #
 # Keep track of the time the commands were executed.
 # The xterm colour escapes require special care when piping; e.g. "| less -R".
-export HISTTIMEFORMAT="${FG_BLUE}${FONT_BOLD}%Y/%m/%d %H:%M:%S${FONT_RESET}  "
+export HISTTIMEFORMAT=$(echo -e "${COLOR_LIGHT_BLUE}%Y-%m-%d %H:%M:%S${COLOR_NO_COLOUR} ")
 
 # use UTF-8
 setLocale()
