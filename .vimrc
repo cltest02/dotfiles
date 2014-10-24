@@ -42,6 +42,11 @@ set shell=bash
 " Tell vim to use the .vim path first (colors and so)
 set runtimepath=~/.vim,$VIMRUNTIME
 
+" With a map leader it's possible to do extra key combinations
+" like <leader>w saves the current file (instead of '\')
+let mapleader = ","
+let g:mapleader = ","
+
 if filereadable(expand("~/.vimrc.bundles"))
   source ~/.vimrc.bundles
 endif
@@ -676,10 +681,6 @@ endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Editing mappings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" With a map leader it's possible to do extra key combinations
-" like <leader>w saves the current file (instead of '\')
-let mapleader = ","
-let g:mapleader = ","
 
 " Remap VIM 0 to first non-blank character
 map 0 ^
