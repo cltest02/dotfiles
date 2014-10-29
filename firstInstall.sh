@@ -112,6 +112,7 @@ sudo aptitude install \
   mercurial \
   `# usefull tools` \
   nodejs \
+  npm \
   ruby-full \
   imagemagick \
   lynx \
