@@ -128,6 +128,10 @@ sudo aptitude install \
   htop \
   tcpdump
 
+#
+# fixing nodejs for ubuntu
+#
+sudo ln -s /usr/bin/nodejs /usr/bin/node
 
 #
 # install java / ubuntu
