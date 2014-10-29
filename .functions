@@ -476,11 +476,8 @@ cleanTheSystem()
 # extract: extract of compressed-files
 extract()
 {
-  local old_dirs current_dirs lower
-
   if [ -f $1 ] ; then
-    lower=$(lc $1)
-    old_dirs=( *(N/) )
+    local lower=$(lc $1)
 
     case $lower in
       *.tar.bz2)   tar xvjf $1     ;;
@@ -498,17 +495,6 @@ extract()
       *)           echo "'$1' cannot be extracted via >extract<"
                    return 1        ;;
     esac
-
-    # Change in to the newly created directory, and
-    # list the directory contents, if there is one.
-    current_dirs=( *(N/) )
-    for i in {1..${#current_dirs}}; do
-        if [[ $current_dirs[$i] != $old_dirs[$i] ]]; then
-            cd $current_dirs[$i]
-            ls
-            break
-        fi
-    done
 
   else
     echo "'$1' is not a valid file"
