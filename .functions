@@ -438,16 +438,7 @@ iptablesBlockIP()
 # ips: get the local IP's
 ips()
 {
-  local ip='' myip='' line='' nl=$'\n'
-
-  while IFS=$': \t' read -a line ; do
-    [ -z "${line%inet}" ] &&
-      ip=${line[${#line[1]}>4?1:2]} &&
-        [ "${ip#127.0.0.1}" ] &&
-          myip=$ip
-    done< <(LANG=C LANGUAGE=C ifconfig)
-
-  printf ${1+-v} $1 "%s${nl:0:$[${#1}>0?0:1]}" $myip
+  ifconfig | grep "inet " | awk '{ print $2 }' | cut -d ":" -f 2
 }
 
 # -------------------------------------------------------------------
