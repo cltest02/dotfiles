@@ -427,8 +427,9 @@ httpdump()
 # usage: iptablesBlockIP 8.8.8.8
 iptablesBlockIP()
 {
-  if [ "$(id -u)" == "0" ] ; then
-    iptables -A INPUT -s $1 -j DROP
+  if [ $# -eq 0 ]; then
+    echo "Usage: iptablesBlockIP 123.123.123.123"
+    return 1
   else
     sudo iptables -A INPUT -s $1 -j DROP
   fi
