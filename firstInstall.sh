@@ -216,6 +216,15 @@ if [[ $? -eq 1 ]]; then
   sudo npm install -g yo
 
   sudo aptitude install php5-cli php5-mysql php5-curl php5-gd php5-intl php-pear php5-imagick php5-imap php5-mcrypt php5-memcached php5-ming php5-ps php5-pspell php5-recode php5-snmp php5-sqlite php5-tidy php5-xmlrpc php5-xsl php5-xdebug php5-apcu php5-geoip
+
+  #sudo php5enmod json
+  sudo php5enmod mcrypt
+  sudo php5enmod curl
+  sudo php5enmod mysql
+  sudo php5enmod gd
+  sudo php5enmod imagick
+  sudo php5enmod apcu
+
   curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/bin
   sudo ln -s /usr/bin/composer.phar /usr/bin/composer
 fi
