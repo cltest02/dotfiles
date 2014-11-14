@@ -76,6 +76,7 @@ sudo aptitude install \
   atop \
   tree \
   rsync \
+  whois \
   vim \
   csstidy \
   recode \
