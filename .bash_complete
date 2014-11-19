@@ -21,7 +21,7 @@ unset file
 complete -W "$(echo `cat ~/.bash_history | egrep '^ssh ' | sort | uniq | sed 's/^ssh //'`;)" ssh
 
 # add tab completion for SSH hostnames based on ~/.ssh/config, ignoring wildcards
-[ -e "~/.ssh/config" ] && complete -o "default" -o "nospace" -W "$(grep "^Host" ~/.ssh/config | grep -v "[?*]" | cut -d " " -f2 | tr ' ' '\n')" scp sftp ssh
+[ -e "~/.ssh/config" ] && complete -o "default" -o "nospace" -W "$(grep "^Host" ~/.ssh/config | grep -v "[?*]" | cut -d " " -f2- | tr ' ' '\n')" scp sftp ssh;
 
 # Add tab completion for openvpn configs based on ~/.openvpn/config, ignoring wildcards
 [ -e "~/.openvpn/config/" ] && complete -o "default" -o "nospace" -W "$(find ~/.openvpn/config/ -name "*.ovpn" )" openvpn

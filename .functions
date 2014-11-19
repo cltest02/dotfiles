@@ -427,8 +427,9 @@ httpdump()
 # usage: iptablesBlockIP 8.8.8.8
 iptablesBlockIP()
 {
-  if [ "$(id -u)" == "0" ] ; then
-    iptables -A INPUT -s $1 -j DROP
+  if [ $# -eq 0 ]; then
+    echo "Usage: iptablesBlockIP 123.123.123.123"
+    return 1
   else
     sudo iptables -A INPUT -s $1 -j DROP
   fi
@@ -438,16 +439,7 @@ iptablesBlockIP()
 # ips: get the local IP's
 ips()
 {
-  local ip='' myip='' line='' nl=$'\n'
-
-  while IFS=$': \t' read -a line ; do
-    [ -z "${line%inet}" ] &&
-      ip=${line[${#line[1]}>4?1:2]} &&
-        [ "${ip#127.0.0.1}" ] &&
-          myip=$ip
-    done< <(LANG=C LANGUAGE=C ifconfig)
-
-  printf ${1+-v} $1 "%s${nl:0:$[${#1}>0?0:1]}" $myip
+  ifconfig | grep "inet " | awk '{ print $2 }' | cut -d ":" -f 2
 }
 
 # -------------------------------------------------------------------
@@ -485,11 +477,8 @@ cleanTheSystem()
 # extract: extract of compressed-files
 extract()
 {
-  local old_dirs current_dirs lower
-
   if [ -f $1 ] ; then
-    lower=$(lc $1)
-    old_dirs=( *(N/) )
+    local lower=$(lc $1)
 
     case $lower in
       *.tar.bz2)   tar xvjf $1     ;;
@@ -507,17 +496,6 @@ extract()
       *)           echo "'$1' cannot be extracted via >extract<"
                    return 1        ;;
     esac
-
-    # Change in to the newly created directory, and
-    # list the directory contents, if there is one.
-    current_dirs=( *(N/) )
-    for i in {1..${#current_dirs}}; do
-        if [[ $current_dirs[$i] != $old_dirs[$i] ]]; then
-            cd $current_dirs[$i]
-            ls
-            break
-        fi
-    done
 
   else
     echo "'$1' is not a valid file"
@@ -602,7 +580,7 @@ calc()
 # mkd: Create a new directory and enter it
 mkd()
 {
-  mkdir -p "$@" && cd "$@"
+  mkdir -p "$@" && cd "$_"
 }
 
 # -------------------------------------------------------------------

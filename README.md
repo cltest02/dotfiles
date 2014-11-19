@@ -75,9 +75,6 @@ more useful shortcuts:
 difflight & filename auto-completion via zsh:
 ![difflight & filename auto-completion via zsh](https://lh3.googleusercontent.com/-PrczDV4plG8/VBaLpMJzXhI/AAAAAAAAEqU/nNK6q3JY5Gs/w1152-h852-no/diff_v2.gif)
 
-difflight & filename auto-completion via zsh:
-![difflight & filename auto-completion via zsh](https://lh3.googleusercontent.com/-PrczDV4plG8/VBaLpMJzXhI/AAAAAAAAEqU/nNK6q3JY5Gs/w1152-h852-no/diff_v2.gif)
-
 copy text via "getclip" & putclip":
 ![copy text via "getclip" & putclip](https://lh5.googleusercontent.com/-8akAgcHLS2s/VBaLpzImBsI/AAAAAAAAEqc/-IVyJbD6Kko/w1152-h852-no/get_put_clip.gif)
 
