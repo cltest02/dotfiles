@@ -501,7 +501,7 @@ set softtabstop=2
 "set textwidth=80
 
 " don't automatically wrap on load
-set nowrap
+" set nowrap
 
 " don't automatically wrap text when typing
 set fo-=t
