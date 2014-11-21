@@ -32,7 +32,7 @@ _enumerateGrailsScripts()
     # - PackagePlugin         -> Package-Plugin
     # - Package-Plugin        -> package-plugin
     command_tmp=$(basename $file                              \
-      | sed -E  -e 's/^_?([^_]+)_?.groovy/\1/' \
+      | sed -r  -e 's/^_?([^_]+)_?.groovy/\1/' \
                 -e 's/([a-z])([A-Z])/\1-\2/g'  \
       | tr "[:upper:]" "[:lower:]"             \
       | sort                                   \

@@ -8,7 +8,7 @@
 _jake()
 {
   if [ -f Jakefile ] || [ -f jakefile ]; then
-    compadd `jake -T | cut -d " " -f 2 | sed -E "s/.\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"`
+    compadd `jake -T | cut -d " " -f 2 | sed -r "s/.\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"`
   fi
 }
 
