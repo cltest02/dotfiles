@@ -110,11 +110,11 @@ set fileformats=unix,dos,mac
 " set autoread
 
 " use the OS clipboard by default (on versions compiled with `+clipboard`)
-if exists("+clipboard")
-  " here we always use the system-clipboard
-  "set clipboard=unnamedplus
-  set clipboard=unnamed
-endif
+"if exists("+clipboard")
+"  " here we always use the system-clipboard
+"  "set clipboard=unnamedplus
+"  set clipboard=unnamed
+"endif
 
 " enable per-directory .vimrc files and disable unsafe commands in them
 set exrc
@@ -202,6 +202,9 @@ set pastetoggle=<F2>
 
 " enable the popup menu
 "set mousem=popup
+
+" show ‚Äúinvisible‚Äù characters
+set lcs=trail:∑,tab:ª∑,eol:¨,nbsp:Ø
 
 " free cursor
 set whichwrap=b,s,h,l,<,>,[,]
@@ -299,7 +302,6 @@ inoremap $t <><esc>i
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " switch syntax highlighting on, when the terminal has colors
 if &t_Co > 2 || has("gui_running")
-
   try
     colorscheme molokai
   catch /^Vim\%((\a\+)\)\=:E185/
@@ -330,10 +332,8 @@ if &t_Co > 2 || has("gui_running")
   endif
 
 
-  " IMPORTANT: Uncomment one of the following lines to force
-  " using 256 colors (or 88 colors) if your terminal supports it,
-  " but does not automatically use 256 colors by default.
-  set t_Co=256
+  " set to 256 colors
+  " set t_Co=256
 
   " Also switch on highlighting the last used search pattern.
   if exists("+hlsearch")
@@ -352,7 +352,9 @@ if &t_Co > 2 || has("gui_running")
     autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
     autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
     autocmd InsertLeave * match ExtraWhitespace /\s\+$/
-    autocmd BufWinLeave * call clearmatches()
+    if exists('*clearmatches')
+      autocmd BufWinLeave * call clearmatches()
+    endif
   endif
 
   " reload .vimrc when updating it
@@ -501,7 +503,7 @@ set softtabstop=2
 "set textwidth=80
 
 " don't automatically wrap on load
-set nowrap
+" set nowrap
 
 " don't automatically wrap text when typing
 set fo-=t

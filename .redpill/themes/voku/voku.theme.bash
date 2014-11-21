@@ -26,10 +26,15 @@ prompt_command()
     userOrHostExtra="\[$user_color\]:"
   fi
 
-  if [[ "$(tty)" == /dev/pts/* ]]; then
+  local isCygwin=false
+  [[ "$(bash --version)" == *-pc-cygwin* ]] && isCygwin=true
+
+  if [[ "$(tty)" == /dev/pts/* ]] || $isCygwin; then
     if [[ -n $remote ]] && [[ $COLORTERM = gnome-* && $TERM = xterm ]] && infocmp gnome-256color >/dev/null 2>&1; then
       export TERM='gnome-256color'
     elif infocmp xterm-256color >/dev/null 2>&1; then
+      export TERM='xterm-256color'
+    elif $isCygwin ; then
       export TERM='xterm-256color'
     fi
   fi
@@ -46,7 +51,7 @@ prompt_command()
   local TITLE=""
   # echo title sequence only for pseudo terminals
   # real tty do not support title escape sequences.
-  if [[ "$(tty)" == /dev/pts/* ]]; then
+  if [[ "$(tty)" == /dev/pts/* ]] || $isCygwin; then
     TITLE="\[\033]0;${USER}@${HOSTNAME}: \w\007\]"
   fi
 

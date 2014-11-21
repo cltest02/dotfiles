@@ -44,12 +44,21 @@ doIt()
   fi
 
   # copy dotfiles
+  git config --global -l | LANG=C sort > /tmp/oldgit$$
   rsync --exclude ".git/" --exclude ".DS_Store" --exclude "bootstrap.sh" \
         --exclude "README.md" --exclude "firstInstall.sh" --exclude "android_sdk_install.sh" \
         --exclude ".gitignore" --exclude ".gitattributes" \
         --exclude "LICENSE-MIT.txt" --exclude ".editorconfig" \
         --exclude "examples/" \
         -avhi --no-perms . ~/
+	source ~/.bash_profile
+
+  git config --global -l | LANG=C sort > /tmp/newgit$$
+
+  echo "git configuration not present anymore after bootstrapping:"
+  LANG=C comm -23 /tmp/oldgit$$ /tmp/newgit$$
+  echo -e "\nYou can use the following commands to add it again:"
+  LANG=C comm -23 /tmp/oldgit$$ /tmp/newgit$$ | while read line; do echo "git config --global --add "$(echo $line | sed 's/=/ \"/;s/$/\"/') ;done
 
   # check for "force"
   if [[ "$FORCE" == "1" ]]; then

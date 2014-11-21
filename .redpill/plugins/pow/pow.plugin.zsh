@@ -39,7 +39,7 @@ rack_root()
 rack_root_detect()
 {
   basedir=$(rack_root)
-  echo `basename $basedir | sed -E "s/.(com|net|org)//"`
+  echo `basename $basedir | sed -r "s/.(com|net|org)//"`
 }
 
 kapow()

@@ -323,7 +323,7 @@ EOF
     fi
     command git config --get-regexp 'remote\.[^.]*\.url' |
     grep -E ' ((https?|git)://|git@)github\.com[:/][^:/]+/[^/]+$' |
-    sed -E 's#^remote\.([^.]+)\.url +.+[:/](([^/]+)/[^.]+)(\.git)?$#'"$format"'#'
+    sed -r 's#^remote\.([^.]+)\.url +.+[:/](([^/]+)/[^.]+)(\.git)?$#'"$format"'#'
   }
 
   # __hub_heads

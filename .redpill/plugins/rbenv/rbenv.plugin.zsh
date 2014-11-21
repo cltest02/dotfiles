@@ -47,7 +47,7 @@ for rbenvdir in "${rbenvdirs[@]}" ; do
     {
       local rbenv_path=$(rbenv prefix)
 
-      gem list $@ | sed -E \
+      gem list $@ | sed -r \
         -e "s/\([0-9a-z, \.]+( .+)?\)/$fg[blue]&$reset_color/g" \
         -e "s|$(echo $rbenv_path)|$fg[magenta]\$rbenv_path$reset_color|g" \
         -e "s/$current_ruby@global/$fg[yellow]&$reset_color/g" \
