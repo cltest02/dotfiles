@@ -537,6 +537,45 @@ stripspace()
 }
 
 # -------------------------------------------------------------------
+# battery_life : Echo the percentage of battery life remaining
+battery_life()
+{
+  local life=$(acpi -b | cut -d "," -f 2)
+  # NOTE: the trailing % is stripped
+  echo ${life%\%}
+}
+
+# -------------------------------------------------------------------
+# battery_indicator: echo a indicator for your battery-time
+battery_indicator()
+{
+  local num=$(battery_life)
+
+  if [ $num -gt 95 ]; then
+    # 95-100% remaining : GREEN
+    echo -e "${COLOR_GREEN}♥♥♥♥♥♥${COLOR_NO_COLOUR}"
+  elif [ $num -gt 85 ]; then
+    # 85-95% remaining : GREEN
+    echo -e "${COLOR_GREEN}♥♥♥♥♥♡${COLOR_NO_COLOUR}"
+  elif [ $num -gt 65 ]; then
+    # 65-85% remaining : GREEN
+    echo -e "${COLOR_GREEN}♥♥♥♥♡♡${COLOR_NO_COLOUR}"
+  elif [ $num -gt 45 ]; then
+    # 45-65% remaining : GREEN
+    echo -e "${COLOR_GREEN}♥♥♥♡♡♡${COLOR_NO_COLOUR}"
+  elif [ $num -gt 25 ]; then
+    # 25-45% remaining : GREEN
+    echo -e "${COLOR_GREEN}♥♥♡♡♡♡${COLOR_NO_COLOUR}"
+  elif [ $num -gt 10 ]; then
+    # 11-25% remaining : YELLOW
+    echo -e "${COLOR_YELLOW}♥♡♡♡♡♡${COLOR_NO_COLOUR}"
+  else
+    # 0-10% remaining : RED
+    echo -e "${COLOR_RED}♥♡♡♡♡♡${COLOR_NO_COLOUR}"
+  fi
+}
+
+# -------------------------------------------------------------------
 # logssh: establish ssh connection + write a logfile
 logssh()
 {
@@ -766,6 +805,32 @@ dataurl()
 }
 
 # -------------------------------------------------------------------
+# gitio: create a git.io short URL
+gitio()
+{
+  if [ -z "${1}" -o -z "${2}" ]; then
+    echo "Usage: \`gitio slug url\`"
+    return 1
+  fi
+
+  curl -i http://git.io/ -F "url=${2}" -F "code=${1}"
+}
+
+# -------------------------------------------------------------------
+# shorturl: Create a short URL
+shorturl()
+{
+  if [ -z "${1}" ]; then
+    echo "Usage: \`shorturl url\`"
+    return 1
+  fi
+
+  curl -s https://www.googleapis.com/urlshortener/v1/url \
+    -H 'Content-Type: application/json' \
+    -d '{"longUrl": '\"$1\"'}' | grep id | cut -d '"' -f 4
+}
+
+# -------------------------------------------------------------------
 # server: Start an HTTP server from a directory, optionally specifying the port
 server()
 {
@@ -908,7 +973,7 @@ history_top_used()
 # for a given domain
 getcertnames()
 {
-	if [ -z "${1}" ]; then
+  if [ -z "${1}" ]; then
     echo "ERROR: No domain specified.";
     return 1;
   fi;
@@ -994,7 +1059,107 @@ httpDebug()
 {
   curl $@ -o /dev/null -w "dns: %{time_namelookup} connect: %{time_connect} pretransfer: %{time_pretransfer} starttransfer: %{time_starttransfer} total: %{time_total}\n"
 }
- 
+
+# -------------------------------------------------------------------
+# digga: show dns-settings from a domain e.g. MX, IP
+#
+# usage: digga moelleken.org
+digga()
+{
+  if [ $# -eq 0 ]; then
+    echo "Usage: digga moelleken.org"
+    return 1
+  else
+    dig +nocmd "$1" ANY +multiline +noall +answer
+  fi
+}
+
+# -------------------------------------------------------------------
+# gid: Install Grunt plugins and add them as `devDependencies` to `package.json`
+#
+# usage: gid contrib-watch contrib-uglify
+gid()
+{
+  npm install --save-dev ${*/#/grunt-}
+}
+
+# -------------------------------------------------------------------
+# gi: Install Grunt plugins and add them as `dependencies` to `package.json`
+#
+# usage: gi contrib-watch contrib-uglify
+gi()
+{
+  npm install --save ${*/#/grunt-}
+}
+
+# -------------------------------------------------------------------
+# `m`: with no arguments opens the current directory in TextMate, otherwise
+# opens the given location
+m()
+{
+  if [ $# -eq 0 ]; then
+    mate .
+  else
+    mate "$@"
+  fi
+}
+
+# -------------------------------------------------------------------
+# `s`: with no arguments opens the current directory in Sublime Text, otherwise
+# opens the given location
+s()
+{
+  if [ $# -eq 0 ]; then
+    subl -a .
+  else
+    subl -a "$@"
+  fi
+}
+
+# -------------------------------------------------------------------
+# `a`: with no arguments opens the current directory in Atom Editor, otherwise
+# opens the given location
+a()
+{
+  if [ $# -eq 0 ]; then
+    atom .
+  else
+    atom "$@"
+  fi
+}
+
+# -------------------------------------------------------------------
+# `v`: with no arguments opens the current directory in Vim, otherwise opens the
+# given location
+v()
+{
+  if [ $# -eq 0 ]; then
+    vim .
+  else
+    vim "$@"
+  fi
+}
+
+# -------------------------------------------------------------------
+# `o`: with no arguments opens current directory, otherwise opens the given
+# location
+o()
+{
+  local openCommand=""
+
+  if xdg-open --version /dev/null > /dev/null 2>&1; then
+    openCommand=xdg-open
+  elif open --version /dev/null > /dev/null 2>&1; then
+    openCommand=open
+  fi
+
+  if [ $# -eq 0 ]; then
+    $openCommand .
+  else
+    $openCommand "$@"
+  fi
+}
+
 # -------------------------------------------------------------------
 # `tre`: is a shorthand for `tree` with hidden files and color enabled, ignoring
 # the `.git` directory, listing directories first. The output gets piped into
