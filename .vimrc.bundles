@@ -194,7 +194,7 @@ Bundle 'flazz/vim-colorschemes'
 "let g:tagbar_indent = 1
 
 " ----------------------------------------
-if exists("clearmatches")
+if exists('*clearmatches')
   Bundle 'Shougo/neocomplcache'
 endif
 
@@ -355,7 +355,7 @@ Bundle 'hail2u/vim-css3-syntax'
 
 " ----------------------------------------
 
-if exists("clearmatches")
+if exists('*clearmatches')
   Bundle 'gorodinskiy/vim-coloresque'
 endif
 

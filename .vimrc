@@ -352,7 +352,7 @@ if &t_Co > 2 || has("gui_running")
     autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
     autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
     autocmd InsertLeave * match ExtraWhitespace /\s\+$/
-    if has('clearmatches')
+    if exists('*clearmatches')
       autocmd BufWinLeave * call clearmatches()
     endif
   endif
