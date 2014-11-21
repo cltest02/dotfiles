@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
 THEME_PROMPT_HOST='\H'
+
+SCM_CHECK=${SCM_CHECK:=true}
+
 SCM_THEME_PROMPT_DIRTY=' ✗'
 SCM_THEME_PROMPT_CLEAN=' ✓'
 SCM_THEME_PROMPT_PREFIX=' |'
@@ -32,7 +35,9 @@ RBFU_THEME_PROMPT_SUFFIX='|'
 
 scm()
 {
-  if [[ -f .git/HEAD ]]; then
+  if [[ "$SCM_CHECK" = false ]]; then
+    SCM=$SCM_NONE
+  elif [[ -f .git/HEAD ]]; then
     SCM=$SCM_GIT
   elif which git &> /dev/null && [[ -n "$(git symbolic-ref HEAD 2> /dev/null)" ]]; then
     SCM=$SCM_GIT
@@ -243,3 +248,12 @@ prompt_char()
 {
   scm_char
 }
+
+if [ ! -e $BASH_IT/plugins/enabled/battery.plugin.bash ]; then
+# if user has installed battery plugin, skip this...
+  battery_charge()
+  {
+    # no op
+    echo -n
+  }
+fi
