@@ -1,0 +1,23 @@
+# Files listed here will not be copied to your home directory.
+
+.git/
+
+.IGNORE
+bootstrap.sh
+
+README*
+LICENSE*
+
+firstInstall.sh
+android_sdk_install.sh
+
+.DS_Store
+.gitignore
+.gitattributes
+.editorconfig
+
+examples/
+
+*~
+*.swp
+*.swo

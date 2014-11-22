@@ -45,12 +45,7 @@ doIt()
 
   # copy dotfiles
   git config --global -l | LANG=C sort > /tmp/oldgit$$
-  rsync --exclude ".git/" --exclude ".DS_Store" --exclude "bootstrap.sh" \
-        --exclude "README.md" --exclude "firstInstall.sh" --exclude "android_sdk_install.sh" \
-        --exclude ".gitignore" --exclude ".gitattributes" \
-        --exclude "LICENSE-MIT.txt" --exclude ".editorconfig" \
-        --exclude "examples/" \
-        -avhi --no-perms . ~/
+  rsync --exclude-from .IGNORE -avhi --no-perms . ~/
 	source ~/.bash_profile
 
   git config --global -l | LANG=C sort > /tmp/newgit$$
@@ -91,12 +86,7 @@ doIt()
 
 dryRun()
 {
-	rsync --exclude ".git/" --exclude ".DS_Store" --exclude "bootstrap.sh" \
-        --exclude "README.md" --exclude "firstInstall.sh" --exclude "android_sdk_install.sh" \
-        --exclude ".gitignore" --exclude ".gitattributes" \
-        --exclude "LICENSE-MIT.txt" --exclude ".editorconfig" \
-        --exclude "examples/" \
-        -avhni --no-perms . ~/
+	rsync --exclude-from .IGNORE -avhni --no-perms . ~/
 	source ~/.bash_profile
 }
 
