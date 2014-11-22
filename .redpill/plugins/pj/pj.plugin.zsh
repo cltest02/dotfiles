@@ -19,8 +19,11 @@ pj()
   file=$1
 
   if [[ "open" == "$file" ]] then
-    file=$2
+    shift
+    file=$*
     cmd=(${(s: :)EDITOR})
+  else
+    file=$*
   fi
 
   for project in $PROJECT_PATHS; do
@@ -36,9 +39,13 @@ pj()
 
 alias pjo="pj open"
 
-_pj ()
+_pj()
 {
-   compadd `/bin/ls -l $PROJECT_PATHS 2>/dev/null | awk '{ print $9 }'`
+  # might be possible to improve this using glob, without the basename trick
+  typeset -a projects
+  projects=($PROJECT_PATHS/*)
+  projects=$projects:t
+  _arguments "*:file:($projects)"
 }
 
 compdef _pj pj

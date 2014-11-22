@@ -2,13 +2,13 @@
 # Tested on Linux, Unix and Windows under ANSI colors.
 # It is recommended to use with a dark background and the font Inconsolata.
 # Colors: black, red, green, yellow, *blue, magenta, cyan, and white.
-# 
+#
 # http://ysmood.org/wp/2013/03/my-ys-terminal-theme/
 # Mar 2013 ys
 
 # Machine name.
 function box_name {
-    [ -f ~/.box-name ] && cat ~/.box-name || hostname
+    [ -f ~/.box-name ] && cat ~/.box-name || echo $HOST
 }
 
 # Directory info.
@@ -21,7 +21,7 @@ ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_DIRTY=" %{$fg[red]%}x"
 ZSH_THEME_GIT_PROMPT_CLEAN=" %{$fg[green]%}o"
 
-# Prompt format: \n # USER at MACHINE in DIRECTORY on git:BRANCH STATE [TIME] \n $ 
+# Prompt format: \n # USER at MACHINE in DIRECTORY on git:BRANCH STATE [TIME] \n $
 PROMPT="
 %{$terminfo[bold]$fg[blue]%}#%{$reset_color%} \
 %{$fg[cyan]%}%n \
@@ -33,7 +33,7 @@ ${git_info} \
 %{$fg[white]%}[%*]
 %{$terminfo[bold]$fg[red]%}$ %{$reset_color%}"
 
-if [[ "$(whoami)" == "root" ]]; then
+if [[ "$USER" == "root" ]]; then
 PROMPT="
 %{$terminfo[bold]$fg[blue]%}#%{$reset_color%} \
 %{$bg[yellow]%}%{$fg[cyan]%}%n%{$reset_color%} \

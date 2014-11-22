@@ -8,7 +8,7 @@ _rails_command()
   elif [ -e "script/server" ]; then
     ruby script/$@
   else
-    rails $@
+    command rails $@
   fi
 }
 
@@ -17,7 +17,7 @@ _rake_command()
   if [ -e "bin/rake" ]; then
     bin/rake $@
   else
-    rake $@
+    command rake $@
   fi
 }
 

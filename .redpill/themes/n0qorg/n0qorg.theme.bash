@@ -5,8 +5,9 @@
 # host directory (branch*)»
 # for example:
 # ananas ~/Code/red-pill/themes (master*)»
-function prompt_command() {
-    PS1="${bold_blue}[$(hostname)]${normal} \w${normal} ${bold_white}[$(git_prompt_info)]${normal}» "
+prompt_command()
+{
+    PS1="${bold_blue}[${HOSTNAME}]${normal} \w${normal} ${bold_white}[$(git_prompt_info)]${normal}» "
 }
 
 PROMPT_COMMAND=prompt_command;

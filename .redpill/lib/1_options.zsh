@@ -24,8 +24,6 @@ setopt \
   HIST_VERIFY \
   `# add to history-file ` \
   APPEND_HISTORY \
-  `# Any parameter that is set to the absolute name of a directory immediately becomes a name for that directory in the usual form ` \
-  AUTO_NAME_DIRS \
   `# Make cd push the old directory onto the directory stack ` \
   AUTO_PUSHD \
   `# swapped the meaning of cd +1 and cd -1; we want them to mean the opposite of what they mean im csh ` \
@@ -64,6 +62,8 @@ setopt \
   PROMPT_SUBST
 
 unsetopt \
+  `# do not set auto_name_dirs because it messes up prompts ` \
+  AUTO_NAME_DIRS \
   `# do not autoselect the first completion entry ` \
   MENU_COMPLETE \
   `# do not freezes output to the terminal until you type ^q `\

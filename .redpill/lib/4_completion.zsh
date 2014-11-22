@@ -112,7 +112,11 @@ zstyle ':completion:*:rm:*' file-patterns '*:all-files'
 # ZLS_COLORS and ZLS_COLOURS parameters.
 # PIDs (bold red)
 zstyle ':completion:*:processes' command ps --forest -A -o pid,cmd
-zstyle ':completion:*:*:*:*:processes' command 'ps -u $USER -o pid,user,comm -w'
+if [ "$OSTYPE[0,7]" = "solaris" ]; then
+  zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,comm"
+else
+  zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,comm -w -w"
+fi
 zstyle ':completion:*:processes' list-colors '=(#b)( #[0-9]#)[^[/0-9a-zA-Z]#(*)=34=37;1=30;1'
 
 # extra settings for the "kill"-command

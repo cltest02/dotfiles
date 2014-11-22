@@ -22,13 +22,13 @@
 rack_root()
 {
   setopt chaselinks
-  local orgdir="$(pwd)"
-  local basedir="$(pwd)"
+  local orgdir="$PWD"
+  local basedir="$PWD"
 
   while [[ $basedir != '/' ]]; do
     test -e "$basedir/config.ru" && break
     builtin cd ".." 2>/dev/null
-    basedir="$(pwd)"
+    basedir="$PWD"
   done
 
   builtin cd "$orgdir" 2>/dev/null
@@ -60,7 +60,7 @@ compctl -W ~/.pow -/ kapow
 
 powit()
 {
-  local basedir="$(pwd)"
+  local basedir="$PWD"
   local vhost=$1
 
   [ ! -n "$vhost" ] && vhost=$(rack_root_detect)
