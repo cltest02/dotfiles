@@ -1271,12 +1271,12 @@ __git_prompt()
       fi
 
       # Check for unstaged changes.
-      if ! $(git diff-files --quiet --ignore-submodules --); then
+      if ! $(git diff-files --quiet --ignore-submodules -- 2>/dev/null); then
         s+="!"
       fi
 
       # Check for untracked files.
-      if [ -n "$(git ls-files --others --exclude-standard)" ]; then
+      if [ -n "$(git ls-files --others --exclude-standard 2>/dev/null)" ]; then
         s+="?"
       fi
 
