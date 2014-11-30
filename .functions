@@ -847,19 +847,19 @@ server()
 # (Requires PHP 5.4.0+.)
 #
 # usage:
-# phpserver [FOO=BAR] [FOO=BAR] [port=auto] [ip=127.0.0.1]
+# phpserver [port=auto] [ip=127.0.0.1] [FOO_1=BAR_1] [FOO_2=BAR_2]
 phpserver()
 {
   local free_port=$(netstat_free_local_port)
-  local port="${5:-${free_port}}"
-  local ip="${6:-127.0.0.1}"
-
-  if [ $1 ] && [ $2 ]; then
-    export ${1}=${2}
-  fi
+  local port="${1:-${free_port}}"
+  local ip="${2:-127.0.0.1}"
 
   if [ $3 ] && [ $4 ]; then
     export ${3}=${4}
+  fi
+
+  if [ $5 ] && [ $6 ]; then
+    export ${5}=${6}
   fi
 
   sleep 1 && o "http://${ip}:${port}/" &
