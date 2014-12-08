@@ -1293,9 +1293,9 @@ __git_prompt()
     # Get the short symbolic ref.
     # If HEAD isn’t a symbolic ref, get the short SHA for the latest commit
     # Otherwise, just give up.
-    branchName="$(git symbolic-ref --quiet HEAD 2> /dev/null | sed 's/^refs\/heads\///' || \
+    branchName="$({ git symbolic-ref --quiet HEAD 2> /dev/null || \
       git rev-parse --short HEAD 2> /dev/null || \
-      echo '(unknown)')"
+      echo '(unknown)'; } | sed 's/^refs\/heads\///')";
 
     [[ -n "${s}" ]] && s=" [${s}]"
 
