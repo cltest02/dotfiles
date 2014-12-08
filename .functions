@@ -1236,11 +1236,24 @@ __git_prompt()
     # check if the current directory is in .git before running git checks
     if [[ "$(git rev-parse --is-inside-git-dir 2> /dev/null)" == "false" ]]; then
 
-      # Ensure the index is up to date.
-      git update-index --really-refresh -q &>/dev/null
+      #create a copy of the index to avoid conflicts with parallel git commands, e.g. git rebase
+      __GIT_DIR="$(git rev-parse --git-dir)"
+      if [[ -z "$GIT_INDEX_FILE" ]]; then
+        __GIT_INDEX_FILE="$__GIT_DIR/index"
+      else
+        __GIT_INDEX_FILE="$GIT_INDEX_FILE"
+      fi
+      __GIT_INDEX_PROMPT="/tmp/git-index-prompt$$"
+      cp "$__GIT_INDEX_FILE" $__GIT_INDEX_PROMPT
 
+      # Ensure the copied index is up to date.
+      GIT_INDEX_FILE="$__GIT_INDEX_PROMPT" git update-index --really-refresh -q &> /dev/null;
       # Check if we are ahead or behind our tracking branch (https://gist.github.com/HowlingMind/996093).
-      local git_status="$(LANG=C LANGUAGE=C git status 2> /dev/null)"
+      local git_status="$(GIT_INDEX_FILE="$__GIT_INDEX_PROMPT" LANG=C LANGUAGE=C git status 2> /dev/null)";
+
+      #rm the temporary index
+      rm "$__GIT_INDEX_PROMPT"
+
       local remote_pattern="Your branch is (ahead|behind).*by ([[:digit:]]*) commit"
 
       if [ -n "$BASH_VERSION" ]; then
