@@ -1,6 +1,6 @@
 function my_git_prompt() {
   tester=$(git rev-parse --git-dir 2> /dev/null) || return
-  
+
   INDEX=$(git status --porcelain 2> /dev/null)
   STATUS=""
 
@@ -10,12 +10,12 @@ function my_git_prompt() {
   fi
 
   # is anything staged?
-  if $(echo "$INDEX" | grep -E -e '^(D[ M]|[MARC][ MD]) ' &> /dev/null); then
+  if $(echo "$INDEX" | command grep -E -e '^(D[ M]|[MARC][ MD]) ' &> /dev/null); then
     STATUS="$STATUS$ZSH_THEME_GIT_PROMPT_STAGED"
   fi
 
   # is anything unstaged?
-  if $(echo "$INDEX" | grep -E -e '^[ MARC][MD] ' &> /dev/null); then
+  if $(echo "$INDEX" | command grep -E -e '^[ MARC][MD] ' &> /dev/null); then
     STATUS="$STATUS$ZSH_THEME_GIT_PROMPT_UNSTAGED"
   fi
 
@@ -25,7 +25,7 @@ function my_git_prompt() {
   fi
 
   # is anything unmerged?
-  if $(echo "$INDEX" | grep -E -e '^(A[AU]|D[DU]|U[ADU]) ' &> /dev/null); then
+  if $(echo "$INDEX" | command grep -E -e '^(A[AU]|D[DU]|U[ADU]) ' &> /dev/null); then
     STATUS="$STATUS$ZSH_THEME_GIT_PROMPT_UNMERGED"
   fi
 

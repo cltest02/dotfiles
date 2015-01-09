@@ -4,6 +4,6 @@
 HISTSIZE=20000
 SAVEHIST=10000
 
-if [ -z $HISTFILE ]; then
+if [ -z "$HISTFILE" ]; then
   HISTFILE=$HOME/.zsh_history
 fi

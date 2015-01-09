@@ -190,24 +190,23 @@ LS_OPTIONS="-hFN --color=auto"
 GREP_COLOR="1;32"
 GREP_OPTIONS="--color=auto"
 
-# avoid VCS folders (if the necessary grep flags are available)
+# is x grep argument available?
 grepFlagAvailable()
 {
-  echo | grep $1 "" >/dev/null 2>&1
+  echo | command grep $1 "" >/dev/null 2>&1
 }
 
+# ignore VCS folders (if the necessary grep flags are available)
+VCS_FOLDERS="{.bzr,.cvs,.git,.hg,.svn}"
+
 if grepFlagAvailable --exclude-dir=.cvs; then
-  for pattern in .cvs .git .hg .svn; do
-    GREP_OPTIONS+=" --exclude-dir=$PATTERN"
-  done
+  GREP_OPTIONS+=" --exclude-dir=$VCS_FOLDERS"
 elif grepFlagAvailable --exclude=.cvs; then
-  for pattern in .cvs .git .hg .svn; do
-    GREP_OPTIONS+=" --exclude=$PATTERN"
-  done
+  GREP_OPTIONS+=" --exclude=$VCS_FOLDERS"
 fi
 
 # clean-up
-unset pattern
+unset VCS_FOLDERS
 unset -f grepFlagAvailable
 
 # some more default color-settings for the root-user
@@ -217,7 +216,12 @@ if [ "$UID" = 0 ]; then
   GREP_OPTIONS=""
 fi
 
-export LSCOLORS LS_COLORS LS_OPTIONS GREP_COLOR GREP_OPTIONS
+# export ls & grep settings
+export LSCOLORS="$LSCOLORS"
+export LS_COLORS="$LS_COLORS="
+export LS_OPTIONS="$LS_OPTIONS"
+export GREP_COLOR="$GREP_COLOR"
+export GREP_OPTIONS="$GREP_OPTIONS"
 
 # lazy add local bin
 LOCAL_BIN="$HOME/.local/bin"

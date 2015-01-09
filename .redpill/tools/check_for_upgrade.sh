@@ -23,8 +23,6 @@ if [[ -z "$epoch_target" ]]; then
   epoch_target=13
 fi
 
-[ -f ~/.profile ] && source ~/.profile
-
 # Cancel upgrade if the current user doesn't have write permissions for the
 # red-pill directory.
 [[ -w "$ZSH" ]] || return 0

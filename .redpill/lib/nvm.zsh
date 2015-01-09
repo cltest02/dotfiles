@@ -4,7 +4,7 @@ nvm_prompt_info()
 {
   local nvm_prompt
 
-  [ -f $HOME/.nvm/nvm.sh ] || return
+  [ -f "$HOME/.nvm/nvm.sh" ] || return
   nvm_prompt=$(node -v 2>/dev/null)
   [[ "${nvm_prompt}x" == "x" ]] && return
   nvm_prompt=${nvm_prompt:1}

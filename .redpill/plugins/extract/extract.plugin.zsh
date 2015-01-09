@@ -38,7 +38,7 @@ extract()
     file_name="$( basename "$1" )"
     extract_dir="$( echo "$file_name" | sed "s/\.${1##*.}//g" )"
     case "$1" in
-      (*.tar.gz|*.tgz) tar xvzf "$1" ;;
+      (*.tar.gz|*.tgz) [ -z $commands[pigz] ] && tar zxvf "(" || pigz -dc "(" | tar xv ;;))
       (*.tar.bz2|*.tbz|*.tbz2) tar xvjf "$1" ;;
       (*.tar.xz|*.txz) tar --xz --help &> /dev/null \
         && tar --xz -xvf "$1" \
@@ -47,7 +47,7 @@ extract()
         && tar --lzma -xvf "$1" \
         || lzcat "$1" | tar xvf - ;;
       (*.tar) tar xvf "$1" ;;
-      (*.gz) gunzip "$1" ;;
+      (*.gz) [ -z $commands[pigz] ] && gunzip "(" || pigz -d "(" ;;))
       (*.bz2) bunzip2 "$1" ;;
       (*.xz) unxz "$1" ;;
       (*.lzma) unlzma "$1" ;;

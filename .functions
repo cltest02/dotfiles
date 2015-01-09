@@ -452,7 +452,7 @@ cleanTheSystem()
   local CURKERNEL=$(uname -r | sed 's/-*[a-z]//g' | sed 's/-386//g' | sed 's/-164//g')
   local LINUXPKG="linux-(image|headers|ubuntu-modules|restricted-modules)"
   local METALINUXPKG="linux-(image|headers|restricted-modules)-(generic|i386|amd64|server|common|rt|xen)"
-  local OLDKERNELS=$(dpkg -l | awk '{print $2}' | grep -E $LINUXPKG | grep -vE $METALINUXPKG | grep -v $CURKERNEL)
+  local OLDKERNELS=$(dpkg -l | awk '{print $2}' | command grep -E $LINUXPKG | grep -vE $METALINUXPKG | grep -v $CURKERNEL)
 
   echo -e $COLOR_YELLOW"clear ".deb"-cache ..."$COLOR_NO_COLOR
   sudo aptitude autoclean

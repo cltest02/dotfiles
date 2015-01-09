@@ -193,6 +193,36 @@ itunes()
 		vol)
 			opt="set sound volume to $1" #$1 Due to the shift
 			;;
+    shuf|shuff|shuffle)
+      # The shuffle property of current playlist can't be changed in iTunes 12,
+      # so this workaround uses AppleScript to simulate user input instead.
+      # Defaults to toggling when no options are given.
+      # The toggle option depends on the shuffle button being visible in the Now playing area.
+      # On and off use the menu bar items.
+      local state=$1
+
+      if [[ -n "$state" && ! "$state" =~ "^(on|off|toggle)$" ]]
+      then
+        print "Usage: itunes shuffle [on|off|toggle]. Invalid option."
+        return 1
+      fi
+
+      case "$state" in
+        on|off)
+          # Inspired by: http://stackoverflow.com/a/14675583
+          osascript 1>/dev/null 2>&1 <<-EOF
+          tell application "System Events" to perform action "AXPress" of (menu item "${state}" of menu "Shuffle" of menu item "Shuffle" of menu "Controls" of menu bar item "Controls" of menu bar 1 of application process "iTunes" )
+EOF
+          return 0
+          ;;
+        toggle|*)
+          osascript 1>/dev/null 2>&1 <<-EOF
+          tell application "System Events" to perform action "AXPress" of (button 2 of process "iTunes"'s window "iTunes"'s scroll area 1)
+EOF
+          return 0
+          ;;
+      esac
+      ;;
 		""|-h|--help)
 			echo "Usage: itunes <option>"
 			echo "option:"
