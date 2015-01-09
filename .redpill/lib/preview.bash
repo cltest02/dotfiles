@@ -7,12 +7,12 @@ then
 
   "
 
-  THEMES="$BASH_IT/themes/*/*.theme.bash"
+  THEMES="$RED_PILL/themes/*/*.theme.bash"
   for theme in $THEMES
   do
-    BASH_IT_THEME=$(basename -s '.theme.bash' $theme)
+    RED_PILL_THEME=$(basename -s '.theme.bash' $theme)
     echo "
-    $BASH_IT_THEME"
-    echo "" | bash --init-file $BASH_IT/bash_it.sh -i
+    $RED_PILL_THEME"
+    echo "" | bash --init-file $RED_PILL/bash_it.sh -i
   done
 fi

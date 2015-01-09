@@ -87,7 +87,7 @@ function scm_prompt_info {
 function git_prompt_vars {
   local details=''
   SCM_STATE=${GIT_THEME_PROMPT_CLEAN:-$SCM_THEME_PROMPT_CLEAN}
-  if [[ "$(git config --get bash-it.hide-status)" != "1" ]]; then
+  if [[ "$(git config --get red-pill.hide-status)" != "1" ]]; then
     local status="$(git status -b --porcelain 2> /dev/null || git status --porcelain 2> /dev/null)"
     if [[ -n "${status}" ]] && [[ "${status}" != "\n" ]] && [[ -n "$(grep -v ^# <<< "${status}")" ]]; then
       SCM_DIRTY=1
@@ -275,7 +275,7 @@ function prompt_char {
     scm_char
 }
 
-if [ ! -e $BASH_IT/plugins/enabled/battery.plugin.bash ]; then
+if [ ! -e $RED_PILL/plugins/enabled/battery.plugin.bash ]; then
 # if user has installed battery plugin, skip this...
     function battery_charge (){
     # no op

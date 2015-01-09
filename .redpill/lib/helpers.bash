@@ -1,11 +1,11 @@
 # Helper function loading various enable-able files
-function _load_bash_it_files() {
+function _load_red_pill_files() {
   subdirectory="$1"
-  if [ ! -d "${BASH_IT}/${subdirectory}/enabled" ]
+  if [ ! -d "${RED_PILL}/${subdirectory}/enabled" ]
   then
     continue
   fi
-  FILES="${BASH_IT}/${subdirectory}/enabled/*.bash"
+  FILES="${RED_PILL}/${subdirectory}/enabled/*.bash"
   for config_file in $FILES
   do
     if [ -e "${config_file}" ]; then
@@ -16,29 +16,29 @@ function _load_bash_it_files() {
 
 # Function for reloading aliases
 function reload_aliases() {
-  _load_bash_it_files "aliases"
+  _load_red_pill_files "aliases"
 }
 
 # Function for reloading auto-completion
 function reload_completion() {
-  _load_bash_it_files "completion"
+  _load_red_pill_files "completion"
 }
 
 # Function for reloading plugins
 function reload_plugins() {
-  _load_bash_it_files "plugins"
+  _load_red_pill_files "plugins"
 }
 
-bash-it ()
+red-pill ()
 {
-    about 'bash-it help and maintenance'
+    about 'red-pill help and maintenance'
     param '1: verb [one of: help | show | enable | disable ]'
     param '2: component type [one of: alias(es) | completion(s) | plugin(s) ]'
     param '3: specific component [optional]'
-    example '$ bash-it show plugins'
-    example '$ bash-it help aliases'
-    example '$ bash-it enable plugin git'
-    example '$ bash-it disable alias hg'
+    example '$ red-pill show plugins'
+    example '$ red-pill help aliases'
+    example '$ red-pill enable plugin git'
+    example '$ red-pill disable alias hg'
     typeset verb=${1:-}
     shift
     typeset component=${1:-}
@@ -46,7 +46,7 @@ bash-it ()
     typeset func
     case $verb in
          show)
-             func=_bash-it-$component;;
+             func=_red-pill-$component;;
          enable)
              func=_enable-$component;;
          disable)
@@ -54,7 +54,7 @@ bash-it ()
          help)
              func=_help-$component;;
          *)
-             reference bash-it
+             reference red-pill
              return;;
     esac
 
@@ -67,7 +67,7 @@ bash-it ()
                 func=${func}es
             else
                 echo "oops! $component is not a valid option!"
-                reference bash-it
+                reference red-pill
                 return
             fi
         fi
@@ -83,39 +83,39 @@ _is_function ()
     [ -n "$(LANG=C type -t $1 2>/dev/null | grep 'function')" ]
 }
 
-_bash-it-aliases ()
+_red-pill-aliases ()
 {
-    _about 'summarizes available bash_it aliases'
+    _about 'summarizes available red_pill aliases'
     _group 'lib'
 
-    _bash-it-describe "aliases" "an" "alias" "Alias"
+    _red-pill-describe "aliases" "an" "alias" "Alias"
 }
 
-_bash-it-completions ()
+_red-pill-completions ()
 {
-    _about 'summarizes available bash_it completions'
+    _about 'summarizes available red_pill completions'
     _group 'lib'
 
-    _bash-it-describe "completion" "a" "completion" "Completion"
+    _red-pill-describe "completion" "a" "completion" "Completion"
 }
 
-_bash-it-plugins ()
+_red-pill-plugins ()
 {
-    _about 'summarizes available bash_it plugins'
+    _about 'summarizes available red_pill plugins'
     _group 'lib'
 
-    _bash-it-describe "plugins" "a" "plugin" "Plugin"
+    _red-pill-describe "plugins" "a" "plugin" "Plugin"
 }
 
-_bash-it-describe ()
+_red-pill-describe ()
 {
-    _about 'summarizes available bash_it components'
+    _about 'summarizes available red_pill components'
     _param '1: subdirectory'
     _param '2: preposition'
     _param '3: file_type'
     _param '4: column_header'
-    _example '$ _bash-it-describe "plugins" "a" "plugin" "Plugin"'
-    
+    _example '$ _red-pill-describe "plugins" "a" "plugin" "Plugin"'
+
     subdirectory="$1"
     preposition="$2"
     file_type="$3"
@@ -124,9 +124,9 @@ _bash-it-describe ()
     typeset f
     typeset enabled
     printf "%-20s%-10s%s\n" "$column_header" 'Enabled?' 'Description'
-    for f in $BASH_IT/$subdirectory/available/*.bash
+    for f in $RED_PILL/$subdirectory/available/*.bash
     do
-        if [ -e $BASH_IT/$subdirectory/enabled/$(basename $f) ]; then
+        if [ -e $RED_PILL/$subdirectory/enabled/$(basename $f) ]; then
             enabled='x'
         else
             enabled=' '
@@ -134,14 +134,14 @@ _bash-it-describe ()
         printf "%-20s%-10s%s\n" "$(basename $f | cut -d'.' -f1)" "  [$enabled]" "$(cat $f | metafor about-$file_type)"
     done
     printf '\n%s\n' "to enable $preposition $file_type, do:"
-    printf '%s\n' "$ bash-it enable $file_type  <$file_type name> -or- $ bash-it enable $file_type all"
+    printf '%s\n' "$ red-pill enable $file_type  <$file_type name> -or- $ red-pill enable $file_type all"
     printf '\n%s\n' "to disable $preposition $file_type, do:"
-    printf '%s\n' "$ bash-it disable $file_type <$file_type name> -or- $ bash-it disable $file_type all"
+    printf '%s\n' "$ red-pill disable $file_type <$file_type name> -or- $ red-pill disable $file_type all"
 }
 
 _disable-plugin ()
 {
-    _about 'disables bash_it plugin'
+    _about 'disables red_pill plugin'
     _param '1: plugin name'
     _example '$ disable-plugin rvm'
     _group 'lib'
@@ -151,7 +151,7 @@ _disable-plugin ()
 
 _disable-alias ()
 {
-    _about 'disables bash_it alias'
+    _about 'disables red_pill alias'
     _param '1: alias name'
     _example '$ disable-alias git'
     _group 'lib'
@@ -161,7 +161,7 @@ _disable-alias ()
 
 _disable-completion ()
 {
-    _about 'disables bash_it completion'
+    _about 'disables red_pill completion'
     _param '1: completion name'
     _example '$ disable-completion git'
     _group 'lib'
@@ -171,12 +171,12 @@ _disable-completion ()
 
 _disable-thing ()
 {
-    _about 'disables a bash_it component'
+    _about 'disables a red_pill component'
     _param '1: subdirectory'
     _param '2: file_type'
     _param '3: file_entity'
     _example '$ _disable-thing "plugins" "plugin" "ssh"'
-    
+
     subdirectory="$1"
     file_type="$2"
     file_entity="$3"
@@ -188,20 +188,20 @@ _disable-thing ()
 
     if [ "$file_entity" = "all" ]; then
         typeset f $file_type
-        for f in $BASH_IT/$subdirectory/available/*.bash
+        for f in $RED_PILL/$subdirectory/available/*.bash
         do
             plugin=$(basename $f)
-            if [ -e $BASH_IT/$subdirectory/enabled/$plugin ]; then
-                rm $BASH_IT/$subdirectory/enabled/$(basename $plugin)
+            if [ -e $RED_PILL/$subdirectory/enabled/$plugin ]; then
+                rm $RED_PILL/$subdirectory/enabled/$(basename $plugin)
             fi
         done
     else
-        typeset plugin=$(command ls $BASH_IT/$subdirectory/enabled/$file_entity.*bash 2>/dev/null | head -1)
+        typeset plugin=$(command ls $RED_PILL/$subdirectory/enabled/$file_entity.*bash 2>/dev/null | head -1)
         if [ -z "$plugin" ]; then
             printf '%s\n' "sorry, that does not appear to be an enabled $file_type."
             return
         fi
-        rm $BASH_IT/$subdirectory/enabled/$(basename $plugin)
+        rm $RED_PILL/$subdirectory/enabled/$(basename $plugin)
     fi
 
     printf '%s\n' "$file_entity disabled."
@@ -209,7 +209,7 @@ _disable-thing ()
 
 _enable-plugin ()
 {
-    _about 'enables bash_it plugin'
+    _about 'enables red_pill plugin'
     _param '1: plugin name'
     _example '$ enable-plugin rvm'
     _group 'lib'
@@ -219,7 +219,7 @@ _enable-plugin ()
 
 _enable-alias ()
 {
-    _about 'enables bash_it alias'
+    _about 'enables red_pill alias'
     _param '1: alias name'
     _example '$ enable-alias git'
     _group 'lib'
@@ -229,7 +229,7 @@ _enable-alias ()
 
 _enable-completion ()
 {
-    _about 'enables bash_it completion'
+    _about 'enables red_pill completion'
     _param '1: completion name'
     _example '$ enable-completion git'
     _group 'lib'
@@ -240,12 +240,12 @@ _enable-completion ()
 _enable-thing ()
 {
     cite _about _param _example
-    _about 'enables a bash_it component'
+    _about 'enables a red_pill component'
     _param '1: subdirectory'
     _param '2: file_type'
     _param '3: file_entity'
-    _example '$ _enable-thing "plugins" "plugin" "ssh"' 
-  
+    _example '$ _enable-thing "plugins" "plugin" "ssh"'
+
     subdirectory="$1"
     file_type="$2"
     file_entity="$3"
@@ -257,29 +257,29 @@ _enable-thing ()
 
     if [ "$file_entity" = "all" ]; then
         typeset f $file_type
-        for f in $BASH_IT/$subdirectory/available/*.bash
+        for f in $RED_PILL/$subdirectory/available/*.bash
         do
             plugin=$(basename $f)
-            if [ ! -h $BASH_IT/$subdirectory/enabled/$plugin ]; then
-                ln -s ../available/$plugin $BASH_IT/$subdirectory/enabled/$plugin
+            if [ ! -h $RED_PILL/$subdirectory/enabled/$plugin ]; then
+                ln -s ../available/$plugin $RED_PILL/$subdirectory/enabled/$plugin
             fi
         done
     else
-        typeset plugin=$(command ls $BASH_IT/$subdirectory/available/$file_entity.*bash 2>/dev/null | head -1)
+        typeset plugin=$(command ls $RED_PILL/$subdirectory/available/$file_entity.*bash 2>/dev/null | head -1)
         if [ -z "$plugin" ]; then
             printf '%s\n' "sorry, that does not appear to be an available $file_type."
             return
         fi
 
         plugin=$(basename $plugin)
-        if [ -e $BASH_IT/$subdirectory/enabled/$plugin ]; then
+        if [ -e $RED_PILL/$subdirectory/enabled/$plugin ]; then
             printf '%s\n' "$file_entity is already enabled."
             return
         fi
 
-        mkdir -p $BASH_IT/$subdirectory/enabled
+        mkdir -p $RED_PILL/$subdirectory/enabled
 
-        ln -s ../available/$plugin $BASH_IT/$subdirectory/enabled/$plugin
+        ln -s ../available/$plugin $RED_PILL/$subdirectory/enabled/$plugin
     fi
 
     printf '%s\n' "$file_entity enabled."
@@ -293,10 +293,10 @@ _help-aliases()
     _example '$ alias-help git'
 
     if [ -n "$1" ]; then
-        cat $BASH_IT/aliases/available/$1.aliases.bash | metafor alias | sed "s/$/'/"
+        cat $RED_PILL/aliases/available/$1.aliases.bash | metafor alias | sed "s/$/'/"
     else
         typeset f
-        for f in $BASH_IT/aliases/enabled/*
+        for f in $RED_PILL/aliases/enabled/*
         do
             typeset file=$(basename $f)
             printf '\n\n%s:\n' "${file%%.*}"
@@ -308,7 +308,7 @@ _help-aliases()
 
 _help-plugins()
 {
-    _about 'summarize all functions defined by enabled bash-it plugins'
+    _about 'summarize all functions defined by enabled red-pill plugins'
     _group 'lib'
 
     # display a brief progress message...
