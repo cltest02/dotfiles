@@ -46,6 +46,8 @@ alias chgrp='chgrp --preserve-root'
 # dmesg with readable time
 alias dmesg='dmesg -T'
 
+# grep v2.21 depracates GREP_OPTIONS env var
+alias grep="grep $GREP_OPTIONS"
 
 # ------------------------------------------------------------------------------
 # | Global Quick Commands                                                      |

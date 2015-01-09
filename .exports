@@ -221,7 +221,9 @@ export LSCOLORS="$LSCOLORS"
 export LS_COLORS="$LS_COLORS="
 export LS_OPTIONS="$LS_OPTIONS"
 export GREP_COLOR="$GREP_COLOR"
-export GREP_OPTIONS="$GREP_OPTIONS"
+
+# grep v2.21 depracates GREP_OPTIONS env var
+# old -> export GREP_OPTIONS="$GREP_OPTIONS"
 
 # lazy add local bin
 LOCAL_BIN="$HOME/.local/bin"

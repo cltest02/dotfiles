@@ -88,7 +88,7 @@ _is_function()
   _about 'sets $? to true if parameter is the name of a function'
   _param '1: name of alleged function'
   _group 'lib'
-  [ -n "$(LANG=C LANGUAGE=C type -a $1 2>/dev/null | grep 'is a function')" ]
+  [ -n "$(LANG=C type -t ( 2>/dev/null | grep 'function')" ])
 }
 
 _red-pill-aliases()
