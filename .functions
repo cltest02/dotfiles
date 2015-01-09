@@ -1244,7 +1244,7 @@ __git_prompt()
         __GIT_INDEX_FILE="$GIT_INDEX_FILE"
       fi
       __GIT_INDEX_PROMPT="/tmp/git-index-prompt$$"
-      cp "$__GIT_INDEX_FILE" $__GIT_INDEX_PROMPT
+      cp "$__GIT_INDEX_FILE" $__GIT_INDEX_PROMPT 2>/dev/null
 
       # Ensure the copied index is up to date.
       GIT_INDEX_FILE="$__GIT_INDEX_PROMPT" git update-index --really-refresh -q &> /dev/null;
@@ -1252,7 +1252,7 @@ __git_prompt()
       local git_status="$(GIT_INDEX_FILE="$__GIT_INDEX_PROMPT" LANG=C LANGUAGE=C git status 2> /dev/null)";
 
       #rm the temporary index
-      rm "$__GIT_INDEX_PROMPT"
+      rm "$__GIT_INDEX_PROMPT" 2>/dev/null
 
       local remote_pattern="Your branch is (ahead|behind).*by ([[:digit:]]*) commit"
 
