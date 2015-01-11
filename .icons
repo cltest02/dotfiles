@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 if [[ "$UTF8_LANG" == 1 ]]; then
-  export ICON_FOR_FALSE="x"
-  export ICON_FOR_TRUE="v"
+  export ICON_FOR_FALSE="✗"
+  export ICON_FOR_TRUE="✓"
   export ICON_FOR_NEXT="❯"
   export ICON_FOR_ARROW_RIGHT="→"
   export ICON_FOR_SUN="☀"
