@@ -18,6 +18,7 @@
 #   pngquant
 #   jpegoptim
 #   libjpeg-progs
+#   mozjpeg
 #
 # References:
 #   1. "Optimization of JPEG (JPG) images: good quality and small size", Retrieved May 23 2011, http://www.ampsoft.net/webdesign-l/jpeg-compression.html
@@ -29,8 +30,6 @@ if [ -z $1 ] || [ -z $2 ]; then
   exit 1
 fi
 
-CMP_THRESHOLD=0.90
-COLOR_DENSITY_RATIO=0.95
 MIN_UNIQUE_COLORS=4096
 
 src=$1
@@ -63,8 +62,9 @@ do_png()
     pngnq "$tmpfile"
     pngs[${#pngs[@]}]="$outfile"
   fi
+
   if [ $(which pngquant) ]; then
-    pngquant --quality=60-90 "$tmpfile"
+    pngquant --quality=75-100 "$tmpfile"
     outfile="${tmpfile::$((${#tmpfile}-4))}-fs8${tmpfile:$((${#tmpfile}-4))}"
     pngs[${#pngs[@]}]="$outfile"
   fi
@@ -105,10 +105,11 @@ search_quality()
   local src_ext=""
   local use=""
 
-  echo "uc=$uc"
   if [ $((uc < MIN_UNIQUE_COLORS)) ]; then
-    #return
-    echo "$uc < $MIN_UNIQUE_COLORS"
+
+    # debug
+    #echo "$uc < $MIN_UNIQUE_COLORS"
+
     src_ext=$(echo "${src}" | tr '[:upper:]' '[:lower:]')
     if [ ".png" = ${src_ext:(-4)} ]; then
       cp -p $src $tmpfile
@@ -116,26 +117,35 @@ search_quality()
       echo "use:$use"
       cp -p $use $tmpfile
       return
-    elif [ ".jpeg" = ${src_ext:(-5)} ] || [ ".jpg" = ${src_ext:(-4)} ] ; then
-      jpegoptim -m 90 -s $src -d $tmpfile
+    elif [ ".jpeg" = ${src_ext:(-5)} ] || [ ".jpg" = ${src_ext:(-4)} ]; then
+      jpegoptim --quiet --strip-all $src
 
       local tmpfile_new=$(mktemp);
-      cp -p $tmpfile $tmpfile_new
-      jpegtran -copy  none -optimize "$tmpfile_new" > "$tmpfile"
+      cp -p $src $tmpfile_new
+      jpegtran -copy none -optimize "$tmpfile_new" > "$src"
       rm $tmpfile_new;
     fi
   fi
 
-  local qmin=50
-  local qmax=90
+  local qmin=75
+  local qmax=100
   local q=""
   local cmppct=""
   local cmpthreshold=""
   # binary search for lowest quality where compare < $cmpthreshold
-  while [ $qmax -gt $((qmin+1)) ]
-  do
-    q=$(((qmax+qmin)/2))
-    convert -quality $q $src $tmpfile
+  while [ $qmax -gt $((qmin+2)) ]; do
+    q=$(((qmax+qmin-1)/2))
+
+    # debug
+    #echo "debug: " $qmax " - " $qmin
+
+    if [ ".jpeg" = ${src_ext:(-5)} ] || [ ".jpg" = ${src_ext:(-4)} ]; then
+      convert $src TGA:- |
+        cjpeg -quality $q -sample 1x1 -outfile $tmpfile -targa
+    else
+      convert -quality $q $src $tmpfile
+    fi
+
     cmppct=`compare -metric RMSE $src $tmpfile /dev/null 2>&1 \
       | cut -d '(' -f2 | cut -d ')' -f1`
     cmppct=`echo "scale=5; $cmppct * 100" | bc -l`
@@ -147,7 +157,9 @@ search_quality()
     else
       qmax=$q
     fi
-    printf "%.2f@%u" "$cmppct" "$q"
+
+    # debug
+    #printf "%.2f@%u" "$cmppct" "$q"
   done
 }
 
@@ -166,9 +178,6 @@ print_stats()
   return $kdiff
 }
 
-color_cnt=`unique_colors $src`
-pixel_count=$((`convert "$src" -format "%w*%h" info:-`))
-original_density=$((color_cnt / pixel_count))
 
 ext=${src:(-3)}
 tmpfile="/tmp/imgmin$$.$ext"
