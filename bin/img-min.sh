@@ -34,6 +34,7 @@ MIN_UNIQUE_COLORS=4096
 
 src=$1
 dst=$2
+src_ext=$(echo "${src}" | tr '[:upper:]' '[:lower:]')
 
 if [ ! -f $src ]; then
   echo "File $src does not exist"
@@ -102,7 +103,6 @@ search_quality()
   local src=$1
   local tmpfile=$2
   local uc=`unique_colors "$src"`
-  local src_ext=""
   local use=""
 
   if [ $((uc < MIN_UNIQUE_COLORS)) ]; then
@@ -110,7 +110,6 @@ search_quality()
     # debug
     #echo "$uc < $MIN_UNIQUE_COLORS"
 
-    src_ext=$(echo "${src}" | tr '[:upper:]' '[:lower:]')
     if [ ".png" = ${src_ext:(-4)} ]; then
       cp -p $src $tmpfile
       use=$(do_png "$src" "$tmpfile")
@@ -122,7 +121,7 @@ search_quality()
 
       local tmpfile_new=$(mktemp);
       cp -p $src $tmpfile_new
-      jpegtran -copy none -optimize "$tmpfile_new" > "$src"
+      jpegtran -copy none "$tmpfile_new" > "$src"
       rm $tmpfile_new;
     fi
   fi
@@ -163,7 +162,7 @@ search_quality()
   done
 }
 
-print_stats()
+check_image_stats()
 {
   local k0=$((`stat -c %s $src` / 1024))
   local k1=$((`stat -c %s $tmpfile` / 1024))
@@ -174,6 +173,26 @@ print_stats()
     kdiff=0
   fi
 
+  if [ $((k0-k1)) -lt 0 ]; then
+    if [ ".jpeg" = ${src_ext:(-5)} ] || [ ".jpg" = ${src_ext:(-4)} ]; then
+      jpegoptim --quiet --strip-all $src
+
+      local tmpfile_new=$(mktemp);
+      cp -p $src $tmpfile_new
+      jpegtran -copy none "$tmpfile_new" > "$tmpfile"
+      rm $tmpfile_new;
+    fi
+
+    k0=$((`stat -c %s $src` / 1024))
+    k1=$((`stat -c %s $tmpfile` / 1024))
+    kdiff=$((($k0-$k1) * 100 / $k0))
+
+    if [ $kdiff -eq 0 ]; then
+      k1=$k0
+      kdiff=0
+    fi
+  fi
+
   echo "Before:${k0}KB After:${k1}KB Saved:$((k0-k1))KB($kdiff%)"
   return $kdiff
 }
@@ -182,7 +201,6 @@ print_stats()
 ext=${src:(-3)}
 tmpfile="/tmp/imgmin$$.$ext"
 search_quality "$src" "$tmpfile"
-convert -strip "$tmpfile" "$dst"
-kdiff=print_stats
+check_image_stats
 cp -p $tmpfile $dst
 rm -f $tmpfile
