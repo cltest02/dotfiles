@@ -26,7 +26,7 @@
 #   3. "Bash Floating Point Comparison", http://unstableme.blogspot.com/2008/06/bash-float-comparison-bc.html
 
 if [ -z $1 ] || [ -z $2 ]; then
-  echo "Usage $0 <image> <dst>"
+  echo "Usage $0 <image> <dst> [<quality>]"
   exit 1
 fi
 
@@ -34,6 +34,7 @@ MIN_UNIQUE_COLORS=4096
 
 src=$1
 dst=$2
+quality=$3
 src_ext=$(echo "${src}" | tr '[:upper:]' '[:lower:]')
 
 if [ ! -f $src ]; then
@@ -53,6 +54,7 @@ do_png()
 {
   local src=$1
   local tmpfile=$2
+  local quality=$3
   local pngs=("$src") # always include existing file
   local outfile=""
 
@@ -65,7 +67,11 @@ do_png()
   fi
 
   if [ $(which pngquant) ]; then
-    pngquant --quality=75-100 "$tmpfile"
+    if [ $quality ]; then
+      pngquant --quality=${quality} "$tmpfile"
+    else
+      pngquant --quality=75-100 "$tmpfile"
+    fi
     outfile="${tmpfile::$((${#tmpfile}-4))}-fs8${tmpfile:$((${#tmpfile}-4))}"
     pngs[${#pngs[@]}]="$outfile"
   fi
@@ -102,6 +108,7 @@ search_quality()
 {
   local src=$1
   local tmpfile=$2
+  local quality=$3
   local uc=`unique_colors "$src"`
   local use=""
 
@@ -112,7 +119,7 @@ search_quality()
 
     if [ ".png" = ${src_ext:(-4)} ]; then
       cp -p $src $tmpfile
-      use=$(do_png "$src" "$tmpfile")
+      use=$(do_png "$src" "$tmpfile" "$quality")
       echo "use:$use"
       cp -p $use $tmpfile
       return
@@ -124,6 +131,17 @@ search_quality()
       jpegtran -copy none "$tmpfile_new" > "$src"
       rm $tmpfile_new;
     fi
+  fi
+
+  if [ $quality ]; then
+    if [ ".jpeg" = ${src_ext:(-5)} ] || [ ".jpg" = ${src_ext:(-4)} ]; then
+      convert $src TGA:- |
+        cjpeg -quality $quality -sample 1x1 -outfile $tmpfile -targa
+    else
+      convert -quality $quality $src $tmpfile
+    fi
+
+    return 1
   fi
 
   local qmin=75
@@ -200,7 +218,7 @@ check_image_stats()
 
 ext=${src:(-3)}
 tmpfile="/tmp/imgmin$$.$ext"
-search_quality "$src" "$tmpfile"
+search_quality "$src" "$tmpfile" "$quality"
 check_image_stats
 cp -p $tmpfile $dst
 rm -f $tmpfile
