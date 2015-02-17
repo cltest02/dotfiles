@@ -104,7 +104,7 @@ fi
 # edit the current command line in $EDITOR
 bindkey '\C-x\C-e' edit-command-line
 
-## file rename magick
+# file rename magick
 bindkey "^[m" copy-prev-shell-word
 
 # consider emacs keybindings:

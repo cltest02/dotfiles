@@ -89,10 +89,10 @@ export HISTTIMEFORMAT="%Y-%m-%d %H:%M:%S"
 setLocale()
 {
   if [[ "$CONFIG_CHARSET_UTF8" == "true" ]]; then
-    local i pattern localeOutput localeAll
+    local i pattern localeOutput localeOutputArray
 
     localeOutput=$(locale -a 2> /dev/null)
-    localeAll=($(locale -a 2> /dev/null))
+    localeOutputArray=($localeOutput)
 
     # check if $CONFIG_LANG isset and available
     if [ "$CONFIG_LANG" != "" ] && [ -n "$(echo $localeOutput | grep $CONFIG_LANG)" ] ; then
@@ -101,7 +101,7 @@ setLocale()
       pattern=".{2,2}_.{2,2}\.(UTF-8|UTF8|utf-8|utf8)$"
     fi
 
-    for i in "${localeAll[@]}"; do
+    for i in "${localeOutputArray[@]}"; do
       if [[ "$i" =~ $pattern ]]; then
         export LC_ALL=${i};
         export LANG=${i};
