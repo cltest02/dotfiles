@@ -583,6 +583,20 @@ logssh()
 }
 
 # -------------------------------------------------------------------
+# lsssh: pretty print all established SSH connections
+lsssh ()
+{
+  lsof -i4 -s TCP:ESTABLISHED -n | grep '^ssh' | while read conn; do
+    ip=$(echo $conn | grep -oE '\->[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}:[^ ]+')
+    ip=${ip/->/}
+    domain=$(dig -x ${ip%:*} +short)
+    domain=${domain%.}
+    # display nonstandard port if relevant
+    printf "%s (%s)\n" $domain  ${ip/:ssh}
+  done | column -t
+}
+
+# -------------------------------------------------------------------
 # WARNING -> replace: changes multiple files at once
 replace()
 {
