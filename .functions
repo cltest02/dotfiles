@@ -1253,74 +1253,79 @@ __git_prompt()
   # Check if the current directory is in a Git repository.
   if [[ $(git rev-parse --is-inside-work-tree &>/dev/null; echo "${?}") == "0" ]]; then
 
-    # check if the current directory is in .git before running git checks
-    if [[ "$(git rev-parse --is-inside-git-dir 2> /dev/null)" == "false" ]]; then
+    #the following is to too slow on cygwin. especially for large repositoryies
+    if [[ "$(uname -o)" != "Cygwin" ]]; then
+      # check if the current directory is in .git before running git checks
+      if [[ "$(git rev-parse --is-inside-git-dir 2> /dev/null)" == "false" ]]; then
 
-      #create a copy of the index to avoid conflicts with parallel git commands, e.g. git rebase
-      __GIT_DIR="$(git rev-parse --git-dir)"
-      if [[ -z "$GIT_INDEX_FILE" ]]; then
-        __GIT_INDEX_FILE="$__GIT_DIR/index"
-      else
-        __GIT_INDEX_FILE="$GIT_INDEX_FILE"
-      fi
-      __GIT_INDEX_PROMPT="/tmp/git-index-prompt$$"
-      cp "$__GIT_INDEX_FILE" $__GIT_INDEX_PROMPT 2>/dev/null
+        #create a copy of the index to avoid conflicts with parallel git commands, e.g. git rebase
+        __GIT_DIR="$(git rev-parse --git-dir)"
+        if [[ -z "$GIT_INDEX_FILE" ]]; then
+          __GIT_INDEX_FILE="$__GIT_DIR/index"
+        else
+          __GIT_INDEX_FILE="$GIT_INDEX_FILE"
+        fi
+        __GIT_INDEX_PROMPT="/tmp/git-index-prompt$$"
+        cp "$__GIT_INDEX_FILE" $__GIT_INDEX_PROMPT 2>/dev/null
 
-      # Ensure the copied index is up to date.
-      GIT_INDEX_FILE="$__GIT_INDEX_PROMPT" git update-index --really-refresh -q &> /dev/null;
-      # Check if we are ahead or behind our tracking branch (https://gist.github.com/HowlingMind/996093).
-      local git_status="$(GIT_INDEX_FILE="$__GIT_INDEX_PROMPT" LANG=C LANGUAGE=C git status 2> /dev/null)";
+        # Ensure the copied index is up to date.
+        GIT_INDEX_FILE="$__GIT_INDEX_PROMPT" git update-index --really-refresh -q &> /dev/null;
+        # Check if we are ahead or behind our tracking branch (https://gist.github.com/HowlingMind/996093).
+        local git_status="$(GIT_INDEX_FILE="$__GIT_INDEX_PROMPT" LANG=C LANGUAGE=C git status 2> /dev/null)";
 
-      #rm the temporary index
-      rm "$__GIT_INDEX_PROMPT" 2>/dev/null
+        #rm the temporary index
+        rm "$__GIT_INDEX_PROMPT" 2>/dev/null
 
-      local remote_pattern="Your branch is (ahead|behind).*by ([[:digit:]]*) commit"
+        local remote_pattern="Your branch is (ahead|behind).*by ([[:digit:]]*) commit"
 
-      if [ -n "$BASH_VERSION" ]; then
+        if [ -n "$BASH_VERSION" ]; then
 
-        if [[ "$git_status" =~ $remote_pattern ]]; then
-          if [[ "${BASH_REMATCH[1]}" == "ahead" ]]; then
-            s+="${ICON_FOR_UP}${BASH_REMATCH[2]} "
-          else
-            s+="${ICON_FOR_DOWN}${BASH_REMATCH[2]} "
+          if [[ "$git_status" =~ $remote_pattern ]]; then
+            if [[ "${BASH_REMATCH[1]}" == "ahead" ]]; then
+              s+="${ICON_FOR_UP}${BASH_REMATCH[2]} "
+            else
+              s+="${ICON_FOR_DOWN}${BASH_REMATCH[2]} "
+            fi
           fi
+
+        elif [ -n "$ZSH_VERSION" ]; then
+
+          if [[ "$git_status" =~ $remote_pattern ]]; then
+            if [[ "${match[1]}" == "ahead" ]]; then
+              s+="${ICON_FOR_UP}${match[2]} "
+            else
+              s+="${ICON_FOR_DOWN}${match[2]} "
+            fi
+          fi
+
         fi
 
-      elif [ -n "$ZSH_VERSION" ]; then
-
-        if [[ "$git_status" =~ $remote_pattern ]]; then
-          if [[ "${match[1]}" == "ahead" ]]; then
-            s+="${ICON_FOR_UP}${match[2]} "
-          else
-            s+="${ICON_FOR_DOWN}${match[2]} "
-          fi
+        # Check for uncommitted changes in the index.
+        if ! $(git diff --quiet --ignore-submodules --cached); then
+          s+="+"
         fi
 
+        # Check for unstaged changes.
+        if ! $(git diff-files --quiet --ignore-submodules -- 2>/dev/null); then
+          s+="!"
+        fi
+
+        # Check for untracked files.
+        if [ -n "$(git ls-files --others --exclude-standard 2>/dev/null)" ]; then
+          s+="?"
+        fi
+
+        # Check for stashed files.
+        if $(git rev-parse --verify refs/stash &>/dev/null); then
+          s+="$"
+        fi
+
+        # The number of commits ahead/behind ends with a trailing space. If no other indicator was added, it will be lingering at the end of `s`.
+        s=$(echo "${s}" | sed 's/ *$//')
+
       fi
-
-      # Check for uncommitted changes in the index.
-      if ! $(git diff --quiet --ignore-submodules --cached); then
-        s+="+"
-      fi
-
-      # Check for unstaged changes.
-      if ! $(git diff-files --quiet --ignore-submodules -- 2>/dev/null); then
-        s+="!"
-      fi
-
-      # Check for untracked files.
-      if [ -n "$(git ls-files --others --exclude-standard 2>/dev/null)" ]; then
-        s+="?"
-      fi
-
-      # Check for stashed files.
-      if $(git rev-parse --verify refs/stash &>/dev/null); then
-        s+="$"
-      fi
-
-      # The number of commits ahead/behind ends with a trailing space. If no other indicator was added, it will be lingering at the end of `s`.
-      s=$(echo "${s}" | sed 's/ *$//')
-
+    else
+      s="-";
     fi
 
     # Get the short symbolic ref.
