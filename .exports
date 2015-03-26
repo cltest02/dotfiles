@@ -218,7 +218,7 @@ fi
 
 # export ls & grep settings
 export LSCOLORS="$LSCOLORS"
-export LS_COLORS="$LS_COLORS="
+export LS_COLORS="$LS_COLORS"
 export LS_OPTIONS="$LS_OPTIONS"
 export GREP_COLOR="$GREP_COLOR"
 
