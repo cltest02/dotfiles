@@ -119,7 +119,7 @@ alias mkdd='mkdir $(date +%Y%m%d)'
 if [ "$TERM" != "dumb" ]; then
 
   # dircolors
-  if [[ "$SYSTEM_TYPE" == "LINUX" ]]; then
+  if [[ "$SYSTEM_TYPE" == "LINUX" || "$SYSTEM_TYPE" == "WINDOWS" ]]; then
     if [ -s "$HOME/.dircolors" ]; then
       eval "$(dircolors -b $HOME/.dircolors)"
     else
@@ -142,7 +142,7 @@ if [ "$TERM" != "dumb" ]; then
       COLORFLAG="-G"
     elif ls --color -d . &>/dev/null 2>&1; then
       COLORFLAG="--color"
-      if [[ "$SYSTEM_TYPE" == "LINUX" ]]; then
+      if [[ "$SYSTEM_TYPE" == "LINUX" || "$SYSTEM_TYPE" == "WINDOWS" ]]; then
         COLORFLAG="--color=auto"
       fi
     fi
