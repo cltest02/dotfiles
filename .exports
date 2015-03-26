@@ -27,7 +27,7 @@ case "$OSTYPE" in
   darwin*)  SYSTEM_TYPE="OSX" ;;
   linux*)   SYSTEM_TYPE="LINUX" ;;
   bsd*)     SYSTEM_TYPE="BSD" ;;
-  cygwin*)  YSTEM_TYPE="WINDOWS" ;;
+  cygwin*)  SYSTEM_TYPE="WINDOWS" ;;
 esac
 
 if [[ "$(uname)" == "Darwin" ]]; then
