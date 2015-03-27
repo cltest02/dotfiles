@@ -420,7 +420,7 @@ if exists('&backupskip')
   set backupskip+=/tmp/*,$TMPDIR/*,$TMP/*,$TEMP/*,*/shm/*
 endif
 
-" Don't keep swap files in temp directories or shm
+" don't keep swap files in temp directories or shm
 if has('autocmd')
   augroup swapskip
     autocmd!
@@ -440,7 +440,7 @@ if has('persistent_undo') && has('autocmd')
   augroup END
 endif
 
-" Enable vim to remember undo chains between sessions (vim 7.3)
+" enable vim to remember undo chains between sessions (vim 7.3)
 if v:version >= 703
   set undofile
 endif
@@ -460,7 +460,7 @@ endif
 " disable folding
 set nofoldenable
 
-" Turn backup off, if most stuff is in SVN, git etc ...
+" turn backup off, if most stuff is in SVN, git etc ...
 "set nobackup
 "set nowritebackup
 "set noswapfile
@@ -741,7 +741,20 @@ map <C-a> 0
 " stop opening man pages
 nmap K <nop>
 
-" strip trailing whitespace (,sw)
+" Automatically set paste mode
+" https://coderwall.com/p/if9mda
+let &t_SI .= "\<Esc>[?2004h"
+let &t_EI .= "\<Esc>[?2004l"
+
+inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
+
+function! XTermPasteBegin()
+  set pastetoggle=<Esc>[201~
+  set paste
+  return ""
+endfunction
+
+" stripe whitespace
 function! StripWhitespace()
   let save_cursor = getpos(".")
   let old_query = getreg('/')

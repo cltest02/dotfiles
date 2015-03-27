@@ -97,7 +97,7 @@ Bundle 'valloric/MatchTagAlways'
 
 " ----------------------------------------
 
-"Bundle 'matchit.zip'
+Bundle 'matchit.zip'
 
 " ----------------------------------------
 
