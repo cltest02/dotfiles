@@ -27,7 +27,8 @@ case "$OSTYPE" in
   darwin*)  SYSTEM_TYPE="OSX" ;;
   linux*)   SYSTEM_TYPE="LINUX" ;;
   bsd*)     SYSTEM_TYPE="BSD" ;;
-  cygwin*)  SYSTEM_TYPE="WINDOWS" ;;
+  msys*)    SYSTEM_TYPE="MINGS" ;;
+  cygwin*)  SYSTEM_TYPE="CYGWIN" ;;
 esac
 
 if [[ "$(uname)" == "Darwin" ]]; then
@@ -41,7 +42,9 @@ elif [[ "$(expr substr $(uname -s) 1 6)" == "NetBSD" ]]; then
 elif [[ "$(expr substr $(uname -s) 1 7)" == "OpenBSD" ]]; then
   SYSTEM_TYPE="OPEN_BSD"
 elif [[ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]]; then
-  SYSTEM_TYPE="WINDOWS"
+  SYSTEM_TYPE="MINGW"
+elif [[ "$(expr substr $(uname -s) 1 9)" == "CYGWIN_NT" ]]; then
+  SYSTEM_TYPE="CYGWIN"
 fi
 
 export SYSTEM_TYPE
