@@ -14,6 +14,10 @@
   # same as git init but creates the git repository in the given path. In a cygwin environment path names are translated to dos style, otherwise the linking would not work in egit (eclipse). Cygwin's git and git-bash is also happy with this.
   initexternal = "!f() { WORKTREE=\"$(pwd)\"; GITDIR=\"$1\"; command -v cygpath >/dev/null 2>&1 && { WORKTREE=$(cygpath -m $WORKTREE); GITDIR=$(cygpath -m $1); }; git --work-tree=$WORKTREE --git-dir=\"$GITDIR\" init && echo \"gitdir: $GITDIR\" >> .git && git config --local core.worktree \"$WORKTREE\"; }; f"
 
+  #find all direct children of given refs
+  #code borrowed from https://gist.github.com/kohsuke/7590246
+  child = "!f() { for arg in \"$@\"; do for commit in $(git rev-parse $arg^0); do for child in $(git log --format='%H %P' --all | grep -F \" $commit\" | cut -f1 -d' '); do git describe $child; done; done; done; }; f"
+
   # Shorthand for add
   a = add
 
