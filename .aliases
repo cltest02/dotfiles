@@ -148,6 +148,17 @@ if [ "$TERM" != "dumb" ]; then
     fi
   fi
 
+  # Burl: better curl shortcuts (https://github.com/visionmedia/burl).
+  if command -v burl > /dev/null; then
+    alias curl_get='burl GET'
+    alias curl_head='burl -I'
+    alias curl_post='burl POST'
+    alias curl_put='burl PUT'
+    alias curl_patch='burl PATCH'
+    alias curl_delete='burl DELETE'
+    alias curl_options='burl OPTIONS'
+  fi
+
   # Use "colordiff" or "highlight" to colour diffs.
   if command -v colordiff > /dev/null; then
     alias difflight="colordiff"
