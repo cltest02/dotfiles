@@ -126,6 +126,13 @@ fi
 
 unset -f setLocale
 
+#tty detection
+if [[ "$(tty | grep -o ^/dev/tty)" == "/dev/tty" ]]; then
+  export IS_TTY=1
+else
+  export IS_TTY=0
+fi
+
 # make less the default pager, and specify some useful defaults
 less_options=(
   # If the entire text fits on one screen, just show it and quit. (Be more

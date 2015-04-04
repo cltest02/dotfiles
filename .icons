@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if [[ "$UTF8_LANG" == 1 ]]; then
+if [[ -z ${FORCE_SIMPLE_ICONS+x} && "$UTF8_LANG" == 1 && "$IS_TTY" == 0 ]]; then
   export ICON_FOR_FALSE="✗"
   export ICON_FOR_TRUE="✓"
   export ICON_FOR_NEXT="❯"
