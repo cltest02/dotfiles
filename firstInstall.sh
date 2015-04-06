@@ -137,7 +137,7 @@ aptitude install \
 #
 # fixing nodejs for ubuntu
 #
-sudo ln -s /usr/bin/nodejs /usr/bin/node
+ln -s /usr/bin/nodejs /usr/bin/node
 
 #
 # install java
@@ -196,7 +196,6 @@ sudo ln -s /usr/bin/nodejs /usr/bin/node
 
 ask_install "install webworker tools"
 if [[ $? -eq 1 ]]; then
-<<<<<<< HEAD
   gem install sass --pre
   gem install compass --pre
   gem install autoprefixer-rails --pre
@@ -210,49 +209,30 @@ if [[ $? -eq 1 ]]; then
   npm install -g yo
 
   aptitude install php5-cli php5-mysql php5-curl php5-gd php5-intl php-pear php5-imagick php5-imap php5-mcrypt php5-memcached php5-ming php5-ps php5-pspell php5-recode php5-snmp php5-sqlite php5-tidy php5-xmlrpc php5-xsl php5-xdebug php5-apcu php5-geoip
+
   curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin
   ln -s /usr/bin/composer.phar /usr/bin/composer
-=======
-  sudo gem install sass --pre
-  sudo gem install compass --pre
-  sudo gem install autoprefixer-rails --pre
-  sudo gem install compass-rgbapng --pre
-  sudo gem install oily_png
 
-  sudo npm install -g bower
-  sudo npm install -g psi
-  sudo npm install -g grunt-cli
-  sudo npm install -g grunt-init
-  sudo npm install -g yo
 
-  sudo aptitude install php5-cli php5-mysql php5-curl php5-gd php5-intl php-pear php5-imagick php5-imap php5-mcrypt php5-memcached php5-ming php5-ps php5-pspell php5-recode php5-snmp php5-sqlite php5-tidy php5-xmlrpc php5-xsl php5-xdebug php5-apcu php5-geoip
-
-  #sudo php5enmod json
-  sudo php5enmod mcrypt
-  sudo php5enmod curl
-  sudo php5enmod mysql
-  sudo php5enmod gd
-  sudo php5enmod imagick
-  sudo php5enmod apcu
+  #php5enmod json
+  #php5enmod mcrypt
+  #php5enmod curl
+  #php5enmod mysql
+  #php5enmod gd
+  #php5enmod imagick
+  #php5enmod apcu
 
   curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/bin
-  sudo ln -s /usr/bin/composer.phar /usr/bin/composer
->>>>>>> 1103d917d8dc74e2477798fa4aaec99ef7826c0b
+  ln -s /usr/bin/composer.phar /usr/bin/composer
 fi
 
 # clean downloaded and already installed packages
 aptitude clean
 
 # update-fonts
-<<<<<<< HEAD
 cp -vr $( dirname "${BASH_SOURCE[0]}" )/.fonts/* /usr/share/fonts/truetype/
 dpkg-reconfigure fontconfig
 fc-cache -fv
-=======
-sudo cp -vr $( dirname "${BASH_SOURCE[0]}" )/.fonts/* /usr/share/fonts/truetype/
-sudo dpkg-reconfigure fontconfig
-sudo fc-cache -fv
->>>>>>> 1103d917d8dc74e2477798fa4aaec99ef7826c0b
 
 # update-locate-db
 updatedb
