@@ -39,12 +39,23 @@ set nocompatible
 " set the shell
 set shell=bash
 
+" Tell vim to use the .vim path first (colors and so)
+set runtimepath=~/.vim,$VIMRUNTIME
+
+" With a map leader it's possible to do extra key combinations
+" like <leader>w saves the current file (instead of '\')
+let mapleader = ","
+let g:mapleader = ","
+
 if filereadable(expand("~/.vimrc.bundles"))
   source ~/.vimrc.bundles
 endif
 
 " Sets how many lines of history VIM has to remember
 set history=100
+
+" open 50 tabs max
+set tabpagemax=50
 
 if v:version >= 500
   " try reducing the number of lines stored in a register
@@ -57,12 +68,19 @@ set ttyfast
 " add the g flag to search/replace by default
 set gdefault
 
+" http://stackoverflow.com/questions/16222530/why-do-i-need-vim-in-binary-mode-for-noeol-to-work
+"set binary
+
 " don’t add empty newlines at the end of files
-set binary
-set noeol
+"set noeol
 
 " look for embedded modelines at the top of the file
 set modeline
+
+" ignore whitespace in vimdiff
+if &diff
+  set diffopt+=iwhite
+endif
 
 " only look at this number of lines for modeline
 set modelines=10
@@ -79,7 +97,7 @@ filetype indent on
 " pasting text unmodified from other applications
 " info: auto-complete via <tab> isn't working in INSERT (paste) mode,
 "       so you need to switch to INSERT mode via <F2> or use <c-n>
-set paste
+" set paste
 
 " decrease timeout for faster insert with 'O'
 set ttimeoutlen=100
@@ -92,21 +110,26 @@ set fileformats=unix,dos,mac
 " set autoread
 
 " use the OS clipboard by default (on versions compiled with `+clipboard`)
-if exists("+clipboard")
-  set clipboard=unnamed
-endif
-
-" With a map leader it's possible to do extra key combinations
-" like <leader>w saves the current file
-let mapleader = ","
-let g:mapleader = ","
+"if exists("+clipboard")
+"  " here we always use the system-clipboard
+"  "set clipboard=unnamedplus
+"  set clipboard=unnamed
+"endif
 
 " enable per-directory .vimrc files and disable unsafe commands in them
 set exrc
 set secure
 
+" automatically safe files when switchin between them / leaving vim
+"set autowriteall
+"autocmd FocusLost * silent! :wa
+"autocmd TabLeave * silent! :wa
+
 " Disable the splash screen (and some various tweaks for messages).
 set shortmess=aTItoO
+
+" tell us about changes
+set report=0
 
 " Show the filename in the window titlebar.
 if exists("+title")
@@ -117,7 +140,8 @@ endif
 "set autowrite
 
 " Fast saving
-"nmap <leader>w :w!<cr>
+nmap <leader>w :w<cr>
+nmap <leader>q :q<cr>
 
 " :W sudo saves the file
 " (useful for handling the permission-denied error)
@@ -129,6 +153,12 @@ endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Set 7 lines to the cursor - when moving vertically using j/k
 set so=7
+
+" turn off lazy redraw
+set nolazyredraw
+
+" always show all line numbers
+"set number
 
 " enhance command-line completion
 if exists("+wildmenu")
@@ -149,7 +179,7 @@ else
 endif
 
 " Height of the command bar
-set cmdheight=2
+set cmdheight=1
 
 " A buffer becomes hidden when it is abandoned
 set hid
@@ -173,6 +203,9 @@ set pastetoggle=<F2>
 
 " enable the popup menu
 "set mousem=popup
+
+" show “invisible” characters
+set lcs=trail:�,tab:��,eol:�,nbsp:�
 
 " free cursor
 set whichwrap=b,s,h,l,<,>,[,]
@@ -216,19 +249,20 @@ endif
 "endif
 
 " Start scrolling at this number of lines from the bottom.
-"set scrolloff=2
+set scrolloff=2
 
 " Start scrolling three lines before the horizontal window border.
-"set scrolloff=3
+set scrolloff=3
 
 " Start scrolling horizontally at this number of columns.
-"set sidescrolloff=5
+set sidescrolloff=4
 
 " disable line numbers
 set nonumber
 
 " no annoying sound on errors
 set noerrorbells
+"set vb t_vb=""
 set visualbell
 
 " no extra margin to the left
@@ -261,7 +295,8 @@ inoremap $3 {}<esc>i
 inoremap $4 {<esc>o}<esc>O
 inoremap $q ''<esc>i
 inoremap $e ""<esc>i
-inoremap $t <><esc>i
+" I have some problems with this :/
+"inoremap $t <><esc>i
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -269,12 +304,16 @@ inoremap $t <><esc>i
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " switch syntax highlighting on, when the terminal has colors
 if &t_Co > 2 || has("gui_running")
-
   try
     colorscheme molokai
   catch /^Vim\%((\a\+)\)\=:E185/
     " not available
   endtry
+
+  " Visual line marking 80 characters (vim 7.3)
+  if v:version >= 703
+    set colorcolumn=80
+  endif
 
   " Enable coloring for dark background terminals.
   if has('gui_running')
@@ -290,14 +329,13 @@ if &t_Co > 2 || has("gui_running")
   " turn on color syntax highlighting
   if exists("+syntax")
     syntax on
+    " increases syntax accuracy
+    syntax sync fromstart
   endif
 
-  syn sync fromstart
 
-  " IMPORTANT: Uncomment one of the following lines to force
-  " using 256 colors (or 88 colors) if your terminal supports it,
-  " but does not automatically use 256 colors by default.
-  set t_Co=256
+  " set to 256 colors
+  " set t_Co=256
 
   " Also switch on highlighting the last used search pattern.
   if exists("+hlsearch")
@@ -305,19 +343,30 @@ if &t_Co > 2 || has("gui_running")
   endif
 
   " highlight current line
-  if exists("+cursorline")
+  "if exists("+cursorline")
     "set cursorline
-  endif
+  "endif
 
-" highlight trailing spaces in annoying red
-if has('autocmd')
+  " highlight trailing spaces in annoying red
+  if has('autocmd')
     highlight ExtraWhitespace ctermbg=1 guibg=red
     match ExtraWhitespace /\s\+$/
     autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
     autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
     autocmd InsertLeave * match ExtraWhitespace /\s\+$/
-    autocmd BufWinLeave * call clearmatches()
+    if exists('*clearmatches')
+      autocmd BufWinLeave * call clearmatches()
+    endif
   endif
+
+  " reload .vimrc when updating it
+  "if has("autocmd")
+  "  autocmd BufWritePost .vimrc nested source %
+  "endif
+
+  " highlight conflict markers
+  match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
+
 endif
 
 " Set extra options when running in GUI mode
@@ -328,22 +377,26 @@ if has("gui_running")
 endif
 
 " use UTF-8 without BOM
+scriptencoding utf-8 nobomb
 set termencoding=utf-8 nobomb
 set encoding=utf-8 nobomb
 
 " Use Unix as the standard file type
 set ffs=unix,dos,mac
 
+" none word dividers
+set isk+=_,$,@,%,#,-
+
 " Set font according to system
-if has("mac") || has("macunix")
-  set gfn=Source\ Code\ Pro:h15,Menlo:h15
-elseif has("win16") || has("win32")
-  set gfn=Source\ Code\ Pro:h12,Bitstream\ Vera\ Sans\ Mono:h11
-elseif has("linux")
-  set gfn=Source\ Code\ Pro:h12,Bitstream\ Vera\ Sans\ Mono:h11
-elseif has("unix")
-  set gfn=Monospace\ 11
-endif
+"if has("mac") || has("macunix")
+"  set gfn=Source\ Code\ Pro:h15,Menlo:h15
+"elseif has("win16") || has("win32")
+"  set gfn=Source\ Code\ Pro:h12,Bitstream\ Vera\ Sans\ Mono:h11
+"elseif has("linux")
+"  set gfn=Source\ Code\ Pro:h12,Bitstream\ Vera\ Sans\ Mono:h11
+"elseif has("unix")
+"  set gfn=Monospace\ 11
+"endif
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -367,11 +420,11 @@ if exists('&backupskip')
   set backupskip+=/tmp/*,$TMPDIR/*,$TMP/*,$TEMP/*,*/shm/*
 endif
 
-" Don't keep swap files in temp directories or shm
+" don't keep swap files in temp directories or shm
 if has('autocmd')
   augroup swapskip
     autocmd!
-    silent! autocmd BufNewFile,BufReadPre
+    silent! autocmd BufRead,BufNewFilePre
       \ /tmp/*,$TMPDIR/*,$TMP/*,$TEMP/*,*/shm/*
       \ setlocal noswapfile
   augroup END
@@ -387,21 +440,29 @@ if has('persistent_undo') && has('autocmd')
   augroup END
 endif
 
+" enable vim to remember undo chains between sessions (vim 7.3)
+if v:version >= 703
+  set undofile
+endif
+
 " don't keep viminfo for files in temp directories or shm
 if has('viminfo')
   if has('autocmd')
     augroup viminfoskip
       autocmd!
-      silent! autocmd BufNewFile,BufReadPre
+      silent! autocmd BufRead,BufNewFilePre
         \ /tmp/*,$TMPDIR/*,$TMP/*,$TEMP/*,*/shm/*
         \ setlocal viminfo=
     augroup END
   endif
 endif
 
-" Turn backup off, if most stuff is in SVN, git etc ...
+" disable folding
+set nofoldenable
+
+" turn backup off, if most stuff is in SVN, git etc ...
 "set nobackup
-"set nowb
+"set nowritebackup
 "set noswapfile
 
 
@@ -440,15 +501,21 @@ set softtabstop=2
 "set lbr
 "set tw=500
 
+" wrap at 80 chars by default
+"set textwidth=80
+
 " don't automatically wrap on load
-set nowrap
+" set nowrap
 
 " don't automatically wrap text when typing
 set fo-=t
 
 " show “invisible” characters
-set lcs=tab:▸\ ,trail:·,eol:¬,nbsp:_
+set listchars=tab:▸\ ,trail:·,eol:¬,nbsp:_
+"set list
 
+" support for numbered/bullet lists
+set formatoptions+=n
 
 """"""""""""""""""""""""""""""
 " => Visual mode related
@@ -458,17 +525,24 @@ set lcs=tab:▸\ ,trail:·,eol:¬,nbsp:_
 vnoremap <silent> * :call VisualSelection('f', '')<CR>
 vnoremap <silent> # :call VisualSelection('b', '')<CR>
 
+" allow virtual edit in visual block ..
+set virtualedit=block
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Moving around, tabs, windows and buffers
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Treat long lines as break lines (useful when moving around in them)
-map j gj
-map k gk
+" gi moves to last insert mode (default)
+" gI moves to last modification
+nnoremap gI `.
+
+" Movement & wrapped long lines
+" This solves the problem that pressing down jumps your cursor 'over' the curren
+nnoremap j gj
+nnoremap k gk
 
 " Map <Space> to / (search) and Ctrl-<Space> to ? (backwards search)
 map <space> /
-map <c-space> ?
+map <C-space> ?
 
 " Disable highlight when <leader><cr> is pressed
 map <silent> <leader><cr> :noh<cr>
@@ -486,11 +560,16 @@ map <leader>bd :Bclose<cr>
 map <leader>ba :1,1000 bd!<cr>
 
 " Useful mappings for managing tabs
+nnoremap <S-Left> :tabprevious<cr>
+nnoremap <S-Right> :tabnext<cr>
 map <leader>tn :tabnew<cr>
 map <leader>to :tabonly<cr>
 map <leader>tc :tabclose<cr>
-map <leader>tm :tabmove
-map <leader>t<leader> :tabnext
+map <leader>tm :tabmove<cr>
+
+" shortcut to jump to next conflict marker
+" WARNING: this isn't working, it prints map-string in files
+"nnoremap <silent> <leader>c /^\(<\\|=\\|>\)\{7\}\([^=].\+\)\?$<CR>
 
 " Opens a new tab with the current buffer's path
 " Super useful when editing files in the same directory
@@ -524,7 +603,6 @@ set viminfo^=%
 set laststatus=2
 
 " Format the status line
-"set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l
 set statusline=[%n]\ %<%f%m%r\ %w\ %y\ \ <%{&fileformat}>\ %{\"[\".(&fenc==\"\"?&enc:&fenc).((exists(\"+bomb\")\ &&\ &bomb)?\",B\":\"\").\"]\ \"}%=[%b\ 0x%02B]\ [%o]\ %l,%c%V\/%L\ \ %P
 
 " Show current mode in the status line.
@@ -538,11 +616,98 @@ if exists("+showcmd")
 endif
 
 
+" ---------------------------------------------------------------------------
+" File Types
+" ---------------------------------------------------------------------------
+" automatic commands
+if has("autocmd")
+  " file type detection
+
+  " Ruby
+  au BufRead,BufNewFile *.rb,*.rbw,*.gem,*.gemspec set filetype=ruby
+
+  " Ruby on Rails
+  au BufRead,BufNewFile *.builder,*.rxml,*.rjs     set filetype=ruby
+
+  " Rakefile
+  au BufRead,BufNewFile [rR]akefile,*.rake         set filetype=ruby
+
+  " Rantfile
+  au BufRead,BufNewFile [rR]antfile,*.rant         set filetype=ruby
+
+  " IRB config
+  au BufRead,BufNewFile .irbrc,irbrc               set filetype=ruby
+
+  " eRuby
+  au BufRead,BufNewFile *.erb,*.rhtml              set filetype=eruby
+
+  " Thorfile
+  au BufRead,BufNewFile [tT]horfile,*.thor         set filetype=ruby
+
+  " css - preprocessor
+  au BufRead,BufNewFile *.less,*.scss,*.sass       set filetype=css syntax=css
+
+  " markdown
+  au BufRead,BufNewFile *.md,*.markdown,*.ronn     set filetype=markdown
+
+  " special text files
+  au BufRead,BufNewFile *.rtxt       set filetype=html spell
+  au BufRead,BufNewFile *.stxt       set filetype=markdown spell
+
+  au BufRead,BufNewFile *.sql        set filetype=pgsql
+
+  au BufRead,BufNewFile *.rl         set filetype=ragel
+
+  au BufRead,BufNewFile *.svg        set filetype=svg
+
+  au BufRead,BufNewFile *.haml       set filetype=haml
+
+  " aura cmp files
+  au BufRead,BufNewFile *.cmp        set filetype=html
+
+  au BufRead,BufNewFile *.json       set filetype=json syntax=javascript
+
+  au BufRead,BufNewFile *.hbs        set syntax=handlebars
+
+  au BufRead,BufNewFile *.mustache   set filetype=mustache
+
+	au BufRead,BufNewFile *.zsh-theme  set filetype=zsh
+
+  au Filetype gitcommit              set tw=68 spell
+  au Filetype ruby                   set tw=80
+
+  " allow tabs on makefiles
+  au FileType make                   setlocal noexpandtab
+  au FileType go                     setlocal noexpandtab
+endif
+
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Editing mappings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 " Remap VIM 0 to first non-blank character
 map 0 ^
+
+" Yank from the cursor to the end of the line, to be consistent with C and D
+nnoremap Y y$
+
+" Yank and put system pasteboard with <Leader>y/p.
+noremap <Leader>y "*y
+noremap <Leader>Y "*y$
+nnoremap <Leader>yy "*yy
+noremap <Leader>p "*p
+noremap <Leader>P "*P
+
+" select last put
+" src: http://vim.wikia.com/wiki/Selecting_your_pasted_text
+"nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]
+
+" show current file as HTML (to paste into Keynote)
+nmap <Leader>h :TOhtml<CR>:w<cr>:!open %<CR>:q<CR>
+
+" select all
+map <Leader>a ggVG
 
 " Move a line of text using ALT+[jk] or Comamnd+[jk] on mac
 nmap <M-j> mz:m+<cr>`z
@@ -551,10 +716,9 @@ vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
 vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 
 " copy between different vim sessions
-" TODO: find free keys for this mapping
-"nmap _Y :!echo “”> ~/.vim/tmp<CR><CR>:w! ~/.vim/tmp<CR>
-"vmap _Y :w! ~/.vim/tmp<CR>
-"nmap _P :r ~/.vim/tmp<CR>
+nmap <s-Y> :!echo “”> ~/.vim/tmp<CR><CR>:w! ~/.vim/tmp<CR>
+vmap <s-Y> :w! ~/.vim/tmp<CR>
+nmap <s-P> :r ~/.vim/tmp<CR>
 
 if has("mac") || has("macunix")
   nmap <D-j> <M-j>
@@ -563,10 +727,34 @@ if has("mac") || has("macunix")
   vmap <D-k> <M-k>
 endif
 
+" quickfix mappings
+map <F7>  :cn<CR>
+map <S-F7> :cp<CR>
+map <A-F7> :copen<CR>
+
+" emacs movement keybindings in insert mode
+imap <C-a> <C-o>0
+imap <C-e> <C-o>$
+map <C-e> $
+map <C-a> 0
+
 " stop opening man pages
 nmap K <nop>
 
-" strip trailing whitespace (,ss)
+" Automatically set paste mode
+" https://coderwall.com/p/if9mda
+let &t_SI .= "\<Esc>[?2004h"
+let &t_EI .= "\<Esc>[?2004l"
+
+inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
+
+function! XTermPasteBegin()
+  set pastetoggle=<Esc>[201~
+  set paste
+  return ""
+endfunction
+
+" stripe whitespace
 function! StripWhitespace()
   let save_cursor = getpos(".")
   let old_query = getreg('/')
@@ -574,19 +762,9 @@ function! StripWhitespace()
   call setpos('.', save_cursor)
   call setreg('/', old_query)
 endfunction
-noremap <leader>ss :call StripWhitespace()<CR>
+noremap <leader>sw :call StripWhitespace()<CR>
 " save a file as root (,W)
 noremap <leader>W :w !sudo tee % > /dev/null<CR>
-
-" automatic commands
-if has("autocmd")
-  " enable file type detection
-  filetype on
-  " treat .json files as .js
-  autocmd BufNewFile,BufRead *.json setfiletype json syntax=javascript
-  " Treat .md files as Markdown
-  autocmd BufNewFile,BufRead *.md setlocal filetype=markdown
-endif
 
 " multi-purpose tab key (auto-complete)
 function! InsertTabWrapper()
@@ -605,22 +783,33 @@ inoremap <expr> <C-n> pumvisible() ? '<C-n>' :
 inoremap <expr> <M-,> pumvisible() ? '<C-n>' :
   \ '<C-x><C-o><C-n><C-p><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
 
-" Delete trailing white space on save, useful for Python and CoffeeScript ;)
-if has("autocmd")
-  func! DeleteTrailingWS()
-    exe "normal mz"
-    %s/\s\+$//ge
-    exe "normal `z"
-  endfunc
-  autocmd BufWrite *.py :call DeleteTrailingWS()
-  autocmd BufWrite *.coffee :call DeleteTrailingWS()
-endif
+" Strip trailing white space.
+function! StripTrailingWhitespaces()
+    " Preparation: save last search, and cursor position.
+    let _s=@/
+    let l = line(".")
+    let c = col(".")
+    " Do the business:
+    %s/\s\+$//e
+    " Clean up: restore previous search history, and cursor position
+    let @/=_s
+    call cursor(l, c)
+endfunction
 
+" call the above function automatically when saving files of certain type.
+if has("autocmd")
+  autocmd BufWritePre *.py,*.js,*.php,*.gpx,*.rb,*.tpl :call StripTrailingWhitespaces()
+endif
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Ack searching and cope displaying
 "    requires ack.vim - it's much better than vimgrep/grep
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Use Ack instead of Grep when available
+if executable("ack")
+  set grepprg=ack\ -H\ --nogroup\ --nocolor\ --ignore-dir=tmp\ --ignore-dir=coverage
+endif
+
 " When you press gv you Ack after the selected text
 vnoremap <silent> gv :call VisualSelection('gv', '')<CR>
 
@@ -630,17 +819,6 @@ map <leader>g :Ack
 " When you press <leader>r you can search and replace the selected text
 vnoremap <silent> <leader>r :call VisualSelection('replace', '')<CR>
 
-" Do :help cope if you are unsure what cope is. It's super useful!
-"
-" When you search with Ack, display your results in cope by doing:
-"   <leader>cc
-"
-" To go to the next search result do:
-"   <leader>n
-"
-" To go to the previous search results do:
-"   <leader>p
-"
 map <leader>cc :botright cope<cr>
 map <leader>co ggVGy:tabnew<cr>:set syntax=qf<cr>pgg
 map <leader>n :cn<cr>
@@ -684,7 +862,7 @@ function! CmdLine(str)
   exe "menu Foo.Bar :" . a:str
   emenu Foo.Bar
   unmenu Foo
-endfunction 
+endfunction
 
 function! VisualSelection(direction, extra_filter) range
   let l:saved_reg = @"
@@ -705,15 +883,6 @@ function! VisualSelection(direction, extra_filter) range
 
   let @/ = l:pattern
   let @" = l:saved_reg
-endfunction
-
-
-" Returns true if paste mode is enabled
-function! HasPaste()
-  if &paste
-    return 'PASTE MODE  '
-  endif
-  return ''
 endfunction
 
 " Don't close window, when deleting a buffer

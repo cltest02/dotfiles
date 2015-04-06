@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if [[ "$UTF8_LANG" == 1 ]]; then
   export ICON_FOR_FALSE="✗"

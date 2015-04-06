@@ -1,4 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+# use the bash as default "sh", fixed some problems
+# with e.g. third-party scripts
+#sudo ln -sf /bin/bash /bin/sh
 
 function ask_install() {
   echo
@@ -40,6 +44,7 @@ aptitude install \
   `# default for many other things` \
   tmux \
   build-essential \
+  autoconf \
   mktemp \
   dialog \
   `# unzip, unrar etc.` \
@@ -57,13 +62,17 @@ aptitude install \
   bzip2 \
   gzip \
   xz-utils \
+  advancecomp \
   `# optimize image-size` \
   gifsicle \
   svgo \
   optipng \
   pngcrush \
+  pngnq \
+  pngquant \
   jpegoptim \
   libjpeg-progs \
+  jhead \
   `# utilities` \
   coreutils  \
   findutils  \
@@ -72,9 +81,11 @@ aptitude install \
   atop \
   tree \
   rsync \
+  whois \
   vim \
   csstidy \
   recode \
+  exuberant-ctags \
   `# GNU bash` \
   bash \
   bash-completion \
@@ -84,6 +95,7 @@ aptitude install \
   grc \
   `# fonts also "non-free"-fonts` \
   `# -- you need "multiverse" || "non-free" sources in your "source.list" -- ` \
+  fontconfig \
   ttf-freefont \
   ttf-mscorefonts-installer \
   ttf-bitstream-vera \
@@ -94,6 +106,7 @@ aptitude install \
   ttf-larabie-straight \
   ttf-larabie-uncommon \
   ttf-liberation \
+  xfonts-jmk \
   `# trace everything` \
   strace \
   `# get files from web` \
@@ -105,20 +118,26 @@ aptitude install \
   mercurial \
   `# usefull tools` \
   nodejs \
+  npm \
   ruby-full \
   imagemagick \
   lynx \
   nmap \
   pv \
-  rename \
   ucspi-tcp \
   xpdf \
   `#install python-pygments for json print` \
+  sqlite3 \
   python-pygments \
   locales \
   sysstat \
-  htop
+  htop \
+  tcpdump
 
+#
+# fixing nodejs for ubuntu
+#
+sudo ln -s /usr/bin/nodejs /usr/bin/node
 
 #
 # install java
@@ -177,6 +196,7 @@ aptitude install \
 
 ask_install "install webworker tools"
 if [[ $? -eq 1 ]]; then
+<<<<<<< HEAD
   gem install sass --pre
   gem install compass --pre
   gem install autoprefixer-rails --pre
@@ -192,15 +212,47 @@ if [[ $? -eq 1 ]]; then
   aptitude install php5-cli php5-mysql php5-curl php5-gd php5-intl php-pear php5-imagick php5-imap php5-mcrypt php5-memcached php5-ming php5-ps php5-pspell php5-recode php5-snmp php5-sqlite php5-tidy php5-xmlrpc php5-xsl php5-xdebug php5-apcu php5-geoip
   curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin
   ln -s /usr/bin/composer.phar /usr/bin/composer
+=======
+  sudo gem install sass --pre
+  sudo gem install compass --pre
+  sudo gem install autoprefixer-rails --pre
+  sudo gem install compass-rgbapng --pre
+  sudo gem install oily_png
+
+  sudo npm install -g bower
+  sudo npm install -g psi
+  sudo npm install -g grunt-cli
+  sudo npm install -g grunt-init
+  sudo npm install -g yo
+
+  sudo aptitude install php5-cli php5-mysql php5-curl php5-gd php5-intl php-pear php5-imagick php5-imap php5-mcrypt php5-memcached php5-ming php5-ps php5-pspell php5-recode php5-snmp php5-sqlite php5-tidy php5-xmlrpc php5-xsl php5-xdebug php5-apcu php5-geoip
+
+  #sudo php5enmod json
+  sudo php5enmod mcrypt
+  sudo php5enmod curl
+  sudo php5enmod mysql
+  sudo php5enmod gd
+  sudo php5enmod imagick
+  sudo php5enmod apcu
+
+  curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/bin
+  sudo ln -s /usr/bin/composer.phar /usr/bin/composer
+>>>>>>> 1103d917d8dc74e2477798fa4aaec99ef7826c0b
 fi
 
 # clean downloaded and already installed packages
 aptitude clean
 
 # update-fonts
+<<<<<<< HEAD
 cp -vr $( dirname "${BASH_SOURCE[0]}" )/.fonts/* /usr/share/fonts/truetype/
 dpkg-reconfigure fontconfig
 fc-cache -fv
+=======
+sudo cp -vr $( dirname "${BASH_SOURCE[0]}" )/.fonts/* /usr/share/fonts/truetype/
+sudo dpkg-reconfigure fontconfig
+sudo fc-cache -fv
+>>>>>>> 1103d917d8dc74e2477798fa4aaec99ef7826c0b
 
 # update-locate-db
 updatedb

@@ -1,9 +1,56 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # make vim the default editor
 export PAGER="less"
-export EDITOR="vim"
+
+# use sublime text for local changes
+if [[ -n $SSH_CONNECTION ]]; then
+  EDITOR="vim"
+else
+  if which subl >/dev/null 2>&1; then
+    EDITOR="subl"
+  else
+    EDITOR="vim"
+  fi
+fi
+export EDITOR
 export VISUAL=$EDITOR
+
+PREVIEW="less"
+[ -s /usr/bin/gloobus-preview ] && PREVIEW="gloobus-preview"
+[ -s /Applications/Preview.app ] && PREVIEW="/Applications/Preview.app"
+export PREVIEW
+
+# detect your os
+case "$OSTYPE" in
+  solaris*) SYSTEM_TYPE="SOLARIS" ;;
+  darwin*)  SYSTEM_TYPE="OSX" ;;
+  linux*)   SYSTEM_TYPE="LINUX" ;;
+  bsd*)     SYSTEM_TYPE="BSD" ;;
+  msys*)    SYSTEM_TYPE="MINGS" ;;
+  cygwin*)  SYSTEM_TYPE="CYGWIN" ;;
+esac
+
+if [[ "$(uname)" == "Darwin" ]]; then
+  SYSTEM_TYPE="OSX"
+elif [[ "$(expr substr $(uname -s) 1 5)" == "Linux" ]]; then
+  SYSTEM_TYPE="LINUX"
+elif [[ "$(expr substr $(uname -s) 1 7)" == "FreeBSD" ]]; then
+  SYSTEM_TYPE="FREE_BSD"
+elif [[ "$(expr substr $(uname -s) 1 6)" == "NetBSD" ]]; then
+  SYSTEM_TYPE="NET_BSD"
+elif [[ "$(expr substr $(uname -s) 1 7)" == "OpenBSD" ]]; then
+  SYSTEM_TYPE="OPEN_BSD"
+elif [[ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]]; then
+  SYSTEM_TYPE="MINGW"
+elif [[ "$(expr substr $(uname -s) 1 9)" == "CYGWIN_NT" ]]; then
+  SYSTEM_TYPE="CYGWIN"
+fi
+
+export SYSTEM_TYPE
+
+# don't check mail when opening terminal.
+#unset MAILCHECK
 
 # make the "sudo" prompt more useful, without requiring access to "visudo"
 export SUDO_PROMPT="[sudo] password for %u on %h: "
@@ -38,16 +85,17 @@ export HISTIGNORE='clear:pwd:exit:date:[bf]g:[ t\]*: *'
 #
 # Keep track of the time the commands were executed.
 # The xterm colour escapes require special care when piping; e.g. "| less -R".
-export HISTTIMEFORMAT="${FG_BLUE}${FONT_BOLD}%Y/%m/%d %H:%M:%S${FONT_RESET}  "
+#export HISTTIMEFORMAT=$(echo -e "${COLOR_LIGHT_BLUE}%Y-%m-%d %H:%M:%S${COLOR_NO_COLOUR} ")
+export HISTTIMEFORMAT="%Y-%m-%d %H:%M:%S"
 
 # use UTF-8
 setLocale()
 {
-  if [[ "$CONFIG_CHARSET_UTF8" == true ]]; then
-    local i pattern localeOutput localeAll
+  if [[ "$CONFIG_CHARSET_UTF8" == "true" ]]; then
+    local i pattern localeOutput localeOutputArray
 
     localeOutput=$(locale -a 2> /dev/null)
-    localeAll=$(echo $localeOutput | grep -i "utf")
+    localeOutputArray=($localeOutput)
 
     # check if $CONFIG_LANG isset and available
     if [ "$CONFIG_LANG" != "" ] && [ -n "$(echo $localeOutput | grep $CONFIG_LANG)" ] ; then
@@ -56,8 +104,8 @@ setLocale()
       pattern=".{2,2}_.{2,2}\.(UTF-8|UTF8|utf-8|utf8)$"
     fi
 
-    for i in $localeAll; do
-      if [[ $i =~ $pattern ]]; then
+    for i in "${localeOutputArray[@]}"; do
+      if [[ "$i" =~ $pattern ]]; then
         export LC_ALL=${i};
         export LANG=${i};
         export LANGUAGE=${i};
@@ -76,7 +124,7 @@ else
   export UTF8_LANG="1"
 fi
 
-unset setLocale
+unset -f setLocale
 
 # make less the default pager, and specify some useful defaults
 less_options=(
@@ -128,13 +176,41 @@ fi
 # don’t clear the screen after quitting a manual page
 export MANPAGER="less -X"
 
+# colored GCC (>= v4.9) warnings and errors
+export GCC_COLORS="error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01"
+
 # always enable colored `grep` output
 #
 # "ls" and "grep" default options
 
-LS_COLORS='no=00:fi=00:di=01;34:ln=01;36:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:su=37;41:sg=30;43:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.svgz=01;31:*.arj=01;31:*.taz=01;31:*.lzh=01;31:*.lzma=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.dz=01;31:*.gz=01;31:*.bz2=01;31:*.bz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.rar=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.jpg=01;35:*.jpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01; 35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:'
+# colorscheme for OS X `ls` environment variable:
+LSCOLORS="Gxfxcxdxbxegedabagacad"
+
+# colorscheme for GNU `ls` environment variable:
+LS_COLORS="no=00:fi=00:di=01;34:ln=01;36:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:su=37;41:sg=30;43:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.svgz=01;31:*.arj=01;31:*.taz=01;31:*.lzh=01;31:*.lzma=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.dz=01;31:*.gz=01;31:*.bz2=01;31:*.bz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.rar=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.jpg=01;35:*.jpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01; 35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:"
 LS_OPTIONS="-hFN --color=auto"
-GREP_OPTIONS="-E --color=auto"
+
+GREP_COLOR="1;32"
+GREP_OPTIONS="--color=auto"
+
+# is x grep argument available?
+grepFlagAvailable()
+{
+  echo | command grep $1 "" >/dev/null 2>&1
+}
+
+# ignore VCS folders (if the necessary grep flags are available)
+VCS_FOLDERS="{.bzr,.cvs,.git,.hg,.svn}"
+
+if grepFlagAvailable --exclude-dir=.cvs; then
+  GREP_OPTIONS+=" --exclude-dir=$VCS_FOLDERS"
+elif grepFlagAvailable --exclude=.cvs; then
+  GREP_OPTIONS+=" --exclude=$VCS_FOLDERS"
+fi
+
+# clean-up
+unset VCS_FOLDERS
+unset -f grepFlagAvailable
 
 # some more default color-settings for the root-user
 if [ "$UID" = 0 ]; then
@@ -142,17 +218,106 @@ if [ "$UID" = 0 ]; then
   LS_OPTIONS="-N --color=auto"
   GREP_OPTIONS=""
 fi
-export LS_COLORS LS_OPTIONS GREP_OPTIONS
 
-# java - example
-#export JAVA_HOME=/usr/lib/jvm/java-7-oracle
-#export JDK_HOME=$JAVA_HOME
-#export JRE_HOME=$JAVA_HOME
-#export PATH=$JAVA_HOME/bin:$PATH
+# export ls & grep settings
+export LSCOLORS="$LSCOLORS"
+export LS_COLORS="$LS_COLORS"
+export LS_OPTIONS="$LS_OPTIONS"
+export GREP_COLOR="$GREP_COLOR"
 
-# android - example
-#export ANDROID_SDK_ROOT=/opt/android-sdk-linux/
-#export ANDROID_NDK=/opt/android-ndk/
-#export ANDROID_HOME=$ANDROID_SDK_ROOT
-#export PATH=$ANDROID_SDK_ROOT/tools/:$ANDROID_SDK_ROOT/platform-tools/:$PATH
+# grep v2.21 depracates GREP_OPTIONS env var
+# old -> export GREP_OPTIONS="$GREP_OPTIONS"
 
+# lazy add local bin
+LOCAL_BIN="$HOME/.local/bin"
+if [ -d $LOCAL_BIN ]; then
+  export PATH="$PATH:$LOCAL_BIN"
+fi
+
+# lazy add chromium
+if [ -f "/usr/bin/chromium" ]; then
+  export CHROME_BIN="/usr/bin/chromium"
+fi
+if [ -f "/usr/bin/google-chrome" ]; then
+  export CHROME_BIN="/usr/bin/google-chrome"
+fi
+if [ -f "/usr/bin/chromium-browser" ]; then
+  export CHROME_BIN="/usr/bin/chromium-browser"
+fi
+
+# lazy add firefox
+if [ -f "/usr/bin/firefox" ]; then
+  export FIREFOX_BIN="/usr/bin/firefox"
+fi
+
+# lazy add JAVA_HOME
+if [ -d "/usr/lib/jvm/java-7-openjdk" ]; then
+  export JAVA_HOME="/usr/lib/jvm/java-7-openjdk"
+fi
+if [ -d "/usr/lib/jvm/java-7-oracle/jre" ]; then
+  export JAVA_HOME="/usr/lib/jvm/java-7-oracle/jre"
+fi
+if [ -d "/usr/lib/jvm/java-7-oracle" ]; then
+  export JAVA_HOME="/usr/lib/jvm/java-7-oracle"
+fi
+if [ -d "/usr/lib/jvm/java-8-oracle" ]; then
+  export JAVA_HOME="/usr/lib/jvm/java-8-oracle"
+fi
+if [ -d "/usr/lib/jvm/oraclejdk8-64" ]; then
+  export JAVA_HOME="/usr/lib/jvm/oraclejdk8-64"
+fi
+if [ -n "$JAVA_HOME" ]; then
+  export JDK_HOME=$JAVA_HOME
+  export JRE_HOME=$JAVA_HOME
+  export PATH="$JAVA_HOME/bin:$PATH"
+fi
+
+# lazy add M2_HOME
+if [ -d "/opt/maven" ]; then
+  export M2_HOME="/opt/maven"
+fi
+if [ -d "/usr/share/maven" ]; then
+  export M2_HOME="/usr/share/maven"
+fi
+if [ -n "$M2_HOME" ]; then
+  export PATH="$M2_HOME/bin:$PATH"
+fi
+
+# lazy add ANDROID_SDK_ROOT
+if [ -d "/opt/android-sdk-linux/" ]; then
+  export ANDROID_SDK_ROOT="/opt/android-sdk-linux/"
+fi
+if [ -d "/android-sdk-linux/" ]; then
+  export ANDROID_SDK_ROOT="/android-sdk-linux/"
+fi
+if [ -n "$ANDROID_SDK_ROOT" ]; then
+  export ANDROID_NDK=/opt/android-ndk/
+  export ANDROID_HOME=$ANDROID_SDK_ROOT
+  export PATH="$ANDROID_SDK_ROOT/tools/:$ANDROID_SDK_ROOT/platform-tools/:$PATH"
+fi
+
+# ruby version management with rbenv
+if [ -d "$HOME/.rbenv" ]; then
+  export RBENV_ROOT="$HOME/.rbenv"
+  export PATH="$RBENV_ROOT/bin:$PATH"
+  eval "$(rbenv init -)"
+fi
+
+# ndenv variable
+if [ -d "$HOME/.ndenv" ]; then
+  export NDENV_HOME="$HOME/.ndenv"
+  export PATH="$NDENV_HOME/bin:$PATH"
+  eval "$(ndenv init -)"
+fi
+
+# jenv settings
+if [ -f "$HOME/.jenv/bin/jenv-init.sh" ]; then
+  source $HOME/.jenv/bin/jenv-init.sh
+fi
+
+# pyenv settings
+if [ -d "$HOME/.pyenv/bin" ]; then
+  export PATH="$HOME/.pyenv/bin:$PATH"
+  eval "$(pyenv init -)"
+  eval "$(pyenv virtualenv-init -)"
+fi

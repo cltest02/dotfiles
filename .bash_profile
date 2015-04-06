@@ -16,7 +16,7 @@ fi
 # load the shell dotfiles, and then some:
 # * ~/.path can be used to extend `$PATH`.
 # * ~/.extra can be used for other settings you don’t want to commit.
-for file in ~/.{config_dotfiles,path,exports,colors,icons,aliases,bash_complete,functions,extra,bash_prompt}; do
+for file in ~/.{config_dotfiles,path,load,colors,exports,icons,aliases,bash_complete,functions,extra}; do
   [ -r "$file" ] && [ -f "$file" ] && source "$file"
 done
 unset file
@@ -26,7 +26,7 @@ unset file
 # enable some Bash 4 features when possible:
 # * `autocd`, e.g. `**/qux` will enter `./foo/bar/baz/qux`
 # * Recursive globbing, e.g. `echo **/*.txt`
-for option in autocd globstar cmdhist dotglob extglob cdable_vars; do
+for option in autocd globstar cmdhist extglob cdable_vars; do
   shopt -s "$option" 2> /dev/null
 done
 unset option
@@ -63,3 +63,13 @@ shopt -s no_empty_cmd_completion;
 #set -o noclobber;
 
 source ~/.shellrc
+
+############# EXTRA ####################################
+
+if [ -d $HOME/.redpill ]; then
+
+  # define the path from "red-pill"
+  export REDPILL=$HOME/.redpill
+
+  source $HOME/.redpill/redpill-init-bash.sh
+fi

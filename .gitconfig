@@ -2,13 +2,18 @@
 # Global configuration file for Git.
 ####################################
 
+# INFO -> this only works for alias?!
+#[user]
+#  name = "!bash -c 'echo \"$CONFIG_GIT_AUTHOR_NAME\";'"
+#  email = "!bash -c 'echo \"$CONFIG_GIT_AUTHOR_EMAIL\";'"
+
 # A lot of aliases to speed up full-time usage of Git from command line.
 # Long flag names are used for readability wherever possible.
 # Short flags are meant for writing on the command line.
 [alias]
   # same as git init but creates the git repository in the given path. In a cygwin environment path names are translated to dos style, otherwise the linking would not work in egit (eclipse). Cygwin's git and git-bash is also happy with this.
-  initexternal = !"f() { WORKTREE=\"$(pwd)\"; GITDIR=\"$1\"; command -v cygpath >/dev/null 2>&1 && { WORKTREE=$(cygpath -m $WORKTREE); GITDIR=$(cygpath -m $1); }; git --work-tree=$WORKTREE --git-dir=\"$GITDIR\" init && echo \"gitdir: $GITDIR\" >> .git && git config --local core.worktree \"$WORKTREE\"; }; f"
- 
+  initexternal = "!f() { WORKTREE=\"$(pwd)\"; GITDIR=\"$1\"; command -v cygpath >/dev/null 2>&1 && { WORKTREE=$(cygpath -m $WORKTREE); GITDIR=$(cygpath -m $1); }; git --work-tree=$WORKTREE --git-dir=\"$GITDIR\" init && echo \"gitdir: $GITDIR\" >> .git && git config --local core.worktree \"$WORKTREE\"; }; f"
+
   # Shorthand for add
   a = add
 
@@ -26,6 +31,10 @@
 
   # See`git help add`
   ai = add --interactive
+
+  # Interactively choose hunks of patch between the index and the work
+  # tree and add them to the index.
+  ap = add --patch
 
   # Amend the currently staged files to the last commit
   # See`git help commit`
@@ -88,13 +97,12 @@
   # diff
   d = diff                          # diff unstaged changes
   dc = diff --cached                # diff staged changes
-  last = diff HEAD^                 # diff last committed change
 
   # Show the diff between the latest commit and the current state
-  diff-to-latest-commit = !"git diff-index --quiet HEAD -- || clear; git --no-pager diff --patch-with-stat"
+  diff-to-latest-commit = "!git diff-index --quiet HEAD -- || clear; git --no-pager diff --patch-with-stat"
 
   # `git diff-to-x-commit $number` shows the diff between the state `$number` revisions ago and the current state
-  diff-to-x-commit = !"d() { git diff --patch-with-stat HEAD~$1; }; git diff-index --quiet HEAD -- || clear; d"
+  diff-to-x-commit = "!d() { git diff --patch-with-stat HEAD~$1; }; git diff-index --quiet HEAD -- || clear; d"
 
   # Remove branches that have already been merged with master
   # a.k.a. delete merged
@@ -133,14 +141,15 @@
   h = help
 
   # log
-  l = log --graph --date=short
+  l = log --graph --decorate --date=short
   changes = log --pretty=format:\"%h %cr %cn %Cgreen%s%Creset\" --name-status
   short = log --pretty=format:\"%h %cr %cn %Cgreen%s%Creset\"
   simple = log --pretty=format:\" * %s\"
   shortnocolor = log --pretty=format:\"%h %cr %cn %s\"
 
   # Pretty log of commits. Supports options of git log
-  log-pretty = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+  # https://www.kernel.org/pub/software/scm/git/docs/git-log.html#_pretty_formats
+  log-pretty = log --graph --decorate --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an - %aE>%Creset' --abbrev-commit
 
   # last commit
   last = log -1 HEAD
@@ -158,10 +167,10 @@
   nmm = branch --no-merged master
 
   # pull
-  pl = pull                         # pull
+  pl = pull
 
   # push
-  ps = push                         # push
+  ps = push
 
   # Create a new remote branch with the same name and track it.
   # First argument is remote name. Defaults to "origin".
@@ -171,18 +180,17 @@
   # Shorthand for remote (verbose)
   r = remote -v
 
-  # Interactive rebase with the given number of latest commits
-  # Same as ri - left for BC.
-  reb = "!r() { git rebase --interactive HEAD~$1; }; r"
-
   #via http://stackoverflow.com/questions/5188320/how-can-i-get-a-list-of-git-branches-ordered-by-most-recent-commit
-  recent-branches = !git for-each-ref --count=5 --sort=-committerdate refs/heads/ --format='%(refname:short)'
+  recent-branches = "!git for-each-ref --count=5 --sort=-committerdate refs/heads/ --format='%(refname:short)'"
 
   # Show verbose output about remotes
   remotes = remote -v
 
   # Interactive rebase with the given number of latest commits
   ri = "!r() { git rebase --interactive HEAD~$1; }; r"
+
+  # Remove the old tag with this name and tag the latest commit with it.
+  retag = "!r() { git tag -d $1 && git push origin :refs/tags/$1 && git tag $1; }; r"
 
   # Update all remotes
   ru = remote update
@@ -193,6 +201,9 @@
 
   # grep alias
   search = grep
+
+  # find a String in the Entire Git History
+  search-git-history = "!r() { git rev-list --all | xargs git grep -F $1; }; r"
 
   # reset
   unstage = reset HEAD              # remove files from index (tracking)
@@ -207,7 +218,7 @@
   st = status                       # status
   stat = status                     # status
 
-  # Shorthand for shortlog
+  # shorthand for shortlog
   shl = shortlog
 
   # stash
@@ -219,17 +230,22 @@
   # Shorthand for tag
   t = tag -n                        # show tags with <n> lines of each tag message
 
-  # Show verbose output about tags
+  # show verbose output about tags
   tags = tag -l
 
 [apply]
-  # Detect whitespace errors when applying a patch
+  # detect whitespace errors when applying a patch
   whitespace = warn
 
 [color]
   # Use colors in Git commands that are capable of colored output when
   # outputting to the terminal. (This is the default setting in Git ≥ 1.8.4.)
   ui = auto
+  diff = auto
+  status = auto
+  branch = auto
+  interactive = auto
+  pager  = true
 
 [color "branch"]
   # Highlight current. Yellow local branches; Green remotes.
@@ -265,11 +281,15 @@
   editor=vim
 
   # Global `.gitignore`
-  excludesfile = ~/.gitignore
+  excludesfile = ~/.gitignore_global
 
   # Make `git rebase` safer on OS X
   # More info: http://www.git-tower.com/blog/make-git-rebase-safe-on-osx
   trustctime = false
+
+  # Prevent showing files whose names contain non-ASCII symbols as unversioned.
+  # http://michael-kuehnel.de/git/2014/11/21/git-mac-osx-and-german-umlaute.html
+  htmlprecomposeunicode = false
 
   # Treat
   #  - spaces before tabs,
@@ -313,10 +333,6 @@
 [help]
   # Automatically correct and execute mistyped commands
   #autocorrect = 1
-
-[pager]
-  # Use colors when paging regardless of default color setting.
-  color = true
 
 [push]
   # See `git help config` and search for "push.default"
