@@ -905,3 +905,5 @@ function! <SID>BufcloseCloseIt()
      execute("bdelete! ".l:currentBufNum)
    endif
 endfunction
+
+set ttymouse=xterm2     " necessary for gnu screen & mouse
