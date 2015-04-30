@@ -1,6 +1,7 @@
 #!/bin/bash
 
 if [ "$CONFIG_SCREEN" = true ] && [ -n "$SSH_TTY" ]; then
+  if [[ ! "$TERMCAP" =~ .*screen.* ]];then
     screen -xR remote
     exit;
   fi
