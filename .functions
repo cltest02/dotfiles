@@ -392,6 +392,16 @@ netstat_connection_overview()
 }
 
 # -------------------------------------------------------------------
+# nice mount (http://catonmat.net/blog/another-ten-one-liners-from-commandlingfu-explained)
+#
+# displays mounted drive information in a nicely formatted manner
+mount_info()
+{
+  (echo "DEVICE PATH TYPE FLAGS" && mount | awk '$2="";1') \
+    | column -t;
+}
+
+# -------------------------------------------------------------------
 # sniff: view HTTP traffic
 #
 # usage: sniff [eth0]
@@ -580,6 +590,19 @@ battery_indicator()
 logssh()
 {
   ssh $1 | tee sshlog
+}
+
+# -------------------------------------------------------------------
+# givedef: shell function to define words
+# http://vikros.tumblr.com/post/23750050330/cute-little-function-time
+givedef()
+{
+  if [[ $# -ge 2 ]] then
+    echo "givedef: too many arguments" >&2
+    return 1
+  else
+    curl --silent "dict://dict.org/d:$1"
+  fi
 }
 
 # -------------------------------------------------------------------
