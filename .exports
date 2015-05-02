@@ -127,7 +127,7 @@ fi
 unset -f setLocale
 
 #tty detection
-if [[ "$(tty | grep -o ^/dev/tty)" == "/dev/tty" ]]; then
+if [[ "$(tty | grep -o '/dev/tty')" == "/dev/tty" ]]; then
   export IS_TTY=1
 else
   export IS_TTY=0
