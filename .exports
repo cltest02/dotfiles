@@ -49,6 +49,20 @@ fi
 
 export SYSTEM_TYPE
 
+if which brew >/dev/null 2>&1; then
+  INSTALL_TYPE="BREW"
+fi
+
+if which apt-get >/dev/null 2>&1; then
+  INSTALL_TYPE="APT"
+fi
+
+if which yum >/dev/null 2>&1; then
+  INSTALL_TYPE="YUM"
+fi
+
+export INSTALL_TYPE
+
 # don't check mail when opening terminal.
 #unset MAILCHECK
 
