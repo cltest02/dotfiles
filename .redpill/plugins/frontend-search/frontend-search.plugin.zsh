@@ -1,7 +1,7 @@
 # frontend from terminal
 
-frontend()
-{
+function frontend() {
+
   # get the open command
   local open_cmd
   if [[ $(uname -s) == 'Darwin' ]]; then
@@ -17,7 +17,7 @@ frontend()
   fi
 
   # check whether the search engine is supported
-  if [[ ! $1 =~ '(jquery|mdn|compass|html5please|caniuse|aurajs|dartlang|qunit|fontello|bootsnipp|cssflow|codepen|unheap|bem|smacss|angularjs|reactjs|emberjs)' ]];
+  if [[ ! $1 =~ '(jquery|mdn|compass|html5please|caniuse|aurajs|dartlang|qunit|fontello|bootsnipp|cssflow|codepen|unheap|bem|smacss|angularjs|reactjs|emberjs|stackoverflow)' ]];
   then
     echo "Search valid search content $1 not supported."
     echo "Valid contents: (formats 'frontend <search-content>' or '<search-content>')"
@@ -40,6 +40,7 @@ frontend()
     echo "* angularjs"
     echo "* reactjs"
     echo "* emberjs"
+    echo "* stackoverflow"
     echo ""
 
     return 1
@@ -103,6 +104,9 @@ frontend()
     "emberjs")
       url="${url}emberjs.com"
       url="${url}/api/#stq=$2&stp=1" ;;
+    "stackoverflow")
+      url="${url}stackoverflow.com"
+      url="${url}/search?q=$2" ;;
     *) echo "INVALID PARAM!"
        return ;;
   esac
@@ -110,6 +114,7 @@ frontend()
   echo "$url"
 
   $open_cmd "$url"
+
 }
 
 # javascript
@@ -149,3 +154,5 @@ alias angularjs='frontend angularjs'
 alias reactjs='frontend reactjs'
 alias emberjs='frontend emberjs'
 
+# search websites
+alias stackoverflow='frontend stackoverflow'
