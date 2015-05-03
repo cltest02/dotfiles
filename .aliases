@@ -325,6 +325,7 @@ alias date_day='date "+%d"'
 alias date_hour='date "+%H"'
 alias date_minute='date "+%M"'
 alias date_second='date "+%S"'
+alias date_time='date "+%H:%M:%S"'
 
 # stopwatch
 alias timer='echo "Timer started. Stop with Ctrl-D." && date && time cat && date'
