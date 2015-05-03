@@ -107,6 +107,7 @@ sudo aptitude install \
   `# get files from web` \
   wget \
   curl \
+  w3m \
   `# repo-tools`\
   git \
   subversion \
