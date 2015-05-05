@@ -205,11 +205,13 @@ sudo ln -s /usr/bin/nodejs /usr/bin/node
 
 ask_install "install webworker tools"
 if [[ $? -eq 1 ]]; then
-  sudo gem install sass --pre
-  sudo gem install compass --pre
-  sudo gem install autoprefixer-rails --pre
-  sudo gem install compass-rgbapng --pre
-  sudo gem install oily_png
+  sudo gem install sass --pre --verbose
+  sudo gem install compass --pre --verbose
+  sudo gem install autoprefixer-rails --pre --verbose
+  sudo gem install compass-rgbapng --pre --verbose
+  sudo gem install oily_png --verbose
+
+  sudo npm config set registry https://registry.nodejs.org/
 
   sudo npm install -g bower
   sudo npm install -g psi
