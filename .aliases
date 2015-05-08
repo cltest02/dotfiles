@@ -296,7 +296,7 @@ alias gurl="curl --compressed"
 alias lsport='sudo lsof -i -T -n'
 
 # shows more about the ports on which the applications use
-alias llport='sudo netstat -nape --inet --inet6'
+alias llport='netstat -nape --inet --inet6'
 
 # show only active network listeners
 alias netlisteners='sudo lsof -i -P | grep LISTEN'
