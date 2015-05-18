@@ -27,7 +27,7 @@ prompt_command()
   fi
 
   local isCygwin=false
-  [[ "$(bash --version)" == *-pc-cygwin* ]] && isCygwin=true
+  [[ "$(bash --version)" == *-cygwin* ]] && isCygwin=true
 
   if [[ "$(tty)" == /dev/pts/* ]] || $isCygwin; then
     if [[ -n $remote ]] && [[ $COLORTERM = gnome-* && $TERM = xterm ]] && infocmp gnome-256color >/dev/null 2>&1; then

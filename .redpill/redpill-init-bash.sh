@@ -6,7 +6,7 @@ source "${REDPILL}/lib/composure.sh"
 cite _about _param _example _group _author _version
 
 #for some reasons the following is extremly slow under cygwin. disabled
-if [[ ! "$(bash --version)" == *-pc-cygwin* ]]; then
+if [[ ! "$(bash --version)" == *-cygwin* ]]; then
   # load colors first so they can be use in base theme
   source "${REDPILL}/themes/colors.theme.bash"
   source "${REDPILL}/themes/base.theme.bash"
