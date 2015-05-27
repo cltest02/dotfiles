@@ -158,7 +158,7 @@ less_options=(
   # Do not complain when we are on a dumb terminal.
   --dumb
 );
-export LESS="-irMX -x4 --shift 5 ${less_options[*]}";
+export LESS="-iMX --shift 5 ${less_options[*]}";
 unset less_options;
 
 # highlight section titles in manual pages
