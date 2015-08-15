@@ -70,11 +70,26 @@ sudo aptitude install \
   coreutils  \
   moreutils \
   findutils  \
+  `# fast alternative to dpkg -L and dpkg -S` \
+  dlocate \
+  `# quickly find files on the filesystem based on their name` \
+  mlocate \
+  locales \
+  `# removing unneeded localizations` \  
+  localepurge \
+  sysstat \
+  tcpdump
   colordiff \
   ack-grep \
   ngrep \
   atop \
+  `# interactive processes viewer` \
+  htop \
+  `# interactive I/O viewer` \
+  iotop \
   tree \
+  `# disk usage viewer` \
+  ncdu \
   rsync \
   whois \
   vim \
@@ -124,11 +139,7 @@ sudo aptitude install \
   xpdf \
   sqlite3 \
   `# nstall python-pygments for json print` \
-  python-pygments \
-  locales \
-  sysstat \
-  htop \
-  tcpdump
+  python-pygments
 
 #
 # fixing nodejs for ubuntu
