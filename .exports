@@ -347,3 +347,9 @@ if [ -d "$HOME/.pyenv/bin" ]; then
   eval "$(pyenv init -)"
   eval "$(pyenv virtualenv-init -)"
 fi
+
+# node-js settings
+### Enable persistent REPL history for `node`.
+export NODE_REPL_HISTORY_FILE=~/.node_history;
+### Allow 32³ entries; the default is 1000.
+export NODE_REPL_HISTORY_SIZE='32768';

@@ -453,7 +453,7 @@ ips()
 }
 
 # -------------------------------------------------------------------
-# cleanTheSystem: purge old config, kernel, trash etc.
+# cleanTheSystem: purge old config, kernel, trash etc. from Ubuntu / Debian
 #
 # WARNING: take a look on what the package-manager will do
 cleanTheSystem()
