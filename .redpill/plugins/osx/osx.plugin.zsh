@@ -1,14 +1,12 @@
 # ------------------------------------------------------------------------------
 #          FILE:  osx.plugin.zsh
-#   DESCRIPTION:  red-pill plugin file.
+#   DESCRIPTION:  oh-my-zsh plugin file.
 #        AUTHOR:  Sorin Ionescu (sorin.ionescu@gmail.com)
 #       VERSION:  1.1.0
 # ------------------------------------------------------------------------------
 
-tab()
-{
-  local command="cd \\\"$PWD\\\"; clear"
-
+function tab() {
+  local command="cd \\\"$PWD\\\"; clear; "
   (( $# > 0 )) && command="${command}; $*"
 
   the_app=$(
@@ -37,6 +35,7 @@ EOF
           set current_session to current session
           tell current_session
             write text "${command}"
+            keystroke return
           end tell
         end tell
       end tell
@@ -44,10 +43,8 @@ EOF
   }
 }
 
-vsplit_tab()
-{
+function vsplit_tab() {
   local command="cd \\\"$PWD\\\""
-
   (( $# > 0 )) && command="${command}; $*"
 
   the_app=$(
@@ -75,10 +72,8 @@ EOF
   }
 }
 
-split_tab()
-{
+function split_tab() {
   local command="cd \\\"$PWD\\\""
-
   (( $# > 0 )) && command="${command}; $*"
 
   the_app=$(
@@ -106,8 +101,7 @@ EOF
   }
 }
 
-pfd()
-{
+function pfd() {
   osascript 2>/dev/null <<EOF
     tell application "Finder"
       return POSIX path of (target of window 1 as alias)
@@ -115,8 +109,7 @@ pfd()
 EOF
 }
 
-pfs()
-{
+function pfs() {
   osascript 2>/dev/null <<EOF
     set output to ""
     tell application "Finder" to set the_selection to selection
@@ -129,31 +122,25 @@ pfs()
 EOF
 }
 
-cdf()
-{
+function cdf() {
   cd "$(pfd)"
 }
 
-pushdf()
-{
+function pushdf() {
   pushd "$(pfd)"
 }
 
-quick-look()
-{
+function quick-look() {
   (( $# > 0 )) && qlmanage -p $* &>/dev/null &
 }
 
-man-preview()
-{
+function man-preview() {
   man -t "$@" | open -f -a Preview
 }
 
-trash()
-{
+function trash() {
   local trash_dir="${HOME}/.Trash"
   local temp_ifs="$IFS"
-
   IFS=$'\n'
   for item in "$@"; do
     if [[ -e "$item" ]]; then
@@ -168,31 +155,29 @@ trash()
   IFS=$temp_ifs
 }
 
-vncviewer()
-{
+function vncviewer() {
   open vnc://$@
 }
 
 # iTunes control function
-itunes()
-{
-	local opt=$1
-	shift
-	case "$opt" in
-		launch|play|pause|stop|rewind|resume|quit)
-			;;
-		mute)
-			opt="set mute to true"
-			;;
-		unmute)
-			opt="set mute to false"
-			;;
-		next|previous)
-			opt="$opt track"
-			;;
-		vol)
-			opt="set sound volume to $1" #$1 Due to the shift
-			;;
+function itunes() {
+  local opt=$1
+  shift
+  case "$opt" in
+    launch|play|pause|stop|rewind|resume|quit)
+      ;;
+    mute)
+      opt="set mute to true"
+      ;;
+    unmute)
+      opt="set mute to false"
+      ;;
+    next|previous)
+      opt="$opt track"
+      ;;
+    vol)
+      opt="set sound volume to $1" #$1 Due to the shift
+      ;;
     shuf|shuff|shuffle)
       # The shuffle property of current playlist can't be changed in iTunes 12,
       # so this workaround uses AppleScript to simulate user input instead.
@@ -223,21 +208,21 @@ EOF
           ;;
       esac
       ;;
-		""|-h|--help)
-			echo "Usage: itunes <option>"
-			echo "option:"
-			echo "\tlaunch|play|pause|stop|rewind|resume|quit"
-			echo "\tmute|unmute\tcontrol volume set"
-			echo "\tnext|previous\tplay next or previous track"
-			echo "\tvol\tSet the volume, takes an argument from 0 to 100"
-			echo "\thelp\tshow this message and exit"
-			return 0
-			;;
-		*)
-			print "Unknown option: $opt"
-			return 1
-			;;
-	esac
-	osascript -e "tell application \"iTunes\" to $opt"
+    ""|-h|--help)
+      echo "Usage: itunes <option>"
+      echo "option:"
+      echo "\tlaunch|play|pause|stop|rewind|resume|quit"
+      echo "\tmute|unmute\tcontrol volume set"
+      echo "\tnext|previous\tplay next or previous track"
+      echo "\tshuf|shuffle [on|off|toggle]\tSet shuffled playback. Default: toggle. Note: toggle doesn't support the MiniPlayer."
+      echo "\tvol\tSet the volume, takes an argument from 0 to 100"
+      echo "\thelp\tshow this message and exit"
+      return 0
+      ;;
+    *)
+      print "Unknown option: $opt"
+      return 1
+      ;;
+  esac
+  osascript -e "tell application \"iTunes\" to $opt"
 }
-

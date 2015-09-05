@@ -43,7 +43,7 @@ unset custom
 unset config_file
 
 if [[ $PROMPT ]]; then
-  export PS1=$PROMPT
+  export PS1="\["$PROMPT"\]"
 fi
 
 # load all the Jekyll stuff

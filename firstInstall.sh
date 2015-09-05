@@ -76,10 +76,25 @@ aptitude install \
   `# utilities` \
   coreutils  \
   findutils  \
+  `# fast alternative to dpkg -L and dpkg -S` \
+  dlocate \
+  `# quickly find files on the filesystem based on their name` \
+  mlocate \
+  locales \
+  `# removing unneeded localizations` \  
+  localepurge \
+  sysstat \
+  tcpdump
   colordiff \
   moreutils \
   atop \
+  `# interactive processes viewer` \
+  htop \
+  `# interactive I/O viewer` \
+  iotop \
   tree \
+  `# disk usage viewer` \
+  ncdu \
   rsync \
   whois \
   vim \
@@ -112,6 +127,7 @@ aptitude install \
   `# get files from web` \
   wget \
   curl \
+  w3m \
   `# repo-tools`\
   git \
   subversion \
@@ -126,13 +142,13 @@ aptitude install \
   pv \
   ucspi-tcp \
   xpdf \
-  `#install python-pygments for json print` \
   sqlite3 \
-  python-pygments \
   locales \
   sysstat \
   htop \
   tcpdump
+  `# nstall python-pygments for json print` \
+  python-pygments
 
 #
 # fixing nodejs for ubuntu
@@ -196,11 +212,13 @@ ln -s /usr/bin/nodejs /usr/bin/node
 
 ask_install "install webworker tools"
 if [[ $? -eq 1 ]]; then
-  gem install sass --pre
-  gem install compass --pre
-  gem install autoprefixer-rails --pre
-  gem install compass-rgbapng --pre
-  gem install oily_png
+  gem install sass --pre --verbose
+  gem install compass --pre --verbose
+  gem install autoprefixer-rails --pre --verbose
+  gem install compass-rgbapng --pre --verbose
+  gem install oily_png --verbose
+
+  npm config set registry https://registry.nodejs.org/
 
   npm install -g bower
   npm install -g psi
@@ -214,13 +232,13 @@ if [[ $? -eq 1 ]]; then
   ln -s /usr/bin/composer.phar /usr/bin/composer
 
 
-  #php5enmod json
-  #php5enmod mcrypt
-  #php5enmod curl
-  #php5enmod mysql
-  #php5enmod gd
-  #php5enmod imagick
-  #php5enmod apcu
+  php5enmod json
+  php5enmod mcrypt
+  php5enmod curl
+  php5enmod mysql
+  php5enmod gd
+  php5enmod imagick
+  php5enmod apcu
 
   curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/bin
   ln -s /usr/bin/composer.phar /usr/bin/composer

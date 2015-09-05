@@ -1,6 +1,4 @@
-
-# aliases / functions
-
+# Aliases
 alias g='git'
 compdef g=git
 alias gst='git status'
@@ -17,6 +15,7 @@ alias gup='git pull --rebase'
 compdef _git gup=git-fetch
 alias gp='git push'
 compdef _git gp=git-push
+alias gd='git diff'
 gdv() { git diff -w "$@" | view - }
 compdef _git gdv=git-diff
 alias gdt='git difftool'
@@ -76,6 +75,7 @@ compdef _git gss=git-status
 alias ga='git add'
 compdef _git ga=git-add
 alias gap='git add --patch'
+alias gaa='git add --all'
 alias gm='git merge'
 compdef _git gm=git-merge
 alias grh='git reset HEAD'
@@ -100,7 +100,7 @@ compdef _git gvt=git verify-tag
 
 alias gpoat='git push origin --all && git push origin --tags'
 alias gmt='git mergetool --no-prompt'
-compdef _git gm=git-mergetool
+compdef _git gmt=git-mergetool
 
 alias gg='git gui citool'
 alias gga='git gui citool --amend'
@@ -121,23 +121,17 @@ compdef git-svn-dcommit-push=git
 
 alias gsr='git svn rebase'
 alias gsd='git svn dcommit'
-
 #
 # Will return the current branch name
 # Usage example: git pull origin $(current_branch)
 #
-current_branch()
-{
-  local ref
-
+function current_branch() {
   ref=$(git symbolic-ref HEAD 2> /dev/null) || \
   ref=$(git rev-parse --short HEAD 2> /dev/null) || return
   echo ${ref#refs/heads/}
 }
 
-current_repository()
-{
-  local ref
+function current_repository() {
   ref=$(git symbolic-ref HEAD 2> /dev/null) || \
   ref=$(git rev-parse --short HEAD 2> /dev/null) || return
   echo $(git remote -v | cut -d':' -f 2)
@@ -154,8 +148,7 @@ alias ggpnp='git pull origin $(current_branch) && git push origin $(current_bran
 compdef ggpnp=git
 
 # Pretty log messages
-_git_log_prettily()
-{
+function _git_log_prettily(){
   if ! [ -z $1 ]; then
     git log --pretty=$1
   fi
@@ -168,8 +161,7 @@ compdef _git glp=git-log
 # When you want to go back to work, just unwip it
 #
 # This function return a warning if the current branch is a wip
-work_in_progress()
-{
+function work_in_progress() {
   if $(git log -n 1 2>/dev/null | grep -q -c "\-\-wip\-\-"); then
     echo "WIP!!"
   fi
@@ -183,4 +175,3 @@ alias gignore='git update-index --assume-unchanged'
 alias gunignore='git update-index --no-assume-unchanged'
 # list temporarily ignored files
 alias gignored='git ls-files -v | grep "^[[:lower:]]"'
-
