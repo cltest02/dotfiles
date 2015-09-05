@@ -81,13 +81,15 @@ aptitude install \
   `# quickly find files on the filesystem based on their name` \
   mlocate \
   locales \
-  `# removing unneeded localizations` \  
+  `# removing unneeded localizations` \
   localepurge \
   sysstat \
   tcpdump
   colordiff \
   moreutils \
   atop \
+  ack-grep \
+  ngrep \
   `# interactive processes viewer` \
   htop \
   `# interactive I/O viewer` \

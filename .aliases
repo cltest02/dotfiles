@@ -446,7 +446,7 @@ alias chromekill="ps ux | grep '[C]hrome Helper --type=renderer' | grep -v exten
 alias composer-install="composer install --optimize-autoloader"
 
 # add ssh-key to ssh-agent when key exist
-if [ "$SSH_AUTH_SOCK" != "" ] && [ -f ~/.ssh/id_rsa ] && [ -x /usr/bin/ssh-add  ]; then
+if [ "$SSH_AUTH_SOCK" != "" ] && [ -f "~/.ssh/id_rsa" ] && [ -x "/usr/bin/ssh-add"  ]; then
   ssh-add -l >/dev/null || alias ssh='(ssh-add -l >/dev/null || ssh-add) && unalias ssh; ssh'
 fi
 
@@ -459,6 +459,8 @@ fi
 
 alias starwars="telnet towel.blinkenlights.nl"
 
+# TODO: add title and move to category
+alias macgen="enum -r -s ':' -f '%02x' 0 .. 6x .. 255"
 
 # ------------------------------------------------------------------------------
 # | auto-completion (for bash)                                                 |
@@ -522,4 +524,3 @@ if [ -n "$BASH_VERSION" ]; then
 fi
 unset -f alias_completion
 
-alias macgen="enum -r -s ':' -f '%02x' 0 .. 6x .. 255"

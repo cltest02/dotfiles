@@ -350,7 +350,7 @@
 
   # Push only the current branch
   #
-  default = simple #disabled for now to be compatible with debian wheezy
+  # default = simple #disabled for now to be compatible with debian wheezy
 
   # Push all branches
   #

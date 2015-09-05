@@ -1210,15 +1210,13 @@ tre()
   tree -aC -I '.git|node_modules|bower_components' --dirsfirst "$@" | less -FRNX
 }
 
-
-
 #-------------------------------------------------------------------
 #`sshkey`: is a function to copy the ssh key into the clipboard
 # options:
 #   x: for xclip selection clipboard
 sshkey()
 {
-  if [ -f ~/.ssh/id_rsa ]; then
+  if [ -f "~/.ssh/id_rsa" ]; then
     #default use xclip and selection clipboard
     if ( [ $# -eq 0 ] || [ "$1" == "x" ] ) && [ -x /usr/bin/xclip ]; then
       cat ~/.ssh/id_rsa.pub | /usr/bin/xclip -selection "clipboard" && echo "Copied to clipboard"
