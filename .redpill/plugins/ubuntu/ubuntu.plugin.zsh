@@ -3,6 +3,7 @@
 # https://github.com/dbb
 # https://github.com/Mappleconfusers
 # Nicolas Jonas nextgenthemes.com
+# https://github.com/loctauxphilippe
 #
 # Debian, Ubuntu and friends related zsh aliases and functions for zsh
 
@@ -28,6 +29,7 @@ compdef _ppap ppap='sudo ppa-purge'
 
 alias ag='sudo apt-get'            # age - but without sudo
 alias aga='sudo apt-get autoclean' # aac
+alias agar='sudo apt-get autoremove'
 alias agb='sudo apt-get build-dep' # abd
 alias agc='sudo apt-get clean'     # adc
 alias agd='sudo apt-get dselect-upgrade' # ads
@@ -38,9 +40,11 @@ alias agu='sudo apt-get update'   # ad
 alias agud='sudo apt-get update && sudo apt-get dist-upgrade' #adu
 alias agug='sudo apt-get upgrade' # ag
 alias aguu='sudo apt-get update && sudo apt-get upgrade'      #adg
+alias agar='sudo apt-get autoremove'
 
 compdef _ag ag='sudo apt-get'
 compdef _aga aga='sudo apt-get autoclean'
+compdef _agar agar='sudo apt-get autoremove'
 compdef _agb agb='sudo apt-get build-dep'
 compdef _agc agc='sudo apt-get clean'
 compdef _agd agd='sudo apt-get dselect-upgrade'
@@ -51,10 +55,11 @@ compdef _agu agu='sudo apt-get update'
 compdef _agud agud='sudo apt-get update && sudo apt-get dist-upgrade'
 compdef _agug agug='sudo apt-get upgrade'
 compdef _aguu aguu='sudo apt-get update && sudo apt-get upgrade'
+compdef _agar agar='sudo apt-get autoremove'
 
 # Remove ALL kernel images and headers EXCEPT the one in use
 alias kclean='sudo aptitude remove -P ?and(~i~nlinux-(ima|hea) \
-  ?not(~n`uname -r`))'
+	?not(~n`uname -r`))'
 
 # Misc. #####################################################################
 # print all installed packages
@@ -65,22 +70,21 @@ alias mydeb='time dpkg-buildpackage -rfakeroot -us -uc'
 
 # apt-add-repository with automatic install/upgrade of the desired package
 # Usage: aar ppa:xxxxxx/xxxxxx [packagename]
-# If packagename is not given as 2nd arument the function will ask for it and guess the defaupt by taking
+# If packagename is not given as 2nd argument the function will ask for it and guess the default by taking
 # the part after the / from the ppa name wich is sometimes the right name for the package you want to install
-aar()
-{
-  if [ -n "$2" ]; then
-    PACKAGE=$2
-  else
-    read "PACKAGE?Type in the package name to install/upgrade with this ppa [${1##*/}]: "
-  fi
-
-  if [ -z "$PACKAGE" ]; then
-    PACKAGE=${1##*/}
-  fi
-
-  sudo apt-add-repository $1 && sudo apt-get update
-  sudo apt-get install $PACKAGE
+aar() {
+	if [ -n "$2" ]; then
+		PACKAGE=$2
+	else
+		read "PACKAGE?Type in the package name to install/upgrade with this ppa [${1##*/}]: "
+	fi
+	
+	if [ -z "$PACKAGE" ]; then
+		PACKAGE=${1##*/}
+	fi
+	
+	sudo apt-add-repository $1 && sudo apt-get update
+	sudo apt-get install $PACKAGE
 }
 
 # Prints apt history
@@ -91,8 +95,7 @@ aar()
 #   apt-history rollback
 #   apt-history list
 # Based On: http://linuxcommando.blogspot.com/2008/08/how-to-show-apt-log-history.html
-apt-history()
-{
+apt-history () {
   case "$1" in
     install)
       zgrep --no-filename 'install ' $(ls -rt /var/log/dpkg*)
@@ -121,25 +124,23 @@ apt-history()
 }
 
 # Kernel-package building shortcut
-kerndeb()
-{
-  # temporarily unset MAKEFLAGS ( '-j3' will fail )
-  MAKEFLAGS=$( print - $MAKEFLAGS | perl -pe 's/-j\s*[\d]+//g' )
-  print '$MAKEFLAGS set to '"'$MAKEFLAGS'"
-  appendage='-custom' # this shows up in $ (uname -r )
-  revision=$(date +"%Y%m%d") # this shows up in the .deb file name
+kerndeb () {
+    # temporarily unset MAKEFLAGS ( '-j3' will fail )
+    MAKEFLAGS=$( print - $MAKEFLAGS | perl -pe 's/-j\s*[\d]+//g' )
+    print '$MAKEFLAGS set to '"'$MAKEFLAGS'"
+	appendage='-custom' # this shows up in $ (uname -r )
+    revision=$(date +"%Y%m%d") # this shows up in the .deb file name
 
-  make-kpkg clean
+    make-kpkg clean
 
-  time fakeroot make-kpkg --append-to-version "$appendage" --revision \
-      "$revision" kernel_image kernel_headers
+    time fakeroot make-kpkg --append-to-version "$appendage" --revision \
+        "$revision" kernel_image kernel_headers
 }
 
 # List packages by size
-apt-list-packages()
-{
-  dpkg-query -W --showformat='${Installed-Size} ${Package} ${Status}\n' \
-    | grep -v deinstall \
-    | sort -n \
-    | awk '{print $1" "$2}'
+function apt-list-packages {
+    dpkg-query -W --showformat='${Installed-Size} ${Package} ${Status}\n' | \
+    grep -v deinstall | \
+    sort -n | \
+    awk '{print $1" "$2}'
 }

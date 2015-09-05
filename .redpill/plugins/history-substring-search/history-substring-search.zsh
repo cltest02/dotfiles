@@ -77,7 +77,7 @@
 # license (see below) as part of the fizsh[3] project in January 2011.
 #
 # It was later extracted from fizsh[3] release 1.0.1, refactored heavily, and
-# repackaged as both an red-pill plugin[4] and as an independently loadable
+# repackaged as both an oh-my-zsh plugin[4] and as an independently loadable
 # ZSH script[5] by Suraj N. Kurapati in 2011.
 #
 # It was further developed[4] by Guido van Steen, Suraj N. Kurapati, Sorin
@@ -86,7 +86,7 @@
 # [1]: http://fishshell.com
 # [2]: http://www.zsh.org/mla/users/2009/msg00818.html
 # [3]: http://sourceforge.net/projects/fizsh/
-# [4]: https://github.com/robbyrussell/red-pill/pull/215
+# [4]: https://github.com/robbyrussell/oh-my-zsh/pull/215
 # [5]: https://github.com/sunaku/zsh-history-substring-search
 # [6]: https://github.com/nicoulaj/zsh-syntax-highlighting
 #
@@ -140,8 +140,7 @@ HISTORY_SUBSTRING_SEARCH_GLOBBING_FLAGS='i'
 # the main ZLE widgets
 #-----------------------------------------------------------------------------
 
-function history-substring-search-up()
-{
+function history-substring-search-up() {
   _history-substring-search-begin
 
   _history-substring-search-up-history ||
@@ -151,8 +150,7 @@ function history-substring-search-up()
   _history-substring-search-end
 }
 
-function history-substring-search-down()
-{
+function history-substring-search-down() {
   _history-substring-search-begin
 
   _history-substring-search-down-history ||
@@ -177,7 +175,6 @@ fi
 # implementation details
 #-----------------------------------------------------------------------------
 
-setopt extendedglob
 zmodload -F zsh/parameter
 
 #
@@ -191,8 +188,7 @@ if [[ $+functions[_zsh_highlight] -eq 0 ]]; then
   # Dummy implementation of _zsh_highlight()
   # that simply removes existing highlights
   #
-  function _zsh_highlight()
-  {
+  function _zsh_highlight() {
     region_highlight=()
   }
 
@@ -200,8 +196,7 @@ if [[ $+functions[_zsh_highlight] -eq 0 ]]; then
   # Remove existing highlights when the user
   # inserts printable characters into $BUFFER
   #
-  function ordinary-key-press()
-  {
+  function ordinary-key-press() {
     if [[ $KEYS == [[:print:]] ]]; then
       region_highlight=()
     fi
@@ -287,8 +282,8 @@ if [[ $+functions[_zsh_highlight] -eq 0 ]]; then
   #-------------->8------------------->8------------------->8-----------------
 fi
 
-function _history-substring-search-begin()
-{
+function _history-substring-search-begin() {
+  setopt localoptions extendedglob
   _history_substring_search_move_cursor_eol=false
   _history_substring_search_query_highlight=
 
@@ -354,8 +349,8 @@ function _history-substring-search-begin()
   fi
 }
 
-function _history-substring-search-end()
-{
+function _history-substring-search-end() {
+  setopt localoptions extendedglob
   _history_substring_search_result=$BUFFER
 
   # move the cursor to the end of the command line
@@ -387,8 +382,7 @@ function _history-substring-search-end()
   true
 }
 
-function _history-substring-search-up-buffer()
-{
+function _history-substring-search-up-buffer() {
   #
   # Check if the UP arrow was pressed to move the cursor within a multi-line
   # buffer. This amounts to three tests:
@@ -417,8 +411,7 @@ function _history-substring-search-up-buffer()
   false
 }
 
-function _history-substring-search-down-buffer()
-{
+function _history-substring-search-down-buffer() {
   #
   # Check if the DOWN arrow was pressed to move the cursor within a multi-line
   # buffer. This amounts to three tests:
@@ -447,8 +440,7 @@ function _history-substring-search-down-buffer()
   false
 }
 
-function _history-substring-search-up-history()
-{
+function _history-substring-search-up-history() {
   #
   # Behave like up in ZSH, except clear the $BUFFER
   # when beginning of history is reached like in Fish.
@@ -470,8 +462,7 @@ function _history-substring-search-up-history()
   false
 }
 
-function _history-substring-search-down-history()
-{
+function _history-substring-search-down-history() {
   #
   # Behave like down-history in ZSH, except clear the
   # $BUFFER when end of history is reached like in Fish.
@@ -494,8 +485,7 @@ function _history-substring-search-down-history()
   false
 }
 
-function _history-substring-search-up-search()
-{
+function _history-substring-search-up-search() {
   _history_substring_search_move_cursor_eol=true
 
   #
@@ -574,8 +564,7 @@ function _history-substring-search-up-search()
   fi
 }
 
-function _history-substring-search-down-search()
-{
+function _history-substring-search-down-search() {
   _history_substring_search_move_cursor_eol=true
 
   #

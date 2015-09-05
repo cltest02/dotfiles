@@ -1,18 +1,14 @@
-_rake_refresh()
-{
+_rake_refresh () {
   if [ -f .rake_tasks ]; then
     rm .rake_tasks
   fi
-
   echo "Generating .rake_tasks..." > /dev/stderr
   _rake_generate
   cat .rake_tasks
 }
 
-_rake_does_task_list_need_generating()
-{
-  if [ ! -f .rake_tasks ]; then
-    return 0;
+_rake_does_task_list_need_generating () {
+  if [ ! -f .rake_tasks ]; then return 0;
   else
     if [[ "$OSTYPE" = darwin* ]]; then
       accurate=$(stat -f%m .rake_tasks)
@@ -25,13 +21,11 @@ _rake_does_task_list_need_generating()
   fi
 }
 
-_rake_generate()
-{
+_rake_generate () {
   rake --silent --tasks | cut -d " " -f 2 > .rake_tasks
 }
 
-_rake()
-{
+_rake () {
   if [ -f Rakefile ]; then
     if _rake_does_task_list_need_generating; then
       echo "\nGenerating .rake_tasks..." > /dev/stderr
@@ -43,4 +37,3 @@ _rake()
 
 compdef _rake rake
 alias rake_refresh='_rake_refresh'
-

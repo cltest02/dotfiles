@@ -1,34 +1,29 @@
 #!zsh
-
 ##############################################################################
-# A descriptive listing of core Gradle commands
+# A descriptive listing of core Gradle commands 
 ############################################################################
+function _gradle_core_commands() {
+    local ret=1 state
+    _arguments ':subcommand:->subcommand' && ret=0
 
-_gradle_core_commands()
-{
-  local ret=1 state
-  _arguments ':subcommand:->subcommand' && ret=0
+    case $state in
+      subcommand)
+        subcommands=(
+          "properties:Display all project properties"
+          "tasks:Calculate and display all tasks"
+          "dependencies:Calculate and display all dependencies"
+          "projects:Discover and display all sub-projects"
+          "build:Build the project"
+          "help:Display help"
+        )
+        _describe -t subcommands 'gradle subcommands' subcommands && ret=0
+    esac
 
-  case $state in
-    subcommand)
-      subcommands=(
-        "properties:Display all project properties"
-        "tasks:Calculate and display all tasks"
-        "dependencies:Calculate and display all dependencies"
-        "projects:Discover and display all sub-projects"
-        "build:Build the project"
-        "help:Display help"
-      )
-      _describe -t subcommands 'gradle subcommands' subcommands && ret=0
-    ;;
-  esac
-
-  return ret
+    return ret
 }
 
-_gradle_arguments()
-{
-  _arguments -C \
+function _gradle_arguments() {
+    _arguments -C \
     '-a[Do not rebuild project dependencies]' \
     '-h[Help]' \
     '-D[System property]' \
@@ -53,19 +48,17 @@ _gradle_arguments()
 ##############################################################################
 # Are we in a directory containing a build.gradle file?
 ############################################################################
-in_gradle()
-{
-  if [[ -f build.gradle ]]; then
-    echo 1
-  fi
+function in_gradle() {
+    if [[ -f build.gradle ]]; then
+        echo 1
+    fi
 }
 
 ############################################################################## Examine the build.gradle file to see if its
 # timestamp has changed, and if so, regen
 # the .gradle_tasks cache file
 ############################################################################
-_gradle_does_task_list_need_generating()
-{
+_gradle_does_task_list_need_generating () {
   [ ! -f .gradletasknamecache ] && return 0;
   [ build.gradle -nt .gradletasknamecache ] && return 0;
   return 1;
@@ -75,34 +68,22 @@ _gradle_does_task_list_need_generating()
 ##############################################################################
 # Discover the gradle tasks by running "gradle tasks --all"
 ############################################################################
-_gradle_tasks()
-{
+_gradle_tasks () {
   if [ in_gradle ]; then
     _gradle_arguments
-
     if _gradle_does_task_list_need_generating; then
-      gradle tasks --all \
-        | grep "^[ ]*[a-zA-Z0-9]*\ -\ " \
-        | sed "s/ - .*$//" \
-        | sed "s/[\ ]*//" > .gradletasknamecache
+     gradle tasks --all | grep "^[ ]*[a-zA-Z0-9:]*\ -\ " | sed "s/ - .*$//" | sed "s/[\ ]*//" > .gradletasknamecache
     fi
-
     compadd -X "==== Gradle Tasks ====" `cat .gradletasknamecache`
   fi
 }
 
-_gradlew_tasks()
-{
+_gradlew_tasks () {
   if [ in_gradle ]; then
     _gradle_arguments
-
     if _gradle_does_task_list_need_generating; then
-      gradlew tasks --all \
-        | grep "^[ ]*[a-zA-Z0-9]*\ -\ " \
-        | sed "s/ - .*$//" \
-        | sed "s/[\ ]*//" > .gradletasknamecache
+     gradlew tasks --all | grep "^[ ]*[a-zA-Z0-9:]*\ -\ " | sed "s/ - .*$//" | sed "s/[\ ]*//" > .gradletasknamecache
     fi
-
     compadd -X "==== Gradlew Tasks ====" `cat .gradletasknamecache`
   fi
 }
@@ -123,4 +104,3 @@ compdef _gradlew_tasks gradlew
 #     with the richer descriptive method of _arguments?
 #     gradle tasks | grep "^[a-zA-Z0-9]*\ -\ " | sed "s/ - /\:/"
 #############################################################################
-

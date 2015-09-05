@@ -1,4 +1,4 @@
-# red-pill Bureau Theme
+# oh-my-zsh Bureau Theme
 
 ### NVM
 

@@ -28,11 +28,10 @@ case $- in
 esac
 
 [ -d "${_Z_DATA:-$HOME/.z}" ] && {
-  echo "ERROR: z.sh's datafile (${_Z_DATA:-$HOME/.z}) is a directory."
+    echo "ERROR: z.sh's datafile (${_Z_DATA:-$HOME/.z}) is a directory."
 }
 
-_z()
-{
+_z() {
 
  local datafile="${_Z_DATA:-$HOME/.z}"
 

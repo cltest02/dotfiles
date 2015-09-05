@@ -1,12 +1,12 @@
 # ------------------------------------------------------------------------------
 #          FILE:  extract.plugin.zsh
-#   DESCRIPTION:  red-pill plugin file.
+#   DESCRIPTION:  oh-my-zsh plugin file.
 #        AUTHOR:  Sorin Ionescu (sorin.ionescu@gmail.com)
 #       VERSION:  1.0.1
 # ------------------------------------------------------------------------------
 
-extract()
-{
+
+function extract() {
   local remove_archive
   local success
   local file_name
@@ -38,7 +38,7 @@ extract()
     file_name="$( basename "$1" )"
     extract_dir="$( echo "$file_name" | sed "s/\.${1##*.}//g" )"
     case "$1" in
-      (*.tar.gz|*.tgz) [ -z $commands[pigz] ] && tar zxvf "(" || pigz -dc "(" | tar xv ;;))
+      (*.tar.gz|*.tgz) [ -z $commands[pigz] ] && tar zxvf "$1" || pigz -dc "$1" | tar xv ;;
       (*.tar.bz2|*.tbz|*.tbz2) tar xvjf "$1" ;;
       (*.tar.xz|*.txz) tar --xz --help &> /dev/null \
         && tar --xz -xvf "$1" \
@@ -47,12 +47,12 @@ extract()
         && tar --lzma -xvf "$1" \
         || lzcat "$1" | tar xvf - ;;
       (*.tar) tar xvf "$1" ;;
-      (*.gz) [ -z $commands[pigz] ] && gunzip "(" || pigz -d "(" ;;))
+      (*.gz) [ -z $commands[pigz] ] && gunzip "$1" || pigz -d "$1" ;;
       (*.bz2) bunzip2 "$1" ;;
       (*.xz) unxz "$1" ;;
       (*.lzma) unlzma "$1" ;;
       (*.Z) uncompress "$1" ;;
-      (*.zip|*.war|*.jar|*.sublime-package) unzip "$1" -d $extract_dir ;;
+      (*.zip|*.war|*.jar|*.sublime-package|*.ipsw) unzip "$1" -d $extract_dir ;;
       (*.rar) unrar x -ad "$1" ;;
       (*.7z) 7za x "$1" ;;
       (*.deb)

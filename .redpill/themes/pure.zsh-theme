@@ -2,7 +2,7 @@
 
 # ------------------------------------------------------------------------------
 #
-# Pure - A minimal and beautiful theme for red-pill
+# Pure - A minimal and beautiful theme for oh-my-zsh
 #
 # Based on the custom Zsh-prompt of the same name by Sindre Sorhus. A huge
 # thanks goes out to him for designing the fantastic Pure prompt in the first

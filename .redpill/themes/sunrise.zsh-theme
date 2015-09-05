@@ -1,4 +1,4 @@
-# Sunrise theme for red-pill
+# Sunrise theme for oh-my-zsh
 # Intended to be used with Solarized: http://ethanschoonover.com/solarized
 # (Needs Git plugin for current_branch method)
 

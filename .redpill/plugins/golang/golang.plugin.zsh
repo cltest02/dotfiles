@@ -3,8 +3,8 @@
 # gc
 prefixes=(5 6 8)
 for p in $prefixes; do
-  compctl -g "*.${p}" ${p}l
-  compctl -g "*.go" ${p}g
+	compctl -g "*.${p}" ${p}l
+	compctl -g "*.go" ${p}g
 done
 
 # standard go tools

@@ -75,22 +75,22 @@ wd_print_usage()
 Usage: wd [command] <point>
 
 Commands:
-  add <point> Adds the current working directory to your warp points
-  add! <point>  Overwrites existing warp point
-  rm <point>  Removes the given warp point
-  show    Print warp points to current directory
-  show <point>  Print path to given warp point
-  list          Print all stored warp points
+	add <point>	Adds the current working directory to your warp points
+	add! <point>	Overwrites existing warp point
+	rm <point>	Removes the given warp point
+	show		Print warp points to current directory
+	show <point>	Print path to given warp point
+	list	        Print all stored warp points
 ls  <point>     Show files from given warp point
 path <point>    Show the path to given warp point
-  clean!    Remove points warping to nonexistent directories
+	clean!		Remove points warping to nonexistent directories
 
-  -v | --version  Print version
-  -d | --debug  Exit after execution with exit codes (for testing)
-  -c | --config Specify config file (default ~/.warprc)
-  -q | --quiet  Suppress all output
+	-v | --version	Print version
+	-d | --debug	Exit after execution with exit codes (for testing)
+	-c | --config	Specify config file (default ~/.warprc)
+	-q | --quiet	Suppress all output
 
-  help    Show this extremely helpful text
+	help		Show this extremely helpful text
 EOF
 }
 

@@ -1,4 +1,4 @@
-# This file integrates the history-substring-search script into red-pill.
+# This file integrates the history-substring-search script into oh-my-zsh.
 
 source "$ZSH/plugins/history-substring-search/history-substring-search.zsh"
 
