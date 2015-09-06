@@ -459,9 +459,6 @@ fi
 
 alias starwars="telnet towel.blinkenlights.nl"
 
-# TODO: add title and move to category
-alias macgen="enum -r -s ':' -f '%02x' 0 .. 6x .. 255"
-
 # ------------------------------------------------------------------------------
 # | auto-completion (for bash)                                                 |
 # ------------------------------------------------------------------------------
