@@ -1,16 +1,17 @@
 #xc function courtesy of http://gist.github.com/subdigital/5420709
-function xc {
+xc()
+{
   xcode_proj=`ls | grep "\.xc" | sort -r | head -1`
-  if [[ `echo -n $xcode_proj | wc -m` == 0 ]]
-  then
+  if [[ `echo -n $xcode_proj | wc -m` == 0 ]]; then
     echo "No xcworkspace/xcodeproj file found in the current directory."
   else
-    echo "Found $xcode_proj" 
-    open "$xcode_proj" 
+    echo "Found $xcode_proj"
+    open "$xcode_proj"
   fi
 }
 
-function xcsel {
+xcsel()
+{
   sudo xcode-select --switch "$*"
 }
 
