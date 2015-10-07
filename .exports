@@ -49,6 +49,20 @@ fi
 
 export SYSTEM_TYPE
 
+if which brew >/dev/null 2>&1; then
+  INSTALL_TYPE="BREW"
+fi
+
+if which apt-get >/dev/null 2>&1; then
+  INSTALL_TYPE="APT"
+fi
+
+if which yum >/dev/null 2>&1; then
+  INSTALL_TYPE="YUM"
+fi
+
+export INSTALL_TYPE
+
 # don't check mail when opening terminal.
 #unset MAILCHECK
 
@@ -79,7 +93,7 @@ HISTCONTROL=$HISTCONTROL${HISTCONTROL+:}ignoredups
 export HISTCONTROL=ignoredups
 
 # make some commands not show up in history
-export HISTIGNORE="clear:pwd:[bf]g:shutdown*:halt*:poweroff*:hibernate*:rm -rf \*"
+export HISTIGNORE="clear:exit:date:pwd:[bf]g:shutdown*:halt*:poweroff*:hibernate*:rm -rf*"
 
 # add the date to the historylog
 #
@@ -127,7 +141,7 @@ fi
 unset -f setLocale
 
 #tty detection
-if [[ "$(tty | grep -o ^/dev/tty)" == "/dev/tty" ]]; then
+if [[ "$(tty | grep -o '/dev/tty')" == "/dev/tty" ]]; then
   export IS_TTY=1
 else
   export IS_TTY=0
@@ -198,26 +212,31 @@ LS_COLORS="no=00:fi=00:di=01;34:ln=01;36:pi=40;33:so=01;35:do=01;35:bd=40;33;01:
 LS_OPTIONS="-hFN --color=auto"
 
 GREP_COLOR="1;32"
-GREP_OPTIONS="--color=auto"
+GREP_OPTIONS=""
 
 # is x grep argument available?
-grepFlagAvailable()
+grep-flag-available()
 {
   echo | command grep $1 "" >/dev/null 2>&1
 }
 
+# color grep results
+if grep-flag-available --color=auto; then
+  GREP_OPTIONS+=" --color=auto"
+fi
+
 # ignore VCS folders (if the necessary grep flags are available)
 VCS_FOLDERS="{.bzr,.cvs,.git,.hg,.svn}"
 
-if grepFlagAvailable --exclude-dir=.cvs; then
+if grep-flag-available --exclude-dir=.cvs; then
   GREP_OPTIONS+=" --exclude-dir=$VCS_FOLDERS"
-elif grepFlagAvailable --exclude=.cvs; then
+elif grep-flag-available --exclude=.cvs; then
   GREP_OPTIONS+=" --exclude=$VCS_FOLDERS"
 fi
 
 # clean-up
 unset VCS_FOLDERS
-unset -f grepFlagAvailable
+unset -f grep-flag-available
 
 # some more default color-settings for the root-user
 if [ "$UID" = 0 ]; then
@@ -328,3 +347,9 @@ if [ -d "$HOME/.pyenv/bin" ]; then
   eval "$(pyenv init -)"
   eval "$(pyenv virtualenv-init -)"
 fi
+
+# node-js settings
+### Enable persistent REPL history for `node`.
+export NODE_REPL_HISTORY_FILE=~/.node_history;
+### Allow 32³ entries; the default is 1000.
+export NODE_REPL_HISTORY_SIZE='32768';

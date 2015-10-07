@@ -93,6 +93,15 @@ alias cd...='cd ../..'
 alias cd....='cd ../../..'
 alias cd.....='cd ../../../..'
 
+alias 1='cd -'
+alias 2='cd -2'
+alias 3='cd -3'
+alias 4='cd -4'
+alias 5='cd -5'
+alias 6='cd -6'
+alias 7='cd -7'
+alias 8='cd -8'
+alias 9='cd -9'
 
 # ------------------------------------------------------------------------------
 # | Directories Commands (create / remove)                                     |
@@ -296,7 +305,7 @@ alias gurl="curl --compressed"
 alias lsport='sudo lsof -i -T -n'
 
 # shows more about the ports on which the applications use
-alias llport='sudo netstat -nape --inet --inet6'
+alias llport='netstat -nape --inet --inet6'
 
 # show only active network listeners
 alias netlisteners='sudo lsof -i -P | grep LISTEN'
@@ -316,6 +325,7 @@ alias date_day='date "+%d"'
 alias date_hour='date "+%H"'
 alias date_minute='date "+%M"'
 alias date_second='date "+%S"'
+alias date_time='date "+%H:%M:%S"'
 
 # stopwatch
 alias timer='echo "Timer started. Stop with Ctrl-D." && date && time cat && date'
@@ -435,8 +445,10 @@ alias chromekill="ps ux | grep '[C]hrome Helper --type=renderer' | grep -v exten
 # php - package-manager - composer
 alias composer-install="composer install --optimize-autoloader"
 
-# add ssh-key to clipboard
-alias sshkey="cat ~/.ssh/id_rsa.pub | putclip && echo 'Copied to clipboard.'"
+# add ssh-key to ssh-agent when key exist
+if [ "$SSH_AUTH_SOCK" != "" ] && [ -f "~/.ssh/id_rsa" ] && [ -x "/usr/bin/ssh-add"  ]; then
+  ssh-add -l >/dev/null || alias ssh='(ssh-add -l >/dev/null || ssh-add) && unalias ssh; ssh'
+fi
 
 
 # ------------------------------------------------------------------------------
@@ -446,7 +458,6 @@ alias sshkey="cat ~/.ssh/id_rsa.pub | putclip && echo 'Copied to clipboard.'"
 #alias nyancat="telnet miku.acm.uiuc.edu"  # offline
 
 alias starwars="telnet towel.blinkenlights.nl"
-
 
 # ------------------------------------------------------------------------------
 # | auto-completion (for bash)                                                 |

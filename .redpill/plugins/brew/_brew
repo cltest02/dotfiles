@@ -35,6 +35,7 @@ _1st_arguments=(
   'info:information about a formula'
   'install:install a formula'
   'reinstall:install a formula anew; re-using its current options'
+  'leaves:show installed formulae that are not dependencies of another installed formula'
   'link:link a formula'
   'list:list files in a formula or not-installed formulae'
   'log:git commit log for a formula'
@@ -101,7 +102,7 @@ case "$words[1]" in
       '(--fink)--fink[search the fink repository]' ;;
   untap)
     _brew_installed_taps
-    _wanted installed_taps expl 'installed taps' compadd -a installed_taps ;;
+    _wanted installed_taps expl 'installed taps' compadd -a installed_taps ;;
   upgrade)
     _brew_outdated_formulae
     _wanted outdated_formulae expl 'outdated formulae' compadd -a outdated_formulae ;;

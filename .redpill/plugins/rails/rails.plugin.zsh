@@ -1,6 +1,4 @@
-
-_rails_command()
-{
+function _rails_command () {
   if [ -e "bin/rails" ]; then
     bin/rails $@
   elif [ -e "script/rails" ]; then
@@ -12,8 +10,7 @@ _rails_command()
   fi
 }
 
-_rake_command()
-{
+function _rake_command () {
   if [ -e "bin/rake" ]; then
     bin/rake $@
   else
@@ -48,10 +45,12 @@ alias rsd='rails server --debugger'
 
 # Rake aliases
 alias rdm='rake db:migrate'
+alias rdms='rake db:migrate:status'
 alias rdr='rake db:rollback'
 alias rdc='rake db:create'
 alias rds='rake db:seed'
 alias rdd='rake db:drop'
+alias rdrs='rake db:reset'
 alias rdtc='rake db:test:clone'
 alias rdtp='rake db:test:prepare'
 alias rdmtc='rake db:migrate db:test:clone'
@@ -61,7 +60,7 @@ alias rn='rake notes'
 alias rr='rake routes'
 
 # legacy stuff
-alias ss='thin --stats "/thin/stats" start'
+alias sstat='thin --stats "/thin/stats" start'
 alias sg='ruby script/generate'
 alias sd='ruby script/destroy'
 alias sp='ruby script/plugin'
@@ -70,8 +69,6 @@ alias ssp='ruby script/spec'
 alias sc='ruby script/console'
 alias sd='ruby script/server --debugger'
 
-remote_console()
-{
+function remote_console() {
   /usr/bin/env ssh $1 "( cd $2 && ruby script/console production )"
 }
-

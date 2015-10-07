@@ -334,6 +334,10 @@
   # Include summaries of merged commits in newly created merge commit messages
   log = true
 
+[diff "bin"]
+  # Use `hexdump` to diff binary files
+  textconv = hexdump -v -C
+
 [help]
   # Automatically correct and execute mistyped commands
   #autocorrect = 1
@@ -343,7 +347,17 @@
   # for more information on different options of the below setting.
   # Setting to Git 2.0 default to surpress warning message
   # If you use branches with different remote name, use "upstream"
-#  default = simple #disabled for now to be compatible with debian wheezy
+
+  # Push only the current branch
+  #
+  # default = simple #disabled for now to be compatible with debian wheezy
+
+  # Push all branches
+  #
+  # default = matching
+
+  # Make `git push` push relevant annotated tags when pushing branches out.
+  followTags = true
 
 # URL shorthands
 #

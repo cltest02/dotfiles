@@ -4,33 +4,39 @@
 # with e.g. third-party scripts
 #sudo ln -sf /bin/bash /bin/sh
 
-ask_install()
-{
-  echo ""
-  echo ""
+function ask_install() {
+  echo
+  echo
   read -p"$1 (y/n) " -n 1
-  echo ""
+  echo
   if [[ $REPLY =~ ^[Yy]$ ]]; then
     return 1
   else
     return 0
   fi
+
 }
+
+# Make sure only root can run our script
+if [ "$(id -u)" != "0" ]; then
+  echo "This script must be run as root"
+  echo "Plese use sudo or su"
+  exit 1
+fi
 
 # use aptitude in the next steps ...
 if [ \! -f $(whereis aptitude | cut -f 2 -d ' ') ] ; then
-  sudo apt-get install aptitude
+  apt-get install aptitude
 fi
 
 # update && upgrade
 ask_install "upgrade your system?"
 if [[ $? -eq 1 ]]; then
-  sudo aptitude update
-  sudo aptitude upgrade
+  aptitude update
+  aptitude upgrade
 fi
 
-# install default-stuff
-sudo aptitude install \
+aptitude install \
   `# read-write NTFS driver for Linux` \
   ntfs-3g \
   `# do not delete main-system-dirs` \
@@ -59,6 +65,7 @@ sudo aptitude install \
   advancecomp \
   `# optimize image-size` \
   gifsicle \
+  svgo \
   optipng \
   pngcrush \
   pngnq \
@@ -68,13 +75,28 @@ sudo aptitude install \
   jhead \
   `# utilities` \
   coreutils  \
-  moreutils \
   findutils  \
+  `# fast alternative to dpkg -L and dpkg -S` \
+  dlocate \
+  `# quickly find files on the filesystem based on their name` \
+  mlocate \
+  locales \
+  `# removing unneeded localizations` \
+  localepurge \
+  sysstat \
+  tcpdump
   colordiff \
+  moreutils \
+  atop \
   ack-grep \
   ngrep \
-  atop \
+  `# interactive processes viewer` \
+  htop \
+  `# interactive I/O viewer` \
+  iotop \
   tree \
+  `# disk usage viewer` \
+  ncdu \
   rsync \
   whois \
   vim \
@@ -107,6 +129,7 @@ sudo aptitude install \
   `# get files from web` \
   wget \
   curl \
+  w3m \
   `# repo-tools`\
   git \
   subversion \
@@ -122,38 +145,25 @@ sudo aptitude install \
   ucspi-tcp \
   xpdf \
   sqlite3 \
-  `# nstall python-pygments for json print` \
-  python-pygments \
   locales \
   sysstat \
   htop \
   tcpdump
+  `# nstall python-pygments for json print` \
+  python-pygments
 
 #
 # fixing nodejs for ubuntu
 #
-sudo ln -s /usr/bin/nodejs /usr/bin/node
+ln -s /usr/bin/nodejs /usr/bin/node
 
 #
-# install java / ubuntu
-#
-
-#sudo add-apt-repository -y ppa:nilarimogard/webupd8
-#sudo add-apt-repository -y ppa:webupd8team/java
-#sudo aptitude update
-#sudo aptitude install oracle-java7-installer
-
-#
-# install java / debian
+# install java
 #
 
 #su -
-#echo "deb http://ppa.launchpad.net/nilarimogard/webupd8/ubuntu precise main" | tee /etc/apt/sources.list.d/webupd8.list
-#echo "deb-src http://ppa.launchpad.net/nilarimogard/webupd8/ubuntu precise main" | tee -a /etc/apt/sources.d/webupd8.list
-#apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4C9D234C
-#
-#echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu precise main" | tee /etc/apt/sources.list.d/webupd8team-java.list
-#echo "deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu precise main" | tee -a /etc/apt/sources.d/webupd8team-java.list
+#echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu precise main" | tee /etc/apt/sources.list.d
+#echo "deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu precise main" | tee -a /etc/apt/sources
 #apt-key adv --keyserver keyserver.ubuntu.com --recv-keys EEA14886
 #aptitude update
 #aptitude install oracle-java7-installer
@@ -204,40 +214,46 @@ sudo ln -s /usr/bin/nodejs /usr/bin/node
 
 ask_install "install webworker tools"
 if [[ $? -eq 1 ]]; then
-  sudo gem install sass --pre
-  sudo gem install compass --pre
-  sudo gem install autoprefixer-rails --pre
-  sudo gem install compass-rgbapng --pre
-  sudo gem install oily_png
+  gem install sass --pre --verbose
+  gem install compass --pre --verbose
+  gem install autoprefixer-rails --pre --verbose
+  gem install compass-rgbapng --pre --verbose
+  gem install oily_png --verbose
 
-  sudo npm install -g bower
-  sudo npm install -g psi
-  sudo npm install -g grunt-cli
-  sudo npm install -g grunt-init
-  sudo npm install -g yo
+  npm config set registry https://registry.nodejs.org/
 
-  sudo aptitude install php5-cli php5-mysql php5-curl php5-gd php5-intl php-pear php5-imagick php5-imap php5-mcrypt php5-memcached php5-ming php5-ps php5-pspell php5-recode php5-snmp php5-sqlite php5-tidy php5-xmlrpc php5-xsl php5-xdebug php5-apcu php5-geoip
+  npm install -g bower
+  npm install -g psi
+  npm install -g grunt-cli
+  npm install -g grunt-init
+  npm install -g yo
 
-  #sudo php5enmod json
-  sudo php5enmod mcrypt
-  sudo php5enmod curl
-  sudo php5enmod mysql
-  sudo php5enmod gd
-  sudo php5enmod imagick
-  sudo php5enmod apcu
+  aptitude install php5-cli php5-mysql php5-curl php5-gd php5-intl php-pear php5-imagick php5-imap php5-mcrypt php5-memcached php5-ming php5-ps php5-pspell php5-recode php5-snmp php5-sqlite php5-tidy php5-xmlrpc php5-xsl php5-xdebug php5-apcu php5-geoip
+
+  curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin
+  ln -s /usr/bin/composer.phar /usr/bin/composer
+
+
+  php5enmod json
+  php5enmod mcrypt
+  php5enmod curl
+  php5enmod mysql
+  php5enmod gd
+  php5enmod imagick
+  php5enmod apcu
 
   curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/bin
-  sudo ln -s /usr/bin/composer.phar /usr/bin/composer
+  ln -s /usr/bin/composer.phar /usr/bin/composer
 fi
 
 # clean downloaded and already installed packages
-sudo aptitude clean
+aptitude clean
 
 # update-fonts
-sudo cp -vr $( dirname "${BASH_SOURCE[0]}" )/.fonts/* /usr/share/fonts/truetype/
-sudo dpkg-reconfigure fontconfig
-sudo fc-cache -fv
+cp -vr $( dirname "${BASH_SOURCE[0]}" )/.fonts/* /usr/share/fonts/truetype/
+dpkg-reconfigure fontconfig
+fc-cache -fv
 
 # update-locate-db
-sudo updatedb
+updatedb
 

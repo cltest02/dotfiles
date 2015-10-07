@@ -1,4 +1,6 @@
-# voku’s dotfiles
+[![Stories in Ready](https://badge.waffle.io/voku/dotfiles.svg?label=ready&title=Ready)](http://waffle.io/voku/dotfiles)
+
+# dotfiles for bash / zsh
 
 ![Screenshot of my shell prompt](http://suckup.de/wp-content/uploads/2014/06/bash_prompt.png)
 
@@ -10,7 +12,7 @@
 You can clone the repository wherever you want. (I like to keep it in `~/Projects/dotfiles`, with `~/dotfiles` as a symlink.) The bootstrapper script will pull in the latest version and copy the files to your home folder.
 
 ```bash
-cd ~ ; git clone https://github.com/voku/dotfiles.git ; cd dotfiles ; ./firstInstall.sh ; ./bootstrap.sh 
+cd ~ ; git clone https://github.com/voku/dotfiles.git; cd dotfiles; ./firstInstall.sh ; ./ bootstrap.sh
 ```
 
 To update, `cd` into your local `dotfiles` repository and then:
@@ -114,9 +116,9 @@ Suggestions/improvements
 
 ## Thanks to…
 
-* [DrVanScott](https://github.com/DrVanScott/dotfiles/)
-* [TuxCoder](https://github.com/TuxCoder/dotfiles/)
-* [Mathias Bynens](https://github.com/mathiasbynens/dotfiles/)
+* [DrVanScott](https://github.com/DrVanScott/) and his [dotfiles repository](https://github.com/alrra/dotfiles)
+* [TuxCoder](https://github.com/TuxCoder/) and his [dotfiles repository](https://github.com/tuxcoder/dotfiles)
+* [Mathias Bynens](https://github.com/mathiasbynens/) and his awesome [dotfiles repository](https://github.com/mathiasbynens/dotfiles/)
 * [@ptb and his _OS X Lion Setup_ repository](https://github.com/ptb/Mac-OS-X-Lion-Setup)
 * [Ben Alman](http://benalman.com/) and his [dotfiles repository](https://github.com/cowboy/dotfiles)
 * [Chris Gerke](http://www.randomsquared.com/) and his [tutorial on creating an OS X SOE master image](http://chris-gerke.blogspot.com/2012/04/mac-osx-soe-master-image-day-7.html) + [_Insta_ repository](https://github.com/cgerke/Insta)
@@ -128,7 +130,7 @@ Suggestions/improvements
 * [Nicolas Gallagher](http://nicolasgallagher.com/) and his [dotfiles repository](https://github.com/necolas/dotfiles)
 * [Sindre Sorhus](http://sindresorhus.com/)
 * [Tom Ryder](http://blog.sanctum.geek.nz/) and his [dotfiles repository](https://github.com/tejr/dotfiles)
-* [Kevin Suttle](http://kevinsuttle.com/) and his [dotfiles repository](https://github.com/kevinSuttle/dotfiles) and [OSXDefaults project](https://github.com/kevinSuttle/OSXDefaults), which aims to provide better documentation for [`~/.osx`](http://mths.be/osx)
+* [Kevin Suttle](http://kevinsuttle.com/) and his [dotfiles repository](https://github.com/kevinSuttle/dotfiles) and [OSXDefaults project](https://github.com/kevinSuttle/OSXDefaults)
 * [Haralan Dobrev](http://hkdobrev.com/)
 
-* anyone who [contributed a patch](https://github.com/voku/dotfiles/contributors) or [made a helpful suggestion](https://github.com/mathiasbynens/dotfiles/issues)
+* anyone who [contributed a patch](https://github.com/voku/dotfiles/contributors) or [made a helpful suggestion](https://waffle.io/voku/dotfiles)

@@ -19,31 +19,28 @@ alias hgca='hg qimport -r tip ; hg qrefresh -e ; hg qfinish tip'
 # list unresolved files (since hg does not list unmerged files in the status command)
 alias hgun='hg resolve --list'
 
-in_hg()
-{
+function in_hg() {
   if [[ -d .hg ]] || $(hg summary > /dev/null 2>&1); then
     echo 1
   fi
 }
 
-hg_get_branch_name()
-{
+function hg_get_branch_name() {
   if [ $(in_hg) ]; then
     echo $(hg branch)
   fi
 }
 
-hg_prompt_info()
-{
+function hg_prompt_info {
   if [ $(in_hg) ]; then
-    local display=$(hg_get_branch_name)
+    _DISPLAY=$(hg_get_branch_name)
     echo "$ZSH_PROMPT_BASE_COLOR$ZSH_THEME_HG_PROMPT_PREFIX\
-$ZSH_THEME_REPO_NAME_COLOR$display$ZSH_PROMPT_BASE_COLOR$ZSH_THEME_HG_PROMPT_SUFFIX$ZSH_PROMPT_BASE_COLOR$(hg_dirty)$ZSH_PROMPT_BASE_COLOR"
+$ZSH_THEME_REPO_NAME_COLOR$_DISPLAY$ZSH_PROMPT_BASE_COLOR$ZSH_PROMPT_BASE_COLOR$(hg_dirty)$ZSH_THEME_HG_PROMPT_SUFFIX$ZSH_PROMPT_BASE_COLOR"
+    unset _DISPLAY
   fi
 }
 
-hg_dirty_choose()
-{
+function hg_dirty_choose {
   if [ $(in_hg) ]; then
     hg status 2> /dev/null | command grep -Eq '^\s*[ACDIM!?L]'
     if [ $pipestatus[-1] -eq 0 ]; then
@@ -56,17 +53,14 @@ hg_dirty_choose()
   fi
 }
 
-hg_dirty()
-{
+function hg_dirty {
   hg_dirty_choose $ZSH_THEME_HG_PROMPT_DIRTY $ZSH_THEME_HG_PROMPT_CLEAN
 }
 
-hgic()
-{
-  hg incoming "$@" | grep "changeset" | wc -l
+function hgic() {
+    hg incoming "$@" | grep "changeset" | wc -l
 }
 
-hgoc()
-{
-  hg outgoing "$@" | grep "changeset" | wc -l
+function hgoc() {
+    hg outgoing "$@" | grep "changeset" | wc -l
 }

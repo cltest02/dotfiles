@@ -5,7 +5,7 @@
 
 # You can set your computer name in the ~/.box-name file if you want.
 
-# Borrowing shamelessly from these red-pill themes:
+# Borrowing shamelessly from these oh-my-zsh themes:
 #   bira
 #   robbyrussell
 #
@@ -19,7 +19,7 @@ prompt_char()
 
 box_name()
 {
-    [ -f ~/.box-name ] && cat ~/.box-name || echo $SHORT_HOST || echo $HOST
+  [ -f ~/.box-name ] && cat ~/.box-name || echo ${SHORT_HOST:-$HOST}
 }
 
 local ruby_env=''

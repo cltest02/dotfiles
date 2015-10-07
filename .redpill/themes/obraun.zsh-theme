@@ -1,7 +1,7 @@
 if [ "$USER" = "root" ]; then
-  CARETCOLOR="red"
+  CARETCOLOR="red";
 else
-  CARETCOLOR="blue"
+  CARETCOLOR="blue";
 fi
 
 local return_code="%(?..%{$fg[red]%}%? ↵%{$reset_color%})"

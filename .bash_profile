@@ -62,6 +62,8 @@ shopt -s no_empty_cmd_completion;
 # Note that you can still override this with ">|".
 #set -o noclobber;
 
+source ~/.shellrc
+
 ############# EXTRA ####################################
 
 if [ -d $HOME/.redpill ]; then

@@ -2,7 +2,7 @@
 
 get_host()
 {
-  echo '@'$HOST
+	echo '@'$HOST
 }
 
 PROMPT='> '

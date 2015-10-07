@@ -5,7 +5,7 @@
 
 # You can set your computer name in the ~/.box-name file if you want.
 
-# Borrowing shamelessly from these red-pill themes:
+# Borrowing shamelessly from these oh-my-zsh themes:
 #   bira
 #   robbyrussell
 #
@@ -13,18 +13,18 @@
 
 virtualenv_info()
 {
-    [ $VIRTUAL_ENV ] && echo '('`basename $VIRTUAL_ENV`') '
+  [ $VIRTUAL_ENV ] && echo '('`basename $VIRTUAL_ENV`') '
 }
 
-prompt_char()
+prompt_char
 {
-    git branch >/dev/null 2>/dev/null && echo '⠠⠵' && return
-    echo '○'
+  git branch >/dev/null 2>/dev/null && echo '⠠⠵' && return
+  echo '○'
 }
 
 box_name()
 {
-    [ -f ~/.box-name ] && cat ~/.box-name || echo $SHORT_HOST || echo $HOST
+  [ -f ~/.box-name ] && cat ~/.box-name || echo ${SHORT_HOST:-$HOST}
 }
 
 local rvm_ruby='‹$(rvm-prompt i v g)›%{$reset_color%}'

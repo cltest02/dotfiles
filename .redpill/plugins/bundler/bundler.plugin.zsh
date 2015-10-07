@@ -4,6 +4,7 @@ alias bp="bundle package"
 alias bo="bundle open"
 alias bu="bundle update"
 alias bi="bundle_install"
+alias bcn="bundle clean"
 
 bundled_commands=(
   annotate
@@ -53,9 +54,10 @@ done
 bundle_install()
 {
   local cores_num bundler_version
-  if _bundler-installed && _within-bundled-project; then
-    bundler_version=`bundle version | cut -d' ' -f3`
 
+  if _bundler-installed && _within-bundled-project; then
+
+    bundler_version=`bundle version | cut -d' ' -f3`
     if [[ $bundler_version > '1.4.0' || $bundler_version = '1.4.0' ]]; then
 
       if [[ "$OSTYPE" = darwin* ]]; then
@@ -68,6 +70,7 @@ bundle_install()
     else
       bundle install $@
     fi
+
   else
     echo "Can't 'bundle install' outside a bundled project"
   fi

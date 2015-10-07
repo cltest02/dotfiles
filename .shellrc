@@ -1,5 +1,12 @@
 #!/bin/sh
 
+if [ "$CONFIG_SCREEN" = true ] && [ -n "$SSH_TTY" ]; then
+  if [[ ! "$TERMCAP" =~ .*screen.* ]];then
+    screen -xR remote
+    exit;
+  fi
+fi
+
 if [[ "$CONFIG_TMUX" = true ]]; then
   if [[ -z "$TMUX" ]]; then
     # get the id of a deattached session
