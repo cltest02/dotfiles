@@ -1,5 +1,6 @@
 # get the name of the branch we are on
-function git_prompt_info() {
+git_prompt_info()
+{
   if [[ "$(command git config --get red-pill.hide-status 2>/dev/null)" != "1" ]]; then
     ref=$(command git symbolic-ref HEAD 2> /dev/null) || \
     ref=$(command git rev-parse --short HEAD 2> /dev/null) || return 0
@@ -31,39 +32,35 @@ parse_git_dirty() {
 
 # get the difference between the local and remote branches
 git_remote_status() {
-    remote=${$(command git rev-parse --verify ${hook_com[branch]}@{upstream} --symbolic-full-name 2>/dev/null)/refs\/remotes\/}
-    if [[ -n ${remote} ]] ; then
-        ahead=$(command git rev-list ${hook_com[branch]}@{upstream}..HEAD 2>/dev/null | wc -l)
-        behind=$(command git rev-list HEAD..${hook_com[branch]}@{upstream} 2>/dev/null | wc -l)
+  remote=${$(command git rev-parse --verify ${hook_com[branch]}@{upstream} --symbolic-full-name 2>/dev/null)/refs\/remotes\/}
+  if [[ -n ${remote} ]] ; then
+    ahead=$(command git rev-list ${hook_com[branch]}@{upstream}..HEAD 2>/dev/null | wc -l)
+    behind=$(command git rev-list HEAD..${hook_com[branch]}@{upstream} 2>/dev/null | wc -l)
 
-        if [ $ahead -eq 0 ] && [ $behind -eq 0 ]
-        then
-          	git_remote_status="$ZSH_THEME_GIT_PROMPT_EQUAL_REMOTE"
-        elif [ $ahead -gt 0 ] && [ $behind -eq 0 ]
-        then
-            git_remote_status="$ZSH_THEME_GIT_PROMPT_AHEAD_REMOTE"
-            git_remote_status_detailed="$ZSH_THEME_GIT_PROMPT_AHEAD_REMOTE_COLOR$ZSH_THEME_GIT_PROMPT_AHEAD_REMOTE$((ahead))%{$reset_color%}"
-        elif [ $behind -gt 0 ] && [ $ahead -eq 0 ] 
-        then
-            git_remote_status="$ZSH_THEME_GIT_PROMPT_BEHIND_REMOTE"
-            git_remote_status_detailed="$ZSH_THEME_GIT_PROMPT_BEHIND_REMOTE_COLOR$ZSH_THEME_GIT_PROMPT_BEHIND_REMOTE$((behind))%{$reset_color%}"
-        elif [ $ahead -gt 0 ] && [ $behind -gt 0 ]
-        then
-            git_remote_status="$ZSH_THEME_GIT_PROMPT_DIVERGED_REMOTE"
-            git_remote_status_detailed="$ZSH_THEME_GIT_PROMPT_AHEAD_REMOTE_COLOR$ZSH_THEME_GIT_PROMPT_AHEAD_REMOTE$((ahead))%{$reset_color%}$ZSH_THEME_GIT_PROMPT_BEHIND_REMOTE_COLOR$ZSH_THEME_GIT_PROMPT_BEHIND_REMOTE$((behind))%{$reset_color%}"
-        fi
-
-        if [ $ZSH_THEME_GIT_PROMPT_REMOTE_STATUS_DETAILED ]
-        then
-            git_remote_status="$ZSH_THEME_GIT_PROMPT_REMOTE_STATUS_PREFIX$remote$git_remote_status_detailed$ZSH_THEME_GIT_PROMPT_REMOTE_STATUS_SUFFIX"
-        fi
-
-        echo $git_remote_status
+    if [ $ahead -eq 0 ] && [ $behind -eq 0 ]; then
+    	git_remote_status="$ZSH_THEME_GIT_PROMPT_EQUAL_REMOTE"
+    elif [ $ahead -gt 0 ] && [ $behind -eq 0 ]; then
+      git_remote_status="$ZSH_THEME_GIT_PROMPT_AHEAD_REMOTE"
+      git_remote_status_detailed="$ZSH_THEME_GIT_PROMPT_AHEAD_REMOTE_COLOR$ZSH_THEME_GIT_PROMPT_AHEAD_REMOTE$((ahead))%{$reset_color%}"
+    elif [ $behind -gt 0 ] && [ $ahead -eq 0 ]; then
+      git_remote_status="$ZSH_THEME_GIT_PROMPT_BEHIND_REMOTE"
+      git_remote_status_detailed="$ZSH_THEME_GIT_PROMPT_BEHIND_REMOTE_COLOR$ZSH_THEME_GIT_PROMPT_BEHIND_REMOTE$((behind))%{$reset_color%}"
+    elif [ $ahead -gt 0 ] && [ $behind -gt 0 ]; then
+      git_remote_status="$ZSH_THEME_GIT_PROMPT_DIVERGED_REMOTE"
+      git_remote_status_detailed="$ZSH_THEME_GIT_PROMPT_AHEAD_REMOTE_COLOR$ZSH_THEME_GIT_PROMPT_AHEAD_REMOTE$((ahead))%{$reset_color%}$ZSH_THEME_GIT_PROMPT_BEHIND_REMOTE_COLOR$ZSH_THEME_GIT_PROMPT_BEHIND_REMOTE$((behind))%{$reset_color%}"
     fi
+
+    if [ $ZSH_THEME_GIT_PROMPT_REMOTE_STATUS_DETAILED ]; then
+      git_remote_status="$ZSH_THEME_GIT_PROMPT_REMOTE_STATUS_PREFIX$remote$git_remote_status_detailed$ZSH_THEME_GIT_PROMPT_REMOTE_STATUS_SUFFIX"
+    fi
+
+    echo $git_remote_status
+  fi
 }
 
 # Gets the number of commits ahead from remote
-function git_commits_ahead() {
+git_commits_ahead()
+{
   if $(echo "$(command git log @{upstream}..HEAD 2> /dev/null)" | grep '^commit' &> /dev/null); then
     COMMITS=$(command git log @{upstream}..HEAD | grep '^commit' | wc -l | tr -d ' ')
     echo "$ZSH_THEME_GIT_COMMITS_AHEAD_PREFIX$COMMITS$ZSH_THEME_GIT_COMMITS_AHEAD_SUFFIX"
@@ -71,21 +68,24 @@ function git_commits_ahead() {
 }
 
 # Outputs if current branch is ahead of remote
-function git_prompt_ahead() {
+git_prompt_ahead()
+{
   if [[ -n "$(command git rev-list origin/$(current_branch)..HEAD 2> /dev/null)" ]]; then
     echo "$ZSH_THEME_GIT_PROMPT_AHEAD"
   fi
 }
 
 # Outputs if current branch is behind remote
-function git_prompt_behind() {
+git_prompt_behind()
+{
   if [[ -n "$(command git rev-list HEAD..origin/$(current_branch) 2> /dev/null)" ]]; then
     echo "$ZSH_THEME_GIT_PROMPT_BEHIND"
   fi
 }
 
 # Outputs if current branch exists on remote or not
-function git_prompt_remote() {
+git_prompt_remote()
+{
   if [[ -n "$(command git show-ref origin/$(current_branch) 2> /dev/null)" ]]; then
     echo "$ZSH_THEME_GIT_PROMPT_REMOTE_EXISTS"
   else
@@ -94,12 +94,14 @@ function git_prompt_remote() {
 }
 
 # Formats prompt string for current git commit short SHA
-function git_prompt_short_sha() {
+git_prompt_short_sha()
+{
   SHA=$(command git rev-parse --short HEAD 2> /dev/null) && echo "$ZSH_THEME_GIT_PROMPT_SHA_BEFORE$SHA$ZSH_THEME_GIT_PROMPT_SHA_AFTER"
 }
 
 # Formats prompt string for current git commit long SHA
-function git_prompt_long_sha() {
+git_prompt_long_sha()
+{
   SHA=$(command git rev-parse HEAD 2> /dev/null) && echo "$ZSH_THEME_GIT_PROMPT_SHA_BEFORE$SHA$ZSH_THEME_GIT_PROMPT_SHA_AFTER"
 }
 
@@ -153,7 +155,8 @@ git_prompt_status() {
 #compare the provided version of git to the version installed and on path
 #prints 1 if input version <= installed version
 #prints -1 otherwise
-function git_compare_version() {
+git_compare_version()
+{
   local INPUT_GIT_VERSION=$1;
   local INSTALLED_GIT_VERSION
   INPUT_GIT_VERSION=(${(s/./)INPUT_GIT_VERSION});
