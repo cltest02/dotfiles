@@ -25,12 +25,12 @@ enable-proxy ()
 	about 'Enables proxy settings for Bash, npm and SSH'
 	group 'proxy'
 
-	export http_proxy=$BASH_IT_HTTP_PROXY
-	export https_proxy=$BASH_IT_HTTPS_PROXY
+	export http_proxy=$REDPILL_HTTP_PROXY
+	export https_proxy=$REDPILL_HTTPS_PROXY
 	export HTTP_PROXY=$http_proxy
 	export HTTPS_PROXY=$https_proxy
 	export ALL_PROXY=$http_proxy
-	export no_proxy=$BASH_IT_NO_PROXY
+	export no_proxy=$REDPILL_NO_PROXY
 	export NO_PROXY=$no_proxy
 	echo "Enabled proxy environment variables"
 
@@ -44,12 +44,12 @@ enable-proxy-alt ()
 	about 'Enables alternate proxy settings for Bash, npm and SSH'
 	group 'proxy'
 
-	export http_proxy=$BASH_IT_HTTP_PROXY_ALT
-	export https_proxy=$BASH_IT_HTTPS_PROXY_ALT
+	export http_proxy=$REDPILL_HTTP_PROXY_ALT
+	export https_proxy=$REDPILL_HTTPS_PROXY_ALT
 	export HTTP_PROXY=$http_proxy
 	export HTTPS_PROXY=$https_proxy
 	export ALL_PROXY=$http_proxy
-	export no_proxy=$BASH_IT_NO_PROXY
+	export no_proxy=$REDPILL_NO_PROXY
 	export NO_PROXY=$no_proxy
 	echo "Enabled alternate proxy environment variables"
 
@@ -66,7 +66,7 @@ show-proxy ()
 	echo ""
 	echo "Environment Variables"
 	echo "====================="
-	env | grep -i "proxy" | grep -v "BASH_IT"
+	env | grep -i "proxy" | grep -v "REDPILL"
 
 	bash-it-show-proxy
 	npm-show-proxy
@@ -86,10 +86,10 @@ Bash-it provides support for enabling/disabling proxy settings for various shell
 The following backends are currently supported (in addition to the shell's environment variables): Git, SVN, npm, ssh
 
 Bash-it uses the following variables to set the shell's proxy settings when you call 'enable-proxy'.
-These variables are best defined in a custom script in bash-it's custom script folder ('$BASH_IT/custom'),
-e.g. '$BASH_IT/custom/proxy.env.bash'
-* BASH_IT_HTTP_PROXY and BASH_IT_HTTPS_PROXY: Define the proxy URL to be used, e.g. 'http://localhost:1234'
-* BASH_IT_NO_PROXY: A comma-separated list of proxy exclusions, e.g. '127.0.0.1,localhost'
+These variables are best defined in a custom script in bash-it's custom script folder ('$REDPILL/custom'),
+e.g. '$REDPILL/custom/proxy.env.bash'
+* REDPILL_HTTP_PROXY and REDPILL_HTTPS_PROXY: Define the proxy URL to be used, e.g. 'http://localhost:1234'
+* REDPILL_NO_PROXY: A comma-separated list of proxy exclusions, e.g. '127.0.0.1,localhost'
 
 Run 'glossary proxy' to show the available proxy functions with a short description.
 EOF
@@ -107,7 +107,7 @@ bash-it-show-proxy ()
 	echo "============================="
 	echo "(These variables will be used to set the proxy when you call 'enable-proxy')"
 	echo ""
-	env | grep -e "BASH_IT.*PROXY"
+	env | grep -e "REDPILL.*PROXY"
 }
 
 npm-show-proxy ()
@@ -141,8 +141,8 @@ npm-enable-proxy ()
 	about 'Enables npm proxy settings'
 	group 'proxy'
 
-	local my_http_proxy=${1:-$BASH_IT_HTTP_PROXY}
-	local my_https_proxy=${2:-$BASH_IT_HTTPS_PROXY}
+	local my_http_proxy=${1:-$REDPILL_HTTP_PROXY}
+	local my_https_proxy=${2:-$REDPILL_HTTPS_PROXY}
 
 	if $(command -v npm &> /dev/null) ; then
 		npm config set proxy $my_http_proxy
@@ -185,8 +185,8 @@ git-global-enable-proxy ()
 	if $(command -v git &> /dev/null) ; then
 		git-global-disable-proxy
 
-		git config --global --add http.proxy $BASH_IT_HTTP_PROXY
-		git config --global --add https.proxy $BASH_IT_HTTPS_PROXY
+		git config --global --add http.proxy $REDPILL_HTTP_PROXY
+		git config --global --add https.proxy $REDPILL_HTTPS_PROXY
 		echo "Enabled global Git proxy settings"
 	fi
 }
@@ -224,8 +224,8 @@ git-enable-proxy ()
 	if $(command -v git &> /dev/null) ; then
 		git-disable-proxy
 
-		git config --add http.proxy $BASH_IT_HTTP_PROXY
-		git config --add https.proxy $BASH_IT_HTTPS_PROXY
+		git config --add http.proxy $REDPILL_HTTP_PROXY
+		git config --add https.proxy $REDPILL_HTTPS_PROXY
 		echo "Enabled Git project proxy settings"
 	fi
 }
@@ -296,9 +296,9 @@ svn-enable-proxy ()
 	group 'proxy'
 
 	if $(command -v svn &> /dev/null) && $(command -v python &> /dev/null) ; then
-		local my_http_proxy=${1:-$BASH_IT_HTTP_PROXY}
+		local my_http_proxy=${1:-$REDPILL_HTTP_PROXY}
 
-		python - "$my_http_proxy" "$BASH_IT_NO_PROXY" <<END
+		python - "$my_http_proxy" "$REDPILL_NO_PROXY" <<END
 import ConfigParser, os, sys, urlparse
 pieces = urlparse.urlparse(sys.argv[1])
 host = pieces.hostname

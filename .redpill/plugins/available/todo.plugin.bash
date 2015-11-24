@@ -3,13 +3,13 @@
 # you may override any of the exported variables below in your .bash_profile
 
 if [ -z "$TODO_DIR" ]; then
-    export TODO_DIR=$BASH_IT/custom  # store todo items in user's custom dir, ignored by git
+    export TODO_DIR=$REDPILL/custom  # store todo items in user's custom dir, ignored by git
 fi
 if [ -z "$TODOTXT_DEFAULT_ACTION" ]; then
     export TODOTXT_DEFAULT_ACTION=ls       # typing 't' by itself will list current todos
 fi
 if [ -z "$TODO_SRC_DIR" ]; then
-    export TODO_SRC_DIR=$BASH_IT/plugins/available/todo
+    export TODO_SRC_DIR=$REDPILL/plugins/available/todo
 fi
 
 # respect ENV var set in .bash_profile, default is 't'

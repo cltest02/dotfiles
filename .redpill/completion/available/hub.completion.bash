@@ -17,9 +17,6 @@ create
 browse
 compare
 ci-status
-release
-issue
-update
 EOF
     __git_list_all_commands_without_hub
   }
@@ -276,7 +273,7 @@ EOF
       echo $GITHUB_USER
       return
     fi
-    local line h k v host=${1:-github.com} config=${HUB_CONFIG:-~/.config/gh}
+    local line h k v host=${1:-github.com} config=${HUB_CONFIG:-~/.config/hub}
     if [ -f "$config" ]; then
       while read line; do
         if [ "$line" = "---" ]; then
@@ -360,7 +357,6 @@ EOF
   }
 
   # Enable completion for hub even when not using the alias
-  complete -o bashdefault -o default -o nospace -F _git gh 2>/dev/null \
-    || complete -o default -o nospace -F _git gh
+  complete -o bashdefault -o default -o nospace -F _git hub 2>/dev/null \
+    || complete -o default -o nospace -F _git hub
 fi
-
