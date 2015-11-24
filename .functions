@@ -1191,6 +1191,8 @@ o()
     openCommand=xdg-open
   elif open --version /dev/null > /dev/null 2>&1; then
     openCommand=open
+  elif cygstart --version /dev/null > /dev/null 2>&1; then
+    openCommand=cygstart
   fi
 
   if [ $# -eq 0 ]; then

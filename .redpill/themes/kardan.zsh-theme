@@ -1,7 +1,6 @@
 # Simple theme based on my old zsh settings.
 
-get_host()
-{
+function get_host {
 	echo '@'$HOST
 }
 
