@@ -7,6 +7,11 @@ if [ "$CONFIG_SCREEN" = true ] && [ -n "$SSH_TTY" ]; then
   fi
 fi
 
+if [ "$CONFIG_BYOBU" = true ] && [ -n "$SSH_TTY" ] && [ -z "$BYOBU_BACKEND" ]; then
+  byobu
+  exit;
+fi
+
 if [[ "$CONFIG_TMUX" = true ]]; then
   if [[ -z "$TMUX" ]]; then
     # get the id of a deattached session
