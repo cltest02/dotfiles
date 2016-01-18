@@ -13,8 +13,8 @@ if [ -f /etc/zsh/zshrc ]; then
   . /etc/zsh/zshrc
 fi
 
-source ~/.shellrc
 source ~/.zprofile
+source ~/.shellrc
 
 ## time on the right side
 strlen () {
