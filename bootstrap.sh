@@ -68,6 +68,18 @@ doIt()
     chsh -s $(which zsh)
   fi
 
+  #vim doesn't like ^M (CRLF) in .vim files. Make sure this will not happen on cygwin / windows systems
+  if [ "$(git config --system --get core.autocrlf)" == "true" ]; then
+    crlf_warning="--system "
+  fi
+  if [ "$(git config --global --get core.autocrlf)" == "true" ]; then
+    crlf_warning="${crlf_warning}--global"
+  fi
+  if [ -n "$crlf_warning" ]; then
+    echo "git config 'core.autocrlf' is currently true in '$crlf_warning'. Unset temporarly, otherwise VIM may have big problems!"
+    return 1
+  fi
+
   # install vim-plugin-manager
   if [ ! -d ~/.vim/bundle/vundle ]; then
     mkdir ~/.vim/bundle

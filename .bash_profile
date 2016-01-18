@@ -8,6 +8,7 @@ fi
 
 # windows git bash is too minimal
 if [[ "$(bash --version)" == *-pc-msys* ]]; then
+  . ~/.extra
   return 0
 fi
 

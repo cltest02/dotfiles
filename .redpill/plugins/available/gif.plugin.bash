@@ -3,7 +3,7 @@ about-plugin 'gif helper functions'
 
 # From https://gist.github.com/SlexAxton/4989674#comment-1199058
 # Requirements (Mac OS X using Homebrew): brew install ffmpeg gifsicle imagemagick
-gifify {
+function gifify {
   about 'Converts a .mov file into an into an animated GIF.'
   group 'gif'
   param '1: MOV file name'
