@@ -31,12 +31,13 @@ My `~/.config_dotfiles` looks something like this:
 #!/bin/bash
 
 CONFIG_DEFAULT_USER="lars"
-CONFIG_TMUX=false
 CONFIG_ZSH_PLUGINS="(git bower composer ruby bundler gem)"
 CONFIG_ZSH_THEME="voku"
 CONFIG_BASH_THEME="voku"
 CONFIG_CHARSET_UTF8=true
 CONFIG_LANG="en_US"
+CONFIG_TERM_LOCAL="" # terms: screen byobu tmux
+CONFIG_TERM_SSH=""
 ```
 
 If `~/.extra` exists, it will be sourced along with the other files. You can use this to add a few custom commands without the need to fork this entire repository, or to add commands you don’t want to commit to a public repository.
