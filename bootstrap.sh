@@ -45,7 +45,11 @@ doIt()
 
   # copy dotfiles
   git config --global -l | LANG=C sort > /tmp/oldgit$$
-  rsync --exclude-from .IGNORE -avhi --no-perms . ~/
+  if which rsync >/dev/null 2>&1; then
+    rsync --exclude-from .IGNORE -avhi --no-perms . ~/
+  else
+    cp -pvr `ls -A | grep -v ".git/" | grep -v "bootstrap.sh"` ~/
+  fi
 	source ~/.bash_profile
 
   git config --global -l | LANG=C sort > /tmp/newgit$$
@@ -98,7 +102,11 @@ doIt()
 
 dryRun()
 {
-	rsync --exclude-from .IGNORE -avhni --no-perms . ~/
+  if which rsync >/dev/null 2>&1; then
+	  rsync --exclude-from .IGNORE -avhni --no-perms . ~/
+  else
+    diff -r . ~/
+  fi
 	source ~/.bash_profile
 }
 
