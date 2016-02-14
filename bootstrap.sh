@@ -48,7 +48,16 @@ doIt()
   if which rsync >/dev/null 2>&1; then
     rsync --exclude-from .IGNORE -avhi --no-perms . ~/
   else
-    cp -pvr `ls -A | grep -v ".git/" | grep -v "bootstrap.sh"` ~/
+
+    ignore=""
+    while read -ra line; do
+      line=$(echo $line | sed s/\n//g)
+      if [[ ! -z $line ]]; then
+        ignore="$ignore|$line"
+      fi
+    done < .IGNORE
+
+    cp -pvr `ls -A | grep -vE "foobar$ignore"` ~/
   fi
 	source ~/.bash_profile
 
