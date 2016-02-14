@@ -51,13 +51,15 @@ doIt()
 
     ignore=""
     while read -ra line; do
-      line=$(echo $line | sed s/\n//g)
+      line=$(echo $line | sed "s/\n//g")
       if [[ ! -z $line ]]; then
         ignore="$ignore|$line"
       fi
     done < .IGNORE
 
-    cp -pvr `ls -A | grep -vE "foobar$ignore"` ~/
+    ignore=$(echo $ignore | sed "s/\./\\\./g")
+
+    cp -pvr `ls -A | grep -vE ".git$ignore"` ~/
   fi
 	source ~/.bash_profile
 
