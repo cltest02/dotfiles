@@ -664,6 +664,15 @@ mkd()
 }
 
 # -------------------------------------------------------------------
+# mkf: Create a new directory, enter it and create a file
+#
+# usage: mkf /tmp/lall/foo.txt
+mkf()
+{
+  mkd $(dirname "$@") && touch $@
+}
+
+# -------------------------------------------------------------------
 # passwdgen: a password generator
 #
 # usage: passwdgen 8
