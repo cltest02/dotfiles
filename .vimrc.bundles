@@ -85,7 +85,7 @@ Bundle 'terryma/vim-multiple-cursors'
 
 " ----------------------------------------
 
-Bundle 'valloric/MatchTagAlways'
+"Bundle 'valloric/MatchTagAlways'
 
 " ----------------------------------------
 
@@ -365,15 +365,26 @@ endif
 
 " ----------------------------------------
 
-Bundle 'bling/vim-airline'
+Bundle 'vim-airline/vim-airline'
+Bundle 'vim-airline/vim-airline-themes'
 
-let g:airline_theme                           = 'molokai'
-let g:airline#extensions#tabline#enabled      = 1
-let g:airline#extensions#tmuxline#enabled     = 0
-let g:airline#extensions#bufferline#enabled   = 0
-let g:airline#extensions#tabline#left_sep     = ' '
-let g:airline#extensions#tabline#left_alt_sep = '|'
+let g:airline_theme = 'solarized'
+
+let g:solarized_termcolors = 256
+let g:solarized_termtrans = 1
+let g:solarized_contrast = "normal"
+let g:solarized_visibility = "normal"
+
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#tmuxline#enabled = 0
+let g:airline#extensions#bufferline#enabled = 0
 let g:airline#extensions#syntastic#enabled    = 1
+let g:airline#extensions#hunks#non_zero_only = 1
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#left_sep = ' '
+let g:airline#extensions#tabline#left_alt_sep = '|'
+let g:airline#extensions#tabline#fnamemod = ':t'
+let g:airline#extensions#tabline#buffer_min_count = 1
 
 " ----------------------------------------
 
