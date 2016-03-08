@@ -16,8 +16,8 @@ about-plugin '                              z is DEPRECATED, use fasd instead'
 #   * z -l foo  # list all dirs matching foo (by frecency)
 
 if [ -e $REDPILL/plugins/enabled/fasd.plugin.bash ]; then
-  printf '%s\n' 'sorry, the z plugin is incompatible with the fasd plugin. you may use either, but not both.'
-  return
+    printf '%s\n' 'sorry, the z plugin is incompatible with the fasd plugin. you may use either, but not both.'
+    return
 fi
 
 z() {

@@ -1,5 +1,5 @@
 # Helper function loading various enable-able files
-function _load_red_pill_files() {
+_load_red_pill_files() {
   subdirectory="$1"
   if [ ! -d "${RED_PILL}/${subdirectory}/enabled" ]
   then
@@ -15,21 +15,24 @@ function _load_red_pill_files() {
 }
 
 # Function for reloading aliases
-function reload_aliases() {
+reload_aliases()
+{
   _load_red_pill_files "aliases"
 }
 
 # Function for reloading auto-completion
-function reload_completion() {
+reload_completion()
+{
   _load_red_pill_files "completion"
 }
 
 # Function for reloading plugins
-function reload_plugins() {
+reload_plugins()
+{
   _load_red_pill_files "plugins"
 }
 
-red-pill ()
+red-pill()
 {
     about 'red-pill help and maintenance'
     param '1: verb [one of: help | show | enable | disable ]'
@@ -75,7 +78,7 @@ red-pill ()
     $func $*
 }
 
-_is_function ()
+_is_function()
 {
     _about 'sets $? to true if parameter is the name of a function'
     _param '1: name of alleged function'
@@ -83,7 +86,7 @@ _is_function ()
     [ -n "$(LANG=C type -t $1 2>/dev/null | grep 'function')" ]
 }
 
-_red-pill-aliases ()
+_red-pill-aliases()
 {
     _about 'summarizes available red_pill aliases'
     _group 'lib'
@@ -91,7 +94,7 @@ _red-pill-aliases ()
     _red-pill-describe "aliases" "an" "alias" "Alias"
 }
 
-_red-pill-completions ()
+_red-pill-completions()
 {
     _about 'summarizes available red_pill completions'
     _group 'lib'
@@ -99,7 +102,7 @@ _red-pill-completions ()
     _red-pill-describe "completion" "a" "completion" "Completion"
 }
 
-_red-pill-plugins ()
+_red-pill-plugins()
 {
     _about 'summarizes available red_pill plugins'
     _group 'lib'
@@ -107,7 +110,7 @@ _red-pill-plugins ()
     _red-pill-describe "plugins" "a" "plugin" "Plugin"
 }
 
-_red-pill-describe ()
+_red-pill-describe()
 {
     _about 'summarizes available red_pill components'
     _param '1: subdirectory'
@@ -139,7 +142,7 @@ _red-pill-describe ()
     printf '%s\n' "$ red-pill disable $file_type <$file_type name> -or- $ red-pill disable $file_type all"
 }
 
-_disable-plugin ()
+_disable-plugin()
 {
     _about 'disables red_pill plugin'
     _param '1: plugin name'
@@ -149,7 +152,7 @@ _disable-plugin ()
     _disable-thing "plugins" "plugin" $1
 }
 
-_disable-alias ()
+_disable-alias()
 {
     _about 'disables red_pill alias'
     _param '1: alias name'
@@ -159,7 +162,7 @@ _disable-alias ()
     _disable-thing "aliases" "alias" $1
 }
 
-_disable-completion ()
+_disable-completion()
 {
     _about 'disables red_pill completion'
     _param '1: completion name'
@@ -169,7 +172,7 @@ _disable-completion ()
     _disable-thing "completion" "completion" $1
 }
 
-_disable-thing ()
+_disable-thing()
 {
     _about 'disables a red_pill component'
     _param '1: subdirectory'
@@ -207,7 +210,7 @@ _disable-thing ()
     printf '%s\n' "$file_entity disabled."
 }
 
-_enable-plugin ()
+_enable-plugin()
 {
     _about 'enables red_pill plugin'
     _param '1: plugin name'
@@ -217,7 +220,7 @@ _enable-plugin ()
     _enable-thing "plugins" "plugin" $1
 }
 
-_enable-alias ()
+_enable-alias()
 {
     _about 'enables red_pill alias'
     _param '1: alias name'
@@ -227,7 +230,7 @@ _enable-alias ()
     _enable-thing "aliases" "alias" $1
 }
 
-_enable-completion ()
+_enable-completion()
 {
     _about 'enables red_pill completion'
     _param '1: completion name'
@@ -237,7 +240,7 @@ _enable-completion ()
     _enable-thing "completion" "completion" $1
 }
 
-_enable-thing ()
+_enable-thing()
 {
     cite _about _param _example
     _about 'enables a red_pill component'
@@ -339,7 +342,7 @@ _help-plugins()
     rm $grouplist 2> /dev/null
 }
 
-all_groups ()
+all_groups()
 {
     about 'displays all unique metadata groups'
     group 'lib'
@@ -353,3 +356,4 @@ all_groups ()
     cat $file | sort | uniq
     rm $file
 }
+

@@ -1,10 +1,9 @@
 # Archlinux zsh aliases and functions
-# Usage is also described at https://github.com/robbyrussell/red-pill/wiki/Plugins
+# Usage is also described at https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins
 
 # Look for yaourt, and add some useful functions if we have it.
-if [[ -x `which yaourt` ]]; then
-  upgrade()
-  {
+if [[ -x `command -v yaourt` ]]; then
+  upgrade () {
     yaourt -Syu
   }
   alias yaconf='yaourt -C'        # Fix all configuration files with vimdiff
@@ -21,25 +20,22 @@ if [[ -x `which yaourt` ]]; then
   alias yalocs='yaourt -Qs'        # Search for package(s) in the local database
   alias yalst='yaourt -Qe'         # List installed packages, even those installed from AUR (they're tagged as "local")
   alias yaorph='yaourt -Qtd'       # Remove orphans using yaourt
-
   # Additional yaourt alias examples
-  if [[ -x `which abs` && -x `which aur` ]]; then
+  if [[ -x `command -v abs` && -x `command -v aur` ]]; then
     alias yaupd='yaourt -Sy && sudo abs && sudo aur'  # Update and refresh the local package, ABS and AUR databases against repositories
-  elif [[ -x `which abs` ]]; then
+  elif [[ -x `command -v abs` ]]; then
     alias yaupd='yaourt -Sy && sudo abs'   # Update and refresh the local package and ABS databases against repositories
-  elif [[ -x `which aur` ]]; then
+  elif [[ -x `command -v aur` ]]; then
     alias yaupd='yaourt -Sy && sudo aur'   # Update and refresh the local package and AUR databases against repositories
   else
     alias yaupd='yaourt -Sy'               # Update and refresh the local package database against repositories
   fi
-
   alias yainsd='yaourt -S --asdeps'        # Install given package(s) as dependencies of another package
   alias yamir='yaourt -Syy'                # Force refresh of all package lists after updating /etc/pacman.d/mirrorlist
 else
-  upgrade()
-  {
-    sudo pacman -Syu
-  }
+ upgrade() {
+   sudo pacman -Syu
+ }
 fi
 
 # Pacman - https://wiki.archlinux.org/index.php/Pacman_Tips
@@ -52,38 +48,34 @@ alias pacrep='pacman -Si'              # Display information about a given packa
 alias pacreps='pacman -Ss'             # Search for package(s) in the repositories
 alias pacloc='pacman -Qi'              # Display information about a given package in the local database
 alias paclocs='pacman -Qs'             # Search for package(s) in the local database
-
 # Additional pacman alias examples
-if [[ -x `which abs` && -x `which aur` ]]; then
+if [[ -x `command -v abs` && -x `command -v aur` ]]; then
   alias pacupd='sudo pacman -Sy && sudo abs && sudo aur'  # Update and refresh the local package, ABS and AUR databases against repositories
-elif [[ -x `which abs` ]]; then
+elif [[ -x `command -v abs` ]]; then
   alias pacupd='sudo pacman -Sy && sudo abs'              # Update and refresh the local package and ABS databases against repositories
-elif [[ -x `which aur` ]]; then
+elif [[ -x `command -v aur` ]]; then
   alias pacupd='sudo pacman -Sy && sudo aur'              # Update and refresh the local package and AUR databases against repositories
 else
   alias pacupd='sudo pacman -Sy'     # Update and refresh the local package database against repositories
 fi
-
 alias pacinsd='sudo pacman -S --asdeps'        # Install given package(s) as dependencies of another package
 alias pacmir='sudo pacman -Syy'                # Force refresh of all package lists after updating /etc/pacman.d/mirrorlist
 
 # https://bbs.archlinux.org/viewtopic.php?id=93683
-paclist()
-{
-  sudo pacman -Qei $(pacman -Qu|cut -d" " -f 1)|awk ' BEGIN {FS=":"}/^Name/{printf("\033[1;36m%s\033[1;37m", $2)}/^Description/{print $2}'
+paclist() {
+  LC_ALL=C pacman -Qei $(pacman -Qu|cut -d" " -f 1)|awk ' BEGIN {FS=":"}/^Name/{printf("\033[1;36m%s\033[1;37m", $2)}/^Description/{print $2}'
 }
 
 alias paclsorphans='sudo pacman -Qdt'
 alias pacrmorphans='sudo pacman -Rs $(pacman -Qtdq)'
 
-pacdisowned()
-{
-  local tmp=${TMPDIR-/tmp}/pacman-disowned-$UID-$$
-  local db=$tmp/db
-  local fs=$tmp/fs
+pacdisowned() {
+  tmp=${TMPDIR-/tmp}/pacman-disowned-$UID-$$
+  db=$tmp/db
+  fs=$tmp/fs
 
   mkdir "$tmp"
-  trap 'rm -rf "$tmp"' EXIT
+  trap  'rm -rf "$tmp"' EXIT
 
   pacman -Qlq | sort -u > "$db"
 
@@ -94,24 +86,18 @@ pacdisowned()
   comm -23 "$fs" "$db"
 }
 
-pacmanallkeys()
-{
-  # get all keys for developers and trusted users
+pacmanallkeys() {
+  # Get all keys for developers and trusted users
   curl https://www.archlinux.org/{developers,trustedusers}/ |
   awk -F\" '(/pgp.mit.edu/) {sub(/.*search=0x/,"");print $1}' |
   xargs sudo pacman-key --recv-keys
 }
 
-pacmansignkeys()
-{
+pacmansignkeys() {
   for key in $*; do
     sudo pacman-key --recv-keys $key
     sudo pacman-key --lsign-key $key
-    printf 'trust\n3\n' | sudo gpg \
-      --homedir /etc/pacman.d/gnupg \
-      --no-permission-warning \
-      --command-fd 0 \
-      --edit-key $key
+    printf 'trust\n3\n' | sudo gpg --homedir /etc/pacman.d/gnupg \
+      --no-permission-warning --command-fd 0 --edit-key $key
   done
 }
-

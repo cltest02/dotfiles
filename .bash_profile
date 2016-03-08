@@ -7,10 +7,12 @@ if [[ $- != *i* ]] || [ -z "$PS1" ]; then
 fi
 
 # windows git bash is too minimal
-if [[ "$(bash --version)" == *-pc-msys* ]]; then
+bashVersionTmp="$(bash --version)" | grep -v "version 4"
+if [[ "$bashVersionTmp" == *-pc-msys* ]]; then
   . ~/.extra
   return 0
 fi
+unset bashVersionTmp
 
 ############# INCLUDE ####################################
 
@@ -62,8 +64,6 @@ shopt -s no_empty_cmd_completion;
 # Do not overwrite files when redirecting using ">".
 # Note that you can still override this with ">|".
 #set -o noclobber;
-
-source ~/.shellrc
 
 ############# EXTRA ####################################
 

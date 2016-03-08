@@ -31,12 +31,13 @@ My `~/.config_dotfiles` looks something like this:
 #!/bin/bash
 
 CONFIG_DEFAULT_USER="lars"
-CONFIG_TMUX=false
 CONFIG_ZSH_PLUGINS="(git bower composer ruby bundler gem)"
 CONFIG_ZSH_THEME="voku"
 CONFIG_BASH_THEME="voku"
 CONFIG_CHARSET_UTF8=true
 CONFIG_LANG="en_US"
+CONFIG_TERM_LOCAL="" # terms: screen byobu tmux
+CONFIG_TERM_SSH=""
 ```
 
 If `~/.extra` exists, it will be sourced along with the other files. You can use this to add a few custom commands without the need to fork this entire repository, or to add commands you don’t want to commit to a public repository.
@@ -45,12 +46,15 @@ My `~/.extra` looks something like this:
 
 ```bash
 #!/bin/bash
+
 GIT_AUTHOR_NAME="Lars Moelleken"
 GIT_COMMITTER_NAME="$GIT_AUTHOR_NAME"
 git config --global user.name "$GIT_AUTHOR_NAME"
+
 GIT_AUTHOR_EMAIL="lars@moelleken.org"
 GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"
 git config --global user.email "$GIT_AUTHOR_EMAIL"
+
 git config --global push.default simple
 ```
 

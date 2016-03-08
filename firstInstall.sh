@@ -230,9 +230,6 @@ if [[ $? -eq 1 ]]; then
 
   aptitude install php5-cli php5-mysql php5-curl php5-gd php5-intl php-pear php5-imagick php5-imap php5-mcrypt php5-memcached php5-ming php5-ps php5-pspell php5-recode php5-snmp php5-sqlite php5-tidy php5-xmlrpc php5-xsl php5-xdebug php5-apcu php5-geoip
 
-  curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin
-  ln -s /usr/bin/composer.phar /usr/bin/composer
-
 
   php5enmod json
   php5enmod mcrypt
@@ -242,7 +239,7 @@ if [[ $? -eq 1 ]]; then
   php5enmod imagick
   php5enmod apcu
 
-  curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/bin
+  curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin
   ln -s /usr/bin/composer.phar /usr/bin/composer
 fi
 
