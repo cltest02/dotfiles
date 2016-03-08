@@ -104,9 +104,11 @@ doIt()
     read -p "Do you want to update vim-plugins? (y/n) " -n 1 yesOrNo
     echo
     if [[ $yesOrNo =~ ^[Yy]$ ]]; then
-      cd ~/.vim/bundle/vundle
-      git pull
-      vim +BundleUpdate +qall
+      (
+        cd ~/.vim/bundle/vundle
+        git pull
+        vim +BundleUpdate +qall
+      )
     fi
   fi
 }
