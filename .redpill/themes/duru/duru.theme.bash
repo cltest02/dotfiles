@@ -6,7 +6,8 @@ SCM_THEME_PROMPT_DIRTY=" ${red}with changes"
 SCM_THEME_PROMPT_CLEAN=""
 
 venv() {
-  if [ ! -z "$VIRTUAL_ENV" ]; then
+  if [ ! -z "$VIRTUAL_ENV" ]
+  then
     local env=$VIRTUAL_ENV
     echo "${gray} in ${orange}${env##*/} "
   fi

@@ -73,18 +73,18 @@ alias mydeb='time dpkg-buildpackage -rfakeroot -us -uc'
 # If packagename is not given as 2nd argument the function will ask for it and guess the default by taking
 # the part after the / from the ppa name wich is sometimes the right name for the package you want to install
 aar() {
-  if [ -n "$2" ]; then
-    PACKAGE=$2
-  else
-    read "PACKAGE?Type in the package name to install/upgrade with this ppa [${1##*/}]: "
-  fi
-
-  if [ -z "$PACKAGE" ]; then
-    PACKAGE=${1##*/}
-  fi
-
-  sudo apt-add-repository $1 && sudo apt-get update
-  sudo apt-get install $PACKAGE
+	if [ -n "$2" ]; then
+		PACKAGE=$2
+	else
+		read "PACKAGE?Type in the package name to install/upgrade with this ppa [${1##*/}]: "
+	fi
+	
+	if [ -z "$PACKAGE" ]; then
+		PACKAGE=${1##*/}
+	fi
+	
+	sudo apt-add-repository $1 && sudo apt-get update
+	sudo apt-get install $PACKAGE
 }
 
 # Prints apt history
@@ -95,8 +95,7 @@ aar() {
 #   apt-history rollback
 #   apt-history list
 # Based On: http://linuxcommando.blogspot.com/2008/08/how-to-show-apt-log-history.html
-apt-history()
-{
+apt-history () {
   case "$1" in
     install)
       zgrep --no-filename 'install ' $(ls -rt /var/log/dpkg*)
@@ -125,26 +124,23 @@ apt-history()
 }
 
 # Kernel-package building shortcut
-kerndeb()
-{
-  # temporarily unset MAKEFLAGS ( '-j3' will fail )
-  MAKEFLAGS=$( print - $MAKEFLAGS | perl -pe 's/-j\s*[\d]+//g' )
-  print '$MAKEFLAGS set to '"'$MAKEFLAGS'"
-  appendage='-custom' # this shows up in $ (uname -r )
-  revision=$(date +"%Y%m%d") # this shows up in the .deb file name
+kerndeb () {
+    # temporarily unset MAKEFLAGS ( '-j3' will fail )
+    MAKEFLAGS=$( print - $MAKEFLAGS | perl -pe 's/-j\s*[\d]+//g' )
+    print '$MAKEFLAGS set to '"'$MAKEFLAGS'"
+	appendage='-custom' # this shows up in $ (uname -r )
+    revision=$(date +"%Y%m%d") # this shows up in the .deb file name
 
-  make-kpkg clean
+    make-kpkg clean
 
-  time fakeroot make-kpkg \
-    --append-to-version "$appendage" \
-    --revision "$revision" kernel_image kernel_headers
+    time fakeroot make-kpkg --append-to-version "$appendage" --revision \
+        "$revision" kernel_image kernel_headers
 }
 
 # List packages by size
-apt-list-packages
-{
-  dpkg-query -W --showformat='${Installed-Size} ${Package} ${Status}\n' \
-    | grep -v deinstall \
-    | sort -n \
-    | awk '{print $1" "$2}'
+function apt-list-packages {
+    dpkg-query -W --showformat='${Installed-Size} ${Package} ${Status}\n' | \
+    grep -v deinstall | \
+    sort -n | \
+    awk '{print $1" "$2}'
 }

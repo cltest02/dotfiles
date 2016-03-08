@@ -20,6 +20,7 @@ THEME_BATTERY_PERCENTAGE_CHECK=${THEME_BATTERY_PERCENTAGE_CHECK:=true}
 
 SCM_GIT_SHOW_DETAILS=${SCM_GIT_SHOW_DETAILS:=true}
 SCM_GIT_SHOW_REMOTE_INFO=${SCM_GIT_SHOW_REMOTE_INFO:=auto}
+SCM_GIT_IGNORE_UNTRACKED=${SCM_GIT_IGNORE_UNTRACKED:=false}
 
 SCM_GIT='git'
 SCM_GIT_CHAR='±'
@@ -95,7 +96,9 @@ function git_prompt_vars {
   local details=''
   SCM_STATE=${GIT_THEME_PROMPT_CLEAN:-$SCM_THEME_PROMPT_CLEAN}
   if [[ "$(git config --get bash-it.hide-status)" != "1" ]]; then
-    local status="$(git status -b --porcelain 2> /dev/null || git status --porcelain 2> /dev/null)"
+    [[ "${SCM_GIT_IGNORE_UNTRACKED}" = "true" ]] && local git_status_flags='-uno'
+    local status="$(git status -b --porcelain ${git_status_flags} 2> /dev/null ||
+		            git status --porcelain ${git_status_flags} 2> /dev/null)"
     if [[ -n "${status}" ]] && [[ "${status}" != "\n" ]] && [[ -n "$(grep -v ^# <<< "${status}")" ]]; then
       SCM_DIRTY=1
       if [[ "${SCM_GIT_SHOW_DETAILS}" = "true" ]]; then
@@ -115,7 +118,7 @@ function git_prompt_vars {
   local ref=$(git symbolic-ref -q HEAD 2> /dev/null)
   if [[ -n "$ref" ]]; then
     SCM_BRANCH=${SCM_THEME_BRANCH_PREFIX}${ref#refs/heads/}
-    local tracking_info="$(grep "${SCM_BRANCH}..." <<< "${status}")"
+    local tracking_info="$(grep "${SCM_BRANCH}\.\.\." <<< "${status}")"
     if [[ -n "${tracking_info}" ]]; then
       [[ "${tracking_info}" =~ .+\[gone\]$ ]] && local branch_gone="true"
       tracking_info=${tracking_info#\#\# ${SCM_BRANCH}...}
@@ -185,9 +188,9 @@ function svn_prompt_vars {
 }
 
 # this functions returns absolute location of .hg directory if one exists
-# It starts in the current directory and moves its way up until it hits /.
+# It starts in the current directory and moves its way up until it hits /. 
 # If we get to / then no Mercurial repository was found.
-# Example:
+# Example: 
 # - lets say we cd into ~/Projects/Foo/Bar
 # - .hg is located in ~/Projects/Foo/.hg
 # - get_hg_root starts at ~/Projects/Foo/Bar and sees that there is no .hg directory, so then it goes into ~/Projects/Foo
@@ -218,7 +221,7 @@ function hg_prompt_vars {
     HG_ROOT=$(get_hg_root)
 
     if [ -f $HG_ROOT/branch ]; then
-        # Mercurial holds it's current branch in .hg/branch file
+        # Mercurial holds it's current branch in .hg/branch file    
         SCM_BRANCH=$(cat $HG_ROOT/branch)
     else
         SCM_BRANCH=$(hg summary 2> /dev/null | grep branch: | awk '{print $2}')
@@ -325,29 +328,27 @@ function prompt_char {
 }
 
 function clock_char {
-  if [[ "${THEME_CLOCK_CHECK}" = true ]]; then
-    DATE_STRING=$(date +"%Y-%m-%d %H:%M:%S")
-    echo -e "${bold_cyan}$DATE_STRING ${red}$CLOCK_CHAR"
-  fi
+    if [[ "${THEME_CLOCK_CHECK}" = true ]]; then
+        DATE_STRING=$(date +"%Y-%m-%d %H:%M:%S")
+        echo -e "${bold_cyan}$DATE_STRING ${red}$CLOCK_CHAR"
+    fi
 }
 
 function battery_char {
-  if [[ "${THEME_BATTERY_PERCENTAGE_CHECK}" = true ]]; then
-    echo -e "${bold_red}$(battery_percentage)%"
-  fi
+    if [[ "${THEME_BATTERY_PERCENTAGE_CHECK}" = true ]]; then
+        echo -e "${bold_red}$(battery_percentage)%"
+    fi
 }
 
-if [ ! -e $BASH_IT/plugins/enabled/battery.plugin.bash ]; then
-  # if user has installed battery plugin, skip this...
-  function battery_charge()
-  {
-    # no op
-    echo -n
-  }
+if [ ! -e $REDPILL/plugins/enabled/battery.plugin.bash ]; then
+    # if user has installed battery plugin, skip this...
+    function battery_charge (){
+	# no op
+	echo -n
+    }
 
-  function battery_char()
-  {
-    # no op
-    echo -n
-  }
+    function battery_char (){
+	# no op
+	echo -n
+    }
 fi

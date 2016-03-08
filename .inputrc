@@ -10,6 +10,12 @@ set history-preserve-point on
 
 # Autocompletion
 # -----------------------------------------------------------------------------
+#
+
+# tab completion and readline editing in mingw/msys shell
+# -> http://serverfault.com/questions/119643/how-to-get-both-tab-completion-and-readline-editing-in-mingw-msys-shell
+"\C-i": vi-complete
+
 # Make Tab autocompletion case-insensitive (cd ~/dow<Tab> => cd ~/Downloads/).
 set completion-ignore-case On
 

@@ -1,6 +1,6 @@
 
 # load composure first, so we support function metadata
-source "${REDPILL}/lib/composure.sh"
+source "${REDPILL}/lib/composure.bash"
 
 # support 'plumbing' metadata
 cite _about _param _example _group _author _version
@@ -18,6 +18,8 @@ for config_file in $lib; do
   source $config_file
 done
 unset lib
+
+source "${REDPILL}/plugins/available/base.plugin.bash"
 
 # load enabled aliases, completion, plugins
 for file_type in "aliases" "completion" "plugins"; do
@@ -48,6 +50,6 @@ fi
 
 # load all the Jekyll stuff
 # TODO: move this to global zsh & bash
-if [ -e $HOME/.jekyllconfig ]; then
-  . $HOME/.jekyllconfig
+if [ -e "$HOME/.jekyllconfig" ]; then
+  . "$HOME/.jekyllconfig"
 fi

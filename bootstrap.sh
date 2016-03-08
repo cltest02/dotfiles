@@ -45,7 +45,22 @@ doIt()
 
   # copy dotfiles
   git config --global -l | LANG=C sort > /tmp/oldgit$$
-  rsync --exclude-from .IGNORE -avhi --no-perms . ~/
+  if which rsync >/dev/null 2>&1; then
+    rsync --exclude-from .IGNORE -avhi --no-perms . ~/
+  else
+
+    ignore=""
+    while read -ra line; do
+      line=$(echo $line | sed "s/\n//g")
+      if [[ ! -z $line ]]; then
+        ignore="$ignore|$line"
+      fi
+    done < .IGNORE
+
+    ignore=$(echo $ignore | sed "s/\./\\\./g")
+
+    cp -pvr `ls -A | grep -vE ".git$ignore"` ~/
+  fi
 	source ~/.bash_profile
 
   git config --global -l | LANG=C sort > /tmp/newgit$$
@@ -98,7 +113,11 @@ doIt()
 
 dryRun()
 {
-	rsync --exclude-from .IGNORE -avhni --no-perms . ~/
+  if which rsync >/dev/null 2>&1; then
+	  rsync --exclude-from .IGNORE -avhni --no-perms . ~/
+  else
+    diff -r . ~/
+  fi
 	source ~/.bash_profile
 }
 

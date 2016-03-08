@@ -5,7 +5,7 @@
 # → 
 #
 # Example:
-# (14:00:26) ± [foo@bar] ~/.red_pill (master ✓) 
+# (14:00:26) ± [foo@bar] ~/.bash_it (master ✓) 
 # → 
 #
 # The arrow on the second line is showing the exit status of the last command:

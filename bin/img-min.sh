@@ -3,8 +3,9 @@
 # Image minimizer
 # Iteratively resamples image quality to a certain threshold, reducing image filesize but retaining quality similar to the original image
 #
-# Example usage:
-# ./imgmin.sh foo-before.jpg foo-after.jpg
+# example usage: ./imgmin.sh foo-before.jpg foo-after.jpg
+#
+# online demo: http://image-api.suckup.de/
 #
 # Author: Ryan Flynn <parseerror+imgmin@gmail.com>
 # Author: Lars Moelleken <lars@moelleken.org>
