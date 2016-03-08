@@ -44,7 +44,7 @@ doIt()
   fi
 
   # copy dotfiles
-  git config --global -l | LANG=C sort > /tmp/oldgit$$
+  OLDMASK=$(umask); umask 0077; git config --global -l | LANG=C sort > .oldgit$$.tmp; umask $OLDMASK
   if which rsync >/dev/null 2>&1; then
     rsync --exclude-from .IGNORE -avhi --no-perms . ~/
   else
@@ -63,12 +63,21 @@ doIt()
   fi
 	source ~/.bash_profile
 
+  OLDMASK=$(umask); umask 0077; git config --global -l | LANG=C sort > .newgit$$.tmp; umask $OLDMASK
   git config --global -l | LANG=C sort > /tmp/newgit$$
 
   echo "git configuration not present anymore after bootstrapping:"
-  LANG=C comm -23 /tmp/oldgit$$ /tmp/newgit$$
+  LANG=C comm -23 .oldgit$$.tmp .newgit$$.tmp
   echo -e "\nYou can use the following commands to add it again:"
-  LANG=C comm -23 /tmp/oldgit$$ /tmp/newgit$$ | while read line; do echo "git config --global --add "$(echo $line | sed 's/=/ \"/;s/$/\"/') ;done
+  LANG=C comm -23 .oldgit$$.tmp .newgit$$.tmp | while read line; do echo "git config --global "$(echo $line | sed 's/=/ \"/;s/$/\"/') ;done
+
+  # restore git?
+  read -p "Do you want to restore these git configs now? (y/n) " -n 1 yesOrNo
+  echo
+  if [[ $yesOrNo =~ ^[Yy]$ ]]; then
+    LANG=C comm -23 .oldgit$$.tmp .newgit$$.tmp | while IFS="=" read  key value; do git config --global "$key" "$value" ;done
+  fi
+  rm .oldgit$$.tmp .newgit$$.tmp
 
   # check for "force"
   if [[ "$FORCE" == "1" ]]; then
