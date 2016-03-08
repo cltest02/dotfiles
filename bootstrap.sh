@@ -84,14 +84,6 @@ doIt()
     return 0
   fi
 
-  # try zsh?
-  read -p "Do you want to use the zsh-shell? (y/n) " -n 1 yesOrNo
-  echo
-  if [[ $yesOrNo =~ ^[Yy]$ ]]; then
-    sudo apt-get install zsh
-    chsh -s $(which zsh)
-  fi
-
   #vim doesn't like ^M (CRLF) in .vim files. Make sure this will not happen on cygwin / windows systems
   if [ "$(git config --system --get core.autocrlf)" == "true" ]; then
     crlf_warning="--system "
