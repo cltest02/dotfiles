@@ -69,7 +69,7 @@ doIt()
   echo "git configuration not present anymore after bootstrapping:"
   LANG=C comm -23 .oldgit$$.tmp .newgit$$.tmp
   echo -e "\nYou can use the following commands to add it again:"
-  LANG=C comm -23 .oldgit$$.tmp .newgit$$.tmp | while read line; do echo "git config --global "$(echo $line | sed 's/=/ \"/;s/$/\"/') ;done
+  LANG=C comm -23 .oldgit$$.tmp .newgit$$.tmp | while read line; do echo "git config --global "$(echo $line | sed 's/=/ '"'"'/;s/$/\'"'"'/') ;done
 
   # restore git?
   read -p "Do you want to restore these git configs now? (y/n) " -n 1 yesOrNo
