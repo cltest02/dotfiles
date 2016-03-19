@@ -404,8 +404,8 @@ elif command -v xclip >/dev/null; then
   alias getclip="xclip -selection clipboard -o"
   alias putclip="xclip -selection clipboard -i"
 elif [[ "$SYSTEM_TYPE" == "CYGWIN" ]]; then
-  alias getclip=$(cat "/dev/clipboard")
-  alias putclip=$(echo "/dev/clipboard")
+  alias getclip="cat /dev/clipboard"
+  alias putclip="cat > /dev/clipboard"
 fi
 
 # Trim new lines and copy to clipboard
