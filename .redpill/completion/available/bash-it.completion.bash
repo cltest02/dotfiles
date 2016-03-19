@@ -10,9 +10,9 @@ _bash-it-comp-list-available-not-enabled()
 {
 	subdirectory="$1"
 
-	local available_things=$(for f in `ls -1 $BASH_IT/$subdirectory/available/*.bash`;
+	local available_things=$(for f in `ls -1 $REDPILL/$subdirectory/available/*.bash`;
 		do
-			if [ ! -e $BASH_IT/$subdirectory/enabled/$(basename $f) ]
+			if [ ! -e $REDPILL/$subdirectory/enabled/$(basename $f) ]
 			then
 				basename $f | cut -d'.' -f1
 			fi
@@ -25,7 +25,7 @@ _bash-it-comp-list-enabled()
 {
 	subdirectory="$1"
 
-	local enabled_things=$(for f in `ls -1 $BASH_IT/$subdirectory/enabled/*.bash`;
+	local enabled_things=$(for f in `ls -1 $REDPILL/$subdirectory/enabled/*.bash`;
 		do
 			basename $f | cut -d'.' -f1
 		done)
@@ -37,7 +37,7 @@ _bash-it-comp-list-available()
 {
 	subdirectory="$1"
 
-	local enabled_things=$(for f in `ls -1 $BASH_IT/$subdirectory/available/*.bash`;
+	local enabled_things=$(for f in `ls -1 $REDPILL/$subdirectory/available/*.bash`;
 		do
 			basename $f | cut -d'.' -f1
 		done)

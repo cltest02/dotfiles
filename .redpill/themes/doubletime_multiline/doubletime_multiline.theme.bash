@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source "$BASH_IT/themes/doubletime/doubletime.theme.bash"
+source "$REDPILL/themes/doubletime/doubletime.theme.bash"
 
 function prompt_setter() {
   # Save history

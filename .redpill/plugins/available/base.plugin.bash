@@ -61,8 +61,8 @@ function passgen ()
 }
 
 # Create alias pass to passgen when pass isn't installed or
-# BASH_IT_LEGACY_PASS is true.
-if ! command -v pass &>/dev/null || [ "$BASH_IT_LEGACY_PASS" = true ]
+# REDPILL_LEGACY_PASS is true.
+if ! command -v pass &>/dev/null || [ "$REDPILL_LEGACY_PASS" = true ]
 then
   alias pass=passgen
 fi
@@ -136,7 +136,7 @@ function usage ()
     fi
 }
 
-if [ ! -e $BASH_IT/plugins/enabled/todo.plugin.bash ]; then
+if [ ! -e $REDPILL/plugins/enabled/todo.plugin.bash ]; then
 # if user has installed todo plugin, skip this...
     function t ()
     {
