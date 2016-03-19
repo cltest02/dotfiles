@@ -1308,6 +1308,7 @@ __git_prompt()
       if [[ "$(git rev-parse --is-inside-git-dir 2> /dev/null)" == "false" ]]; then
 
         #create a copy of the index to avoid conflicts with parallel git commands, e.g. git rebase
+        __GIT_INDEX_FILE_ORIG="$GIT_INDEX_FILE"
         __GIT_DIR="$(git rev-parse --git-dir)"
         if [[ -z "$GIT_INDEX_FILE" ]]; then
           __GIT_INDEX_FILE="$__GIT_DIR/index"
@@ -1316,14 +1317,12 @@ __git_prompt()
         fi
         __GIT_INDEX_PROMPT="/tmp/git-index-prompt$$"
         cp "$__GIT_INDEX_FILE" $__GIT_INDEX_PROMPT 2>/dev/null
+        export GIT_INDEX_FILE="$__GIT_INDEX_PROMPT"
 
         # Ensure the copied index is up to date.
-        GIT_INDEX_FILE="$__GIT_INDEX_PROMPT" git update-index --really-refresh -q &> /dev/null;
+        git update-index --really-refresh -q &> /dev/null;
         # Check if we are ahead or behind our tracking branch (https://gist.github.com/HowlingMind/996093).
-        local git_status="$(GIT_INDEX_FILE="$__GIT_INDEX_PROMPT" LANG=C LANGUAGE=C git status 2> /dev/null)";
-
-        #rm the temporary index
-        rm "$__GIT_INDEX_PROMPT" 2>/dev/null
+        local git_status="$(LANG=C LANGUAGE=C git status 2> /dev/null)";
 
         local remote_pattern="Your branch is (ahead|behind).*by ([[:digit:]]*) commit"
 
@@ -1372,6 +1371,9 @@ __git_prompt()
         # The number of commits ahead/behind ends with a trailing space. If no other indicator was added, it will be lingering at the end of `s`.
         s=$(echo "${s}" | sed 's/ *$//')
 
+        export GIT_INDEX_FILE="$__GIT_INDEX_FILE_ORIG"
+        #rm the temporary index
+        rm "$__GIT_INDEX_PROMPT" 2>/dev/null
       fi
     else
       s="-";
