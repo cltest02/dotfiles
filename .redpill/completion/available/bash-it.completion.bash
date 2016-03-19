@@ -10,9 +10,9 @@ _bash-it-comp-list-available-not-enabled()
 {
 	subdirectory="$1"
 
-	local available_things=$(for f in `ls -1 $REDPILL/$subdirectory/available/*.bash`;
+	local available_things=$(for f in `ls -1 $BASH_IT/$subdirectory/available/*.bash`;
 		do
-			if [ ! -e $REDPILL/$subdirectory/enabled/$(basename $f) ]
+			if [ ! -e $BASH_IT/$subdirectory/enabled/$(basename $f) ]
 			then
 				basename $f | cut -d'.' -f1
 			fi
@@ -25,7 +25,7 @@ _bash-it-comp-list-enabled()
 {
 	subdirectory="$1"
 
-	local enabled_things=$(for f in `ls -1 $REDPILL/$subdirectory/enabled/*.bash`;
+	local enabled_things=$(for f in `ls -1 $BASH_IT/$subdirectory/enabled/*.bash`;
 		do
 			basename $f | cut -d'.' -f1
 		done)
@@ -37,7 +37,7 @@ _bash-it-comp-list-available()
 {
 	subdirectory="$1"
 
-	local enabled_things=$(for f in `ls -1 $REDPILL/$subdirectory/available/*.bash`;
+	local enabled_things=$(for f in `ls -1 $BASH_IT/$subdirectory/available/*.bash`;
 		do
 			basename $f | cut -d'.' -f1
 		done)
@@ -53,7 +53,7 @@ _bash-it-comp()
 	prev="${COMP_WORDS[COMP_CWORD-1]}"
 	chose_opt="${COMP_WORDS[1]}"
 	file_type="${COMP_WORDS[2]}"
-	opts="help show enable disable"
+	opts="help show enable disable update"
 	case "${chose_opt}" in
 		show)
 			local show_args="plugins aliases completions"
@@ -61,10 +61,13 @@ _bash-it-comp()
 			return 0
 			;;
 		help)
-			local help_args="plugins aliases completions"
+			local help_args="plugins aliases completions update"
 			COMPREPLY=( $(compgen -W "${help_args}" -- ${cur}) )
 			return 0
 			;;
+    update)
+      return 0
+      ;;
 		enable | disable)
 			if [ x"${chose_opt}" == x"enable" ];then
 				suffix="available-not-enabled"
