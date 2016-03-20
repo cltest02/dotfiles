@@ -386,3 +386,8 @@
 [credential]
   # cache the password for http-auth
   helper = cache
+[pager]
+  color = true
+  diff = diff-highlight | less
+  log = diff-highlight | less
+  show = diff-highlight | less
