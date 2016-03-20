@@ -673,7 +673,7 @@ if has("autocmd")
 
 	au BufRead,BufNewFile *.zsh-theme  set filetype=zsh
 
-  au Filetype gitcommit              set tw=68 spell
+  au Filetype gitcommit              set tw=68 spell fo+=t
   au Filetype ruby                   set tw=80
 
   " allow tabs on makefiles
