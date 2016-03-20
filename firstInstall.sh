@@ -217,23 +217,57 @@ ln -s /usr/bin/nodejs /usr/bin/node
 
 ask_install "install webworker tools"
 if [[ $? -eq 1 ]]; then
+
+  echo "update/install ruby-rems ..."
+
+  gem update --pre
+
   gem install sass --pre --verbose
   gem install compass --pre --verbose
   gem install autoprefixer-rails --pre --verbose
   gem install compass-rgbapng --pre --verbose
   gem install oily_png --verbose
 
-  npm config set registry https://registry.nodejs.org/
+  echo "update/install npm-packages ..."
 
-  npm install -g bower
-  npm install -g psi
-  npm install -g grunt-cli
-  npm install -g grunt-init
-  npm install -g yo
-  npm install -g svgo
+  npm config set strict-ssl false
+  npm config set registry http://registry.npmjs.org
 
-  aptitude install php5-cli php5-mysql php5-curl php5-gd php5-intl php-pear php5-imagick php5-imap php5-mcrypt php5-memcached php5-ming php5-ps php5-pspell php5-recode php5-snmp php5-sqlite php5-tidy php5-xmlrpc php5-xsl php5-xdebug php5-apcu php5-geoip
+  npm install -g npm
 
+  npm update -g
+
+  npm install bower -g
+  npm install grunt-cli -g
+  npm install grunt-init -g
+  npm install yo -g
+  npm install svgo -g
+
+  echo "install php-5-extensions ..."
+
+  aptitude install \
+    php5-cli \
+    php5-mysql \
+    php5-curl \
+    php5-gd \
+    php5-intl \
+    php-pear \
+    php5-imagick \
+    php5-imap \
+    php5-mcrypt \
+    php5-memcached \
+    php5-ming \
+    php5-ps \
+    php5-pspell \
+    php5-recode \
+    php5-snmp \
+    php5-sqlite \
+    php5-tidy \
+    php5-xmlrpc \
+    php5-xsl \
+    php5-xdebug \
+    php5-apcu \
+    php5-geoip
 
   php5enmod json
   php5enmod mcrypt
@@ -248,7 +282,7 @@ if [[ $? -eq 1 ]]; then
 fi
 
 # clean downloaded and already installed packages
-aptitude clean
+aptitude -v clean
 
 # update-fonts
 cp -vr $( dirname "${BASH_SOURCE[0]}" )/.fonts/* /usr/share/fonts/truetype/
@@ -256,5 +290,6 @@ dpkg-reconfigure fontconfig
 fc-cache -fv
 
 # update-locate-db
-updatedb
+echo "update-locate-db ..."
+updatedb -v
 
