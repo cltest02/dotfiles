@@ -355,7 +355,14 @@ if [ -d "$HOME/.pyenv/bin" ]; then
   eval "$(pyenv virtualenv-init -)"
 fi
 
-# node-js settings
+# php - composer
+if [ -d "$HOME/AppData/Roaming/Composer/vendor/bin" ]; then
+  export PATH="$HOME/AppData/Roaming/Composer/vendor/bin:$PATH"
+fi
+if [ -d "$HOME/.composer/vendor/bin" ]; then
+  export PATH="$HOME/.composer/vendor/bin:$PATH"
+fi
+                                                                # node-js settings
 ### Enable persistent REPL history for `node`.
 export NODE_REPL_HISTORY=~/.node_history;
 ### Allow 32³ entries; the default is 1000.
