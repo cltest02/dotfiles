@@ -362,7 +362,8 @@ fi
 if [ -d "$HOME/.composer/vendor/bin" ]; then
   export PATH="$HOME/.composer/vendor/bin:$PATH"
 fi
-                                                                # node-js settings
+
+# node-js settings
 ### Enable persistent REPL history for `node`.
 export NODE_REPL_HISTORY=~/.node_history;
 ### Allow 32³ entries; the default is 1000.
