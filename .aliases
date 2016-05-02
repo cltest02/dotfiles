@@ -207,6 +207,12 @@ if [ "$TERM" != "dumb" ]; then
     alias syslog="sudo colour tail -f -n 100 /var/log/syslog"
   fi
 
+  # replace diff with "git diff"
+  if command -v git >/dev/null; then
+    alias diff_orig="/usr/bin/diff"
+    alias diff="git diff --color-words "
+  fi
+
   # replace top with htop
   if command -v htop >/dev/null; then
     alias top_orig="/usr/bin/top"
