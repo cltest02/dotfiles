@@ -1302,8 +1302,8 @@ __git_prompt()
   # Check if the current directory is in a Git repository.
   if [[ $(git rev-parse --is-inside-work-tree &>/dev/null; echo "${?}") == "0" ]]; then
 
-    #the following is to too slow on cygwin. especially for large repositoryies
-    if [[ "$(uname -o)" != "Cygwin" ]]; then
+    #the following is to too slow on cygwin/mingw. especially for large repositoryies
+    if [[ $SYSTEM_TYPE != "CYGWIN" && $SYSTEM_TYPE != "MINGS" ]]; then
       # check if the current directory is in .git before running git checks
       if [[ "$(git rev-parse --is-inside-git-dir 2> /dev/null)" == "false" ]]; then
 

@@ -84,6 +84,7 @@ doIt()
     return 0
   fi
 
+  crlf_warning=""
   #vim doesn't like ^M (CRLF) in .vim files. Make sure this will not happen on cygwin / windows systems
   if [ "$(git config --system --get core.autocrlf)" == "true" ]; then
     crlf_warning="--system "

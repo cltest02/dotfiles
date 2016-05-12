@@ -6,8 +6,8 @@ if [[ $- != *i* ]] || [ -z "$PS1" ]; then
   return 0
 fi
 
-# windows git bash is too minimal
-bashVersionTmp="$(bash --version)" | grep -v "version 4"
+# windows git bash version 3 is too minimal
+bashVersionTmp="$(bash --version | grep -v "version 4")"
 if [[ "$bashVersionTmp" == *-pc-msys* ]]; then
   . ~/.extra
   return 0
