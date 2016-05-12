@@ -138,7 +138,7 @@ wtfis()
       # "normal" binaries.
       local path_tmp=$(${type_command} "$cmd" 2> /dev/null)
 
-      if (( ? )) || ! test -x $path_tmp; then
+      if [ $? -ne 0 ] || ! test -x "$path_tmp"; then
         # Show the output from "type" without ANSI escapes.
         echo "${type_tmp//$'\e'/\\033}"
 
