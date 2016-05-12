@@ -5,8 +5,8 @@ source "${REDPILL}/lib/composure.bash"
 # support 'plumbing' metadata
 cite _about _param _example _group _author _version
 
-#for some reasons the following is extremly slow under cygwin. disabled
-if [[ ! "$(bash --version)" == *-cygwin* ]]; then
+#for some reasons the following is extremly slow under cygwin/mingw. disabled
+if [[ $SYSTEM_TYPE != "CYGWIN" && $SYSTEM_TYPE != "MINGS" ]]; then
   # load colors first so they can be use in base theme
   source "${REDPILL}/themes/colors.theme.bash"
   source "${REDPILL}/themes/base.theme.bash"
