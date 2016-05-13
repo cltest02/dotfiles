@@ -241,6 +241,9 @@
   # detect whitespace errors when applying a patch
   whitespace = warn
 
+  # automagically fix whitespace
+  #whitespace = fix
+
 [color]
   # Use colors in Git commands that are capable of colored output when
   # outputting to the terminal. (This is the default setting in Git ≥ 1.8.4.)
@@ -310,6 +313,8 @@
   # See "`git help diff` --patience" and "`git help merge` recursive".
   algorithm = patience
 
+  color = auto
+
   # Tells git to detect renames. If set to any boolean value,
   # it will enable basic rename detection. If set to "copies" or "copy",
   # it will detect copies, as well.
@@ -322,14 +327,25 @@
   # If `opendiff` is not in your $PATH, override with difftool.opendiff.path
   # See`git help config` and search for "diff.tool"
   #tool = opendiff
+  tool = vimdiff
 
 [difftool]
   # Difftool will not prompt for every file.
   # Use --prompt to override.
   #prompt = false
 
+[status]
+  color = auto
+
 [merge]
   #tool = opendiff
+  tool = vimdiff
+
+  # Always show a diffstat at the end of a merge
+  stat = true
+
+  # Git has an option to display merge conflicts in diff3 format (by default it only displays the two files to be merged).
+  conflictstyle = diff3
 
   # Include summaries of merged commits in newly created merge commit messages
   log = true
@@ -341,6 +357,12 @@
 [help]
   # Automatically correct and execute mistyped commands
   #autocorrect = 1
+
+  autocorrect = 10
+  # e.g.: $ git lgo
+  # WARNING: You called a Git command named 'lgo', which does not exist.
+  # Continuing under the assumption that you meant 'log'
+  # in 1.0 seconds automatically...
 
 [push]
   # See `git help config` and search for "push.default"
@@ -386,8 +408,21 @@
 [credential]
   # cache the password for http-auth
   helper = cache
+
+[log]
+  decorate = short
+
 [pager]
   color = true
   diff = diff-highlight | less
   log = diff-highlight | less
   show = diff-highlight | less
+
+[rebase]
+  autosquash = true
+  # for fixup hotness later
+
+[rerere]
+  enabled = true
+  # Reuse recorded resolution of conflicted merges
+  # see `man git-rerere'
