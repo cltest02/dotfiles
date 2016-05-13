@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 
 # make vim the default editor
-export PAGER="less"
+export PAGER=${PAGER:-"less"}
 
 # use sublime text for local changes
 if [[ -n $SSH_CONNECTION ]]; then
-  EDITOR="vim"
+  EDITOR=${EDITOR:-"vim"}
 else
   if which subl >/dev/null 2>&1; then
     EDITOR="subl"
   else
-    EDITOR="vim"
+    EDITOR=${EDITOR:-"vim"}
   fi
 fi
 export EDITOR
@@ -67,7 +67,7 @@ export INSTALL_TYPE
 #unset MAILCHECK
 
 # make the "sudo" prompt more useful, without requiring access to "visudo"
-export SUDO_PROMPT="[sudo] password for %u on %h: "
+export SUDO_PROMPT=${SUDO_PROMPT:-"[sudo] password for %u on %h: "}
 
 # PATH addons
 if [ -d "$HOME/bin" ]; then
@@ -85,22 +85,24 @@ fi
 export PATH
 
 # larger bash history (allow 32³ entries; default is 500)
-export HISTSIZE=32768
+export HISTSIZE=${HISTSIZE:-32768} # resize history size
 export HISTFILESIZE=$HISTSIZE
 
 # ignore duplicates commands in the historylog
-HISTCONTROL=$HISTCONTROL${HISTCONTROL+:}ignoredups
-export HISTCONTROL=ignoredups
+export HISTCONTROL=$HISTCONTROL${HISTCONTROL+:}ignoredups
 
 # make some commands not show up in history
-export HISTIGNORE="shutdown*:halt*:poweroff*:hibernate*:rm -rf*"
+export HISTIGNORE=${HISTIGNORE:-"shutdown*:halt*:poweroff*:hibernate*:rm -rf*"}
 
 # add the date to the historylog
 #
 # Keep track of the time the commands were executed.
 # The xterm colour escapes require special care when piping; e.g. "| less -R".
 #export HISTTIMEFORMAT=$(echo -e "${COLOR_LIGHT_BLUE}%Y-%m-%d %H:%M:%S${COLOR_NO_COLOUR} ")
-export HISTTIMEFORMAT="%Y-%m-%d %H:%M:%S"
+export HISTTIMEFORMAT=${HISTTIMEFORMAT:-"%Y-%m-%d %H:%M:%S"}
+
+# Cucumber / Autotest inte  gration
+export AUTOFEATURE=${AUTOFEATURE:-"true autotest"}
 
 # use UTF-8
 setLocale()
@@ -178,7 +180,7 @@ unset less_options;
 # highlight section titles in manual pages
 export LESSHISTFILE="-"     # no less history file
 if [ "$UID" != 0 ]; then
-    export LESSCHARSET="utf-8"
+    export LESSCHARSET=${LESSCHARSET:-"utf-8"}
 
     if [ -z "$LESSOPEN" ]; then
       [ -x "`which lesspipe 2>/dev/null`" ] && eval "$(lesspipe)"
@@ -195,30 +197,30 @@ if [ "$UID" != 0 ]; then
 fi
 
 # don’t clear the screen after quitting a manual page
-export MANPAGER="less -X"
+export MANPAGER=${MANPAGER:-"less -X"}
 
 # colored GCC (>= v4.9) warnings and errors
-export GCC_COLORS="error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01"
+export GCC_COLORS=${GCC_COLORS:-"error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01"}
 
 # always enable colored `grep` output
 #
 # "ls" and "grep" default options
 
 # colorscheme for OS X `ls` environment variable:
-LSCOLORS="Gxfxcxdxbxegedabagacad"
+LSCOLORS=${LSCOLORS:-"Gxfxcxdxbxegedabagacad"}
 
 # colorscheme for GNU `ls` environment variable:
 bashVersionTmp="$(bash --version)"
 if [[ "$bashVersionTmp" == *-pc-msys* ]]; then
-  LS_COLORS="di=1:fi=0:ln=31:pi=5:so=5:bd=5:cd=5:or=31:mi=0:ex=35:*.rpm=90"
+  LS_COLORS=${LS_COLORS:-"di=1:fi=0:ln=31:pi=5:so=5:bd=5:cd=5:or=31:mi=0:ex=35:*.rpm=90"}
 else
-  LS_COLORS="no=00:fi=00:di=01;34:ln=01;36:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:su=37;41:sg=30;43:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.svgz=01;31:*.arj=01;31:*.taz=01;31:*.lzh=01;31:*.lzma=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.dz=01;31:*.gz=01;31:*.bz2=01;31:*.bz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.rar=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.jpg=01;35:*.jpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01; 35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:"
+  LS_COLORS=${LS_COLORS:-"no=00:fi=00:di=01;34:ln=01;36:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:su=37;41:sg=30;43:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.svgz=01;31:*.arj=01;31:*.taz=01;31:*.lzh=01;31:*.lzma=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.dz=01;31:*.gz=01;31:*.bz2=01;31:*.bz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.rar=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.jpg=01;35:*.jpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01; 35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:"}
 fi
 unset bashVersionTmp
 
-LS_OPTIONS="-hFN --color=auto"
+LS_OPTIONS=${LS_OPTIONS:-"-hFN --color=auto"}
 
-GREP_COLOR="1;32"
+GREP_COLOR=${GREP_COLOR:-"1;32"}
 GREP_OPTIONS=""
 
 # is x grep argument available?
@@ -233,7 +235,8 @@ if grep-flag-available --color=auto; then
 fi
 
 # ignore VCS folders (if the necessary grep flags are available)
-VCS_FOLDERS="{.bzr,.cvs,.git,.hg,.svn}"
+VCS_FOLDERS_TMP="{.bzr,.cvs,.git,.hg,.svn}"
+VCS_FOLDERS=${VCS_FOLDERS:-${VCS_FOLDERS_TMP}}
 
 if grep-flag-available --exclude-dir=.cvs; then
   GREP_OPTIONS+=" --exclude-dir=$VCS_FOLDERS"
@@ -242,6 +245,7 @@ elif grep-flag-available --exclude=.cvs; then
 fi
 
 # clean-up
+unset VCS_FOLDERS_TMP
 unset VCS_FOLDERS
 unset -f grep-flag-available
 
@@ -329,6 +333,8 @@ if [ -n "$ANDROID_SDK_ROOT" ]; then
   export PATH="$ANDROID_SDK_ROOT/tools/:$ANDROID_SDK_ROOT/platform-tools/:$PATH"
 fi
 
+# ruby settings
+#
 # ruby version management with rbenv
 if [ -d "$HOME/.rbenv" ]; then
   export RBENV_ROOT="$HOME/.rbenv"
@@ -336,7 +342,8 @@ if [ -d "$HOME/.rbenv" ]; then
   eval "$(rbenv init -)"
 fi
 
-# ndenv variable
+# ndenv settings
+#
 if [ -d "$HOME/.ndenv" ]; then
   export NDENV_HOME="$HOME/.ndenv"
   export PATH="$NDENV_HOME/bin:$PATH"
@@ -344,18 +351,22 @@ if [ -d "$HOME/.ndenv" ]; then
 fi
 
 # jenv settings
+#
 if [ -f "$HOME/.jenv/bin/jenv-init.sh" ]; then
   source $HOME/.jenv/bin/jenv-init.sh
 fi
 
 # pyenv settings
+#
 if [ -d "$HOME/.pyenv/bin" ]; then
   export PATH="$HOME/.pyenv/bin:$PATH"
   eval "$(pyenv init -)"
   eval "$(pyenv virtualenv-init -)"
 fi
 
-# php - composer
+# php settings
+#
+# composer - path
 if [ -d "$HOME/AppData/Roaming/Composer/vendor/bin" ]; then
   export PATH="$HOME/AppData/Roaming/Composer/vendor/bin:$PATH"
 fi
@@ -364,13 +375,16 @@ if [ -d "$HOME/.composer/vendor/bin" ]; then
 fi
 
 # node-js settings
-### Enable persistent REPL history for `node`.
-export NODE_REPL_HISTORY=~/.node_history;
-### Allow 32³ entries; the default is 1000.
-export NODE_REPL_HISTORY_SIZE="32768";
+#
+# Enable persistent REPL history for `node`.
+export NODE_REPL_HISTORY="~/.node_history"
+# Allow 32³ entries; the default is 1000.
+export NODE_REPL_HISTORY_SIZE="32768"
 # Use sloppy mode by default, matching web browsers.
-export NODE_REPL_MODE="sloppy";
+export NODE_REPL_MODE="sloppy"
 
+# python settings
+#
 # Make Python use UTF-8 encoding for output to stdin, stdout, and stderr.
-export PYTHONIOENCODING="UTF-8";
+export PYTHONIOENCODING="UTF-8"
 
