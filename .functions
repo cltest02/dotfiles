@@ -73,7 +73,7 @@ repo()
     echo "Not a git repository or no remote.origin.url is set."
   else
     local gitbranch=$(git rev-parse --abbrev-ref HEAD)
-    local giturl="http:${giturl}"
+    local giturl="https:${giturl}"
 
     if [[ $gitbranch != "master" ]]; then
       if echo "${giturl}" | grep -i "bitbucket" > /dev/null ; then
@@ -901,12 +901,23 @@ dataurl()
 # gitio: create a git.io short URL
 gitio()
 {
-  if [ -z "${1}" -o -z "${2}" ]; then
-    echo "Usage: \`gitio slug url\`"
+  if [ -z "${1}" ]; then
+    echo "Usage: \`gitio github-url-or-shortcut\`"
     return 1
   fi
 
-  curl -i http://git.io/ -F "url=${2}" -F "code=${1}"
+  local url
+  local code
+
+  if [[ "$1" =~ "https:" ]]; then
+    url=$1
+  else
+    url="https://github.com/${1}"
+  fi
+
+  code=$(curl_post -k https://git.io/create -F "url=${url}")
+
+  echo https://git.io/${code}
 }
 
 # -------------------------------------------------------------------
