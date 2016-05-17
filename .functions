@@ -88,6 +88,24 @@ repo()
   fi
 }
 
+
+# -------------------------------------------------------------------
+# Helper function for "git credential"
+__git_credential_helper()
+{
+  if [[ $SYSTEM_TYPE == "OSX" ]]; then
+    # Do something under Mac OS X platform
+    echo ""
+  elif [[ $SYSTEM_TYPE == "LINUX" ]]; then
+    # Do something under Linux platform
+    echo ""
+  elif [[ $SYSTEM_TYPE == "CYGWIN" ]]; then
+    cygpath 'C:\\Users\\$USERNAME\\AppData\\Roaming\\GitCredStore\\git-credential-winstore.exe'
+  elif [[ $SYSTEM_TYPE == "MINGW" ]]; then
+    echo "/c/Users/$USERNAME/AppData/Roaming/GitCredStore/git-credential-winstore.exe"
+  fi
+}
+
 # -------------------------------------------------------------------
 # wtfis: Show what a given command really is. It is a combination of "type", "file"
 # and "ls". Unlike "which", it does not only take $PATH into account. This
@@ -1372,7 +1390,7 @@ __git_prompt()
   if [[ $(git rev-parse --is-inside-work-tree &>/dev/null; echo "${?}") == "0" ]]; then
 
     #the following is to too slow on cygwin/mingw. especially for large repositoryies
-    if [[ $SYSTEM_TYPE != "CYGWIN" && $SYSTEM_TYPE != "MINGS" ]]; then
+    if [[ $SYSTEM_TYPE != "CYGWIN" && $SYSTEM_TYPE != "MINGW" ]]; then
       # check if the current directory is in .git before running git checks
       if [[ "$(git rev-parse --is-inside-git-dir 2> /dev/null)" == "false" ]]; then
 

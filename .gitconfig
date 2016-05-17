@@ -307,6 +307,9 @@
   # https://stackoverflow.com/questions/18257622/why-is-git-core-preloadindex-default-value-false/18259086
   preloadindex = true
 
+  # Enable the filesystem cache (for git bash | windows)
+  fscache = true
+
 [diff]
   # Use more time to create better diffs.
   # E.g. matching opening/closing braces from neighbour functions.
@@ -407,7 +410,7 @@
 
 [credential]
   # cache the password for http-auth
-  helper = cache
+  helper = !"`sh -c '__git_credential_helper'`"
 
 [log]
   decorate = short
@@ -426,3 +429,6 @@
   enabled = true
   # Reuse recorded resolution of conflicted merges
   # see `man git-rerere'
+
+[hub]
+	protocol = https
