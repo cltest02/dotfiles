@@ -36,6 +36,13 @@ cd()
 }
 
 # -------------------------------------------------------------------
+# cdo: cd into the previous (old) working directory
+cdo()
+{
+  cd $OLDPWD
+}
+
+# -------------------------------------------------------------------
 # lc: Convert the parameters or STDIN to lowercase.
 lc()
 {
