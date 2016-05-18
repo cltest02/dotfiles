@@ -410,7 +410,7 @@
 
 [credential]
   # cache the password for http-auth
-  helper = !"`sh -c '__git_credential_helper'`"
+  helper = !"`sh -c 'source ~/.githelpers && __git_credential_helper'`"
 
 [log]
   decorate = short
