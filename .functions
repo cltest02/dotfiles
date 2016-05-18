@@ -1152,6 +1152,22 @@ note_show()
 }
 
 # -------------------------------------------------------------------
+# print_all_colors: show all printable colors in the shell
+function print_all_colors()
+{
+  # credit to http://askubuntu.com/a/279014
+  for x in 0 1 4 5 7 8; do
+    for i in `seq 30 37`; do
+      for a in `seq 40 47`; do
+        echo -ne "\e[$x;$i;$a""m\\\e[$x;$i;$a""m\e[0;37;40m "
+      done
+      echo ""
+    done
+  done
+  echo ""
+}
+
+# -------------------------------------------------------------------
 # tail with search highlight
 #
 # usage: t /var/log/Xorg.0.log [kHz]
