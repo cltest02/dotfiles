@@ -354,6 +354,14 @@
   # Include summaries of merged commits in newly created merge commit messages
   log = true
 
+[mergetool]
+  # No *.orig files left when using mergetool.
+  #keepBackup = false
+
+  # Mergetool will not prompt for every file.
+  # Use --prompt to override.
+  #prompt = false
+
 [diff "bin"]
   # Use `hexdump` to diff binary files
   textconv = hexdump -v -C
@@ -423,8 +431,11 @@
   show = diff-highlight | less
 
 [rebase]
-  autosquash = true
-  # for fixup hotness later
+  # Use --autosquash by default. It's not like one would write !fixup message by accident.
+  autoSquash = true
+
+  # Use --autostash when running git pull --rebase and when rebasing interactively
+  autoStash = true
 
 [rerere]
   enabled = true
@@ -432,4 +443,7 @@
   # see `man git-rerere'
 
 [hub]
-	protocol = https
+  protocol = https
+
+[include]
+  path = .gitconfig.extra
