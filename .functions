@@ -1490,19 +1490,11 @@ __git_prompt()
 # svn_branch: helper for PS1
 __svn_branch()
 {
-  __svn_url | sed -e 's#^'"$(__svn_repository_root)"'##g' | awk '{print " ("$1")" }'
+  local svn_info=$(svn info 2>/dev/null)
+
+  echo $svn_info \
+    | sed -ne 's#^URL: ##p' \
+    | sed -e 's#^'"$(echo $svn_info | sed -ne 's#^Repository Root: ##p')"'##g' \
+    | awk '{print " ("$1")" }'
 }
 
-# -------------------------------------------------------------------
-# svn_url: helper for PS1
-__svn_url()
-{
-  svn info 2>/dev/null | sed -ne 's#^URL: ##p'
-}
-
-# -------------------------------------------------------------------
-# svn_repository_root: helper for PS1
-__svn_repository_root()
-{
-  svn info 2>/dev/null | sed -ne 's#^Repository Root: ##p'
-}
