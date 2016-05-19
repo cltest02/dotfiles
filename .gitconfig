@@ -416,10 +416,12 @@
   decorate = short
 
 [pager]
+  # Use colors when paging regardless of default color setting.
   color = true
-  diff = diff-highlight | less
-  log = diff-highlight | less
-  show = diff-highlight | less
+
+  diff = diff-so-fancy | less --RAW-CONTROL-CHARS --quit-if-one-screen --no-init --tilde --clear-screen --status-column --HILITE-UNREAD --pattern='^(added|deleted|modified): '
+  show = diff-so-fancy | less --RAW-CONTROL-CHARS --quit-if-one-screen --no-init --tilde --clear-screen --status-column --HILITE-UNREAD --pattern='^(added|deleted|modified): '
+  log = diff-so-fancy | less --RAW-CONTROL-CHARS --quit-if-one-screen --no-init --tilde --clear-scree  n --status-column
 
 [rebase]
   autosquash = true
