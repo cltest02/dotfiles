@@ -1,6 +1,4 @@
-[![Stories in Ready](https://badge.waffle.io/voku/dotfiles.svg?label=ready&title=Ready)](http://waffle.io/voku/dotfiles)
-
-# dotfiles for bash / zsh
+# dotfiles for Bash / ZSH / Git Bash (Windows)
 
 ![Screenshot of my shell prompt](http://suckup.de/wp-content/uploads/2014/06/bash_prompt.png)
 
@@ -49,13 +47,13 @@ My `~/.extra` looks something like this:
 
 GIT_AUTHOR_NAME="Lars Moelleken"
 GIT_COMMITTER_NAME="$GIT_AUTHOR_NAME"
-git config --global user.name "$GIT_AUTHOR_NAME"
+git config --file=$HOME/.gitconfig.extra user.name "$GIT_AUTHOR_NAME"
 
 GIT_AUTHOR_EMAIL="lars@moelleken.org"
 GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"
-git config --global user.email "$GIT_AUTHOR_EMAIL"
+git config --file=$HOME/.gitconfig.extra user.email "$GIT_AUTHOR_EMAIL"
 
-git config --global push.default simple
+git config --file=$HOME/.gitconfig.extra push.default simple
 ```
 
 You could also use `~/.extra` to override settings, functions and aliases from my dotfiles repository. It’s probably better to [fork this repository](https://github.com/voku/dotfiles/fork) instead, though.
