@@ -29,7 +29,8 @@ My `~/.config_dotfiles` looks something like this:
 #!/bin/bash
 
 CONFIG_DEFAULT_USER="lars"
-CONFIG_ZSH_PLUGINS="(git bower composer ruby bundler gem zsh-completions zsh-syntax-highlighting history-substring-search)"
+CONFIG_ZSH_PLUGINS="(git zsh-completions zsh-syntax-highlighting)"
+CONFIG_BASH_PLUGINS="(git)"
 CONFIG_ZSH_THEME="voku"
 CONFIG_BASH_THEME="voku"
 CONFIG_CHARSET_UTF8=true
