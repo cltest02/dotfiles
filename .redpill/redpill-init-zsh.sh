@@ -58,7 +58,7 @@ fi
 autoload -U compinit
 compinit -i -d "${ZSH_COMPDUMP}"
 
-# load all of the plugins that were defined in ~/.zshrc
+# load all of the plugins that were defined in ~/.config_dotfiles
 for plugin ($plugins); do
   if [ -f $ZSH_CUSTOM/plugins/$plugin/$plugin.plugin.zsh ]; then
     source $ZSH_CUSTOM/plugins/$plugin/$plugin.plugin.zsh
