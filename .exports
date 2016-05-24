@@ -122,10 +122,13 @@ export AUTOFEATURE=${AUTOFEATURE:-"true autotest"}
 setLocale()
 {
   if [[ "$CONFIG_CHARSET_UTF8" == "true" ]]; then
-    local i pattern localeOutput localeOutputArray
+    local i pattern localeOutput localeOutputArray line
 
-    localeOutput=$(locale -a 2> /dev/null)
-    localeOutputArray=($localeOutput)
+    localeOutput=$(locale -a 2>/dev/null)
+    localeOutputArray=()
+    while read -r line; do
+      localeOutputArray+=("$line")
+    done <<< "$localeOutput"
 
     # check if $CONFIG_LANG isset and available
     if [ "$CONFIG_LANG" != "" ] && [ -n "$(echo $localeOutput | grep $CONFIG_LANG)" ] ; then
