@@ -6,7 +6,7 @@ fi
 # FOLLOW THE WHITE RABBIT ...
 
 # add a function path
-fpath=($ZSH/functions $ZSH/completions $fpath)
+fpath=($ZSH/functions $ZSH/completions $ZSH/plugins/zsh-completions/src $fpath)
 
 # set ZSH_CUSTOM to the path where your custom config files
 # and plugins exists or we use a default value

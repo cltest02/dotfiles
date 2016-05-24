@@ -7,7 +7,7 @@ autoload -Uz promptinit && promptinit
 autoload -Uz colors && colors
 autoload -Uz complist
 autoload -Uz computil
-autoload -Uz compinit && compinit -C
+autoload -Uz compinit && compinit
 autoload -Uz edit-command-line && zle -N edit-command-line
 
 ## Load smart urls if available
