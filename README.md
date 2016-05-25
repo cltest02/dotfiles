@@ -1,4 +1,4 @@
-# dotfiles for Bash / ZSH / Git Bash (Windows)
+# dotfiles for Bash / ZSH / Git Bash (Windows) / Cygwin (Windows)
 
 ![Screenshot of my shell prompt](http://suckup.de/wp-content/uploads/2014/06/bash_prompt.png)
 
