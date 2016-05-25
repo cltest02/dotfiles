@@ -10,7 +10,17 @@
 You can clone the repository wherever you want. (I like to keep it in `~/Projects/dotfiles`, with `~/dotfiles` as a symlink.) The bootstrapper script will pull in the latest version and copy the files to your home folder.
 
 ```bash
-cd ~ ; git clone https://github.com/voku/dotfiles.git; cd dotfiles; ./firstInstall.sh ; ./ bootstrap.sh
+# get the code
+cd ~ ; git clone https://github.com/voku/dotfiles.git; cd dotfiles
+
+# only for Debian based e.g. Ubuntu, Lubuntu, Kubuntu etc.
+./firstInstallDebianBased.sh
+
+# only for Cygwin (Windows)
+./firstInstallCygwin.sh
+
+# copy the dotfiles into your home directory
+./bootstrap.sh
 ```
 
 To update, `cd` into your local `dotfiles` repository and then:

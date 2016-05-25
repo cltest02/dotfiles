@@ -45,6 +45,8 @@ aptitude install \
   tmux \
   build-essential \
   autoconf \
+  make \
+  cmake \
   mktemp \
   dialog \
   `# unzip, unrar etc.` \
@@ -144,16 +146,20 @@ aptitude install \
   ucspi-tcp \
   xpdf \
   sqlite3 \
-  locales \
-  sysstat \
-  htop \
-  tcpdump \
   perl \
   python \
   python-pip \
   python-dev \
   `# install python-pygments for json print` \
   python-pygments
+
+# try zsh?
+read -p "Do you want to use the zsh-shell? (y/n) " -n 1 yesOrNo
+echo
+if [[ $yesOrNo =~ ^[Yy]$ ]]; then
+  sudo aptitude install zsh
+  chsh -s $(which zsh)
+fi
 
 #
 # fixing nodejs for ubuntu
