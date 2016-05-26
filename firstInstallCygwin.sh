@@ -148,15 +148,8 @@ if [[ $? -eq 1 ]]; then
     php-recode \
     php-tidy \
     php-xmlrpc \
-    php-xsl
-
-  php5enmod json
-  php5enmod mcrypt
-  php5enmod curl
-  php5enmod mysql
-  php5enmod gd
-  php5enmod imagick
-  php5enmod apcu
+    php-xsl \
+    php-tokenizer
 
   if [ \! -f $(whereis apt-cyg | cut -f 2 -d ' ') ] ; then
     curl -sS https://getcomposer.org/installer | php --
