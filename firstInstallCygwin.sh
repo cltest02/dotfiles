@@ -149,7 +149,8 @@ if [[ $? -eq 1 ]]; then
     php-tidy \
     php-xmlrpc \
     php-xsl \
-    php-tokenizer
+    php-tokenizer \
+    php-ctype
 
   if [ \! -f $(whereis apt-cyg | cut -f 2 -d ' ') ] ; then
     curl -sS https://getcomposer.org/installer | php --
