@@ -419,7 +419,9 @@
 
 [credential]
   # cache the password for http-auth
-  helper = manager
+  helper = cache
+  # for "Git Credential Manager for Windows"
+  #helper = manager
 
 [log]
   decorate = short
