@@ -118,10 +118,16 @@ search_quality()
     # debug
     #echo "$uc < $MIN_UNIQUE_COLORS"
 
-    if [ ".png" = ${src_ext:(-4)} ]; then
+    if [ ".gif" = ${src_ext:(-4)} ]; then
+      gifsicle --colors 256 -O2 $src -o $tmpfile
+      return
+    elif [ ".png" = ${src_ext:(-4)} ]; then
       cp -p $src $tmpfile
       use=$(do_png "$src" "$tmpfile" "$quality")
-      echo "use:$use"
+
+      # debug
+      #echo "use:$use"
+
       cp -p $use $tmpfile
       return
     elif [ ".jpeg" = ${src_ext:(-5)} ] || [ ".jpg" = ${src_ext:(-4)} ]; then
