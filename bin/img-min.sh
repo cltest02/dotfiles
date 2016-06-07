@@ -151,13 +151,13 @@ search_quality()
     return 1
   fi
 
-  local qmin=75
+  local qmin=40
   local qmax=100
   local q=""
   local cmppct=""
   local cmpthreshold=""
   # binary search for lowest quality where compare < $cmpthreshold
-  while [ $qmax -gt $((qmin+2)) ]; do
+  while [ $qmax -gt $((qmin+5)) ]; do
     q=$(((qmax+qmin-1)/2))
 
     # debug
