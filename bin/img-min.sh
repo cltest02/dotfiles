@@ -151,17 +151,17 @@ search_quality()
     return 1
   fi
 
-  local qmin=40
+  local qmin=30
   local qmax=100
   local q=""
   local cmppct=""
   local cmpthreshold=""
   # binary search for lowest quality where compare < $cmpthreshold
-  while [ $qmax -gt $((qmin+5)) ]; do
+  while [ $qmax -gt $((qmin+10)) ]; do
     q=$(((qmax+qmin-1)/2))
 
     # debug
-    #echo "debug: " $qmax " - " $qmin
+    #echo "debug: " $qmax " - " $qmin " - " $q
 
     if [ ".jpeg" = ${src_ext:(-5)} ] || [ ".jpg" = ${src_ext:(-4)} ]; then
       convert $src TGA:- |
@@ -176,7 +176,9 @@ search_quality()
 
     cmpthreshold=$cmppct;
 
-    if [[ $( printf '%.0f' $(echo "${cmpthreshold}" | bc -l)) -eq 1 ]]; then
+    echo "foo: " $cmpthreshold
+
+    if [[ $( LC_ALL=C printf '%.0f' $(echo "${cmpthreshold}" | bc -l)) -eq 1 ]]; then
       qmin=$q
     else
       qmax=$q
