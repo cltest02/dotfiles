@@ -74,6 +74,9 @@ for config_file ($ZSH_CUSTOM/*.zsh(N)); do
 done
 unset config_file
 
+# git-prompt
+source $ZSH/zsh_prompt/zshrc.sh
+
 # load the theme
 if [ "$ZSH_THEME" = "random" ]; then
 
