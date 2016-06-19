@@ -1,7 +1,7 @@
-#!/usr/bin/env bash
+# This theme for gitprompt.sh is optimized for "red-pill"
 
-prompt_command()
-{
+override_git_prompt_colors() {
+
   # Local or SSH session?
   local remote=""
   [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ] && remote=1
@@ -51,18 +51,28 @@ prompt_command()
     TITLE="\[\033]0;${USER}@${HOSTNAME}: \w\007\]"
   fi
 
+  GIT_PROMPT_THEME_NAME="voku"
+  GIT_PROMPT_STAGED="${Yellow}+"
+  GIT_PROMPT_UNTRACKED="${Cyan}?"
+  GIT_PROMPT_STASHED="${BoldMagenta}!"
+  GIT_PROMPT_CLEAN="${Green}${ICON_FOR_TRUE}"
+  GIT_PROMPT_COMMAND_OK="${Green}${ICON_FOR_TRUE}"
+  GIT_PROMPT_COMMAND_FAIL="${Red}${ICON_FOR_FALSE}"
+
   # INFO:   Text (commands) inside \[...\] does not impact line length calculation which fixes stange bug when looking through the history
   #         $? is a status of last command, should be processed every time prompt prints
 
   # Format prompt
-  export PS1="${TITLE}\`if [ \$? -eq 0 ]; then echo -e \[\$COLOR_GREEN\]\${ICON_FOR_TRUE}; else echo -e \[\$COLOR_RED\]\${ICON_FOR_FALSE}; fi\` \[$user_color\]${user}${host}${userOrHostExtra}\[$COLOR_LIGHT_BLUE\]\w\[$COLOR_LIGHT_RED\]${ICON_FOR_ARROW_RIGHT}\[$COLOR_LIGHT_PURPLE\]${scm}\[$COLOR_NO_COLOUR\] "
+  local ps1="${TITLE}\`if [ \$? -eq 0 ]; then echo -e \[\$COLOR_GREEN\]\${ICON_FOR_TRUE}; else echo -e \[\$COLOR_RED\]\${ICON_FOR_FALSE}; fi\` \[$user_color\]${user}${host}${userOrHostExtra}\[$COLOR_LIGHT_BLUE\]\w\[$COLOR_LIGHT_RED\]${ICON_FOR_ARROW_RIGHT}\[$COLOR_NO_COLOUR\]"
 
   # Multiline command
-  export PS2="\[$COLOR_LIGHT_RED\]${ICON_FOR_ARROW_RIGHT}\[$COLOR_NO_COLOUR\]"
+  local ps2=" "
 
-  # Restore the original prompt for select menus. This is unset initially and
-  # seems to default to "#? ".
-  unset PS3;
+  GIT_PROMPT_START_USER="${ps1}"
+  GIT_PROMPT_START_ROOT="${ps1}"
+  
+  GIT_PROMPT_END_USER="${ps2}"
+  GIT_PROMPT_END_ROOT="${ps2}"
 }
 
-PROMPT_COMMAND=prompt_command;
+reload_git_prompt_colors "voku"

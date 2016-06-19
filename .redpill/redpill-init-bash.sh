@@ -56,6 +56,9 @@ for config_file in $custom; do
   fi
 done
 
+# prompt
+source "${REDPILL}/bash_prompt/gitprompt.sh"
+
 unset file_type
 unset file_type_single
 unset plugin
