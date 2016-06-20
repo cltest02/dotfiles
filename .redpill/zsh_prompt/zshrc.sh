@@ -22,44 +22,45 @@ add-zsh-hook precmd precmd_update_git_vars
 
 ## Function definitions
 function preexec_update_git_vars() {
-    case "$2" in
-        git*|hub*|gh*|stg*)
-        __EXECUTED_GIT_COMMAND=1
-        ;;
-    esac
+  case "$2" in
+    git*|hub*|gh*|stg*)
+    __EXECUTED_GIT_COMMAND=1
+    ;;
+  esac
 }
 
 function precmd_update_git_vars() {
-    if [ -n "$__EXECUTED_GIT_COMMAND" ] || [ ! -n "$ZSH_THEME_GIT_PROMPT_CACHE" ]; then
-        update_current_git_vars
-        unset __EXECUTED_GIT_COMMAND
-    fi
+  if [ -n "$__EXECUTED_GIT_COMMAND" ] || [ ! -n "$ZSH_THEME_GIT_PROMPT_CACHE" ]; then
+    update_current_git_vars
+    unset __EXECUTED_GIT_COMMAND
+  fi
 }
 
 function chpwd_update_git_vars() {
-    update_current_git_vars
+  update_current_git_vars
 }
 
 function update_current_git_vars() {
-    unset __CURRENT_GIT_STATUS
+  unset __CURRENT_GIT_STATUS
 
-    if [[ "$GIT_PROMPT_EXECUTABLE" == "python" ]]; then
-        local gitstatus="$__GIT_PROMPT_DIR/gitstatus.py"
-        _GIT_STATUS=`python ${gitstatus} 2>/dev/null`
-    fi
-    if [[ "$GIT_PROMPT_EXECUTABLE" == "haskell" ]]; then
-        _GIT_STATUS=`git status --porcelain --branch &> /dev/null | $__GIT_PROMPT_DIR/src/.bin/gitstatus`
-    fi
-     __CURRENT_GIT_STATUS=("${(@s: :)_GIT_STATUS}")
+  if [[ "$GIT_PROMPT_EXECUTABLE" == "python" ]]; then
+    local gitstatus="$__GIT_PROMPT_DIR/gitstatus.py"
+    _GIT_STATUS=`python ${gitstatus} 2>/dev/null`
+  fi
+
+  if [[ "$GIT_PROMPT_EXECUTABLE" == "haskell" ]]; then
+    _GIT_STATUS=`git status --porcelain --branch &> /dev/null | $__GIT_PROMPT_DIR/src/.bin/gitstatus`
+  fi
+
+  __CURRENT_GIT_STATUS=("${(@s: :)_GIT_STATUS}")
 	GIT_BRANCH=$__CURRENT_GIT_STATUS[1]
 	GIT_AHEAD=$__CURRENT_GIT_STATUS[2]
 	GIT_BEHIND=$__CURRENT_GIT_STATUS[3]
 	GIT_STAGED=$__CURRENT_GIT_STATUS[4]
 	GIT_CONFLICTS=$__CURRENT_GIT_STATUS[5]
 	GIT_CHANGED=$__CURRENT_GIT_STATUS[6]
-	GIT_UNTRACKED=$__CURRENT_GIT_STATUS[7]
+  GIT_UNTRACKED=$__CURRENT_GIT_STATUS[7]
 }
-
 
 git_super_status() {
   if [ -n "$__CURRENT_GIT_STATUS" ]; then
@@ -89,10 +90,10 @@ git_super_status() {
 
     # remove end space
     STATUS="$(echo $STATUS | sed 's/ $//g' )"
-	  STATUS="$STATUS%{${reset_color}%}$ZSH_THEME_GIT_PROMPT_SUFFIX"
+    STATUS="$STATUS%{${reset_color}%}$ZSH_THEME_GIT_PROMPT_SUFFIX"
 
-	  echo "$STATUS"
-	fi
+    echo "$STATUS"
+  fi
 }
 
 # Default values for the appearance of the prompt. Configure at will.
