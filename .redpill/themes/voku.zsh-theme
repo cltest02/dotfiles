@@ -49,7 +49,7 @@ setup_prompt()
 	PROMPT="%(?.%{$fg[green]%}${ICON_FOR_TRUE}.%{$fg[red]%}${ICON_FOR_FALSE}[%?]) ${user_color}${user}${host}${userOrHostExtra}%{$(print -P ${COLOR_LIGHT_BLUE})%}%~% %{$(print -P ${COLOR_LIGHT_RED})%}${ICON_FOR_ARROW_RIGHT}%{$reset_color%} "
 	PROMPT2="%{$fg[red]%}${ICON_FOR_ARROW_RIGHT}%{$reset_color%}"
 
-  RPROMPT='$(git_super_status)%{$(print -P ${COLOR_LIGHT_PURPLE})%}$(__svn_branch)%{$reset_color%}'
+  RPROMPT="$(git_super_status)%{$(print -P ${COLOR_LIGHT_PURPLE})%}$(__svn_branch)%{$reset_color%}"
 
 	export PROMPT PROMPT2 RPROMPT
 }
