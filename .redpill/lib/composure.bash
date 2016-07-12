@@ -3,7 +3,7 @@
 # composure - by erichs
 # light-hearted functions for intuitive shell programming
 
-# version: 1.3
+# version: 1.3.1
 # latest source available at http://git.io/composure
 
 # install: source this script in your ~/.profile or ~/.${SHELL}rc script
@@ -14,6 +14,7 @@
 _bootstrap_composure() {
   _generate_metadata_functions
   _load_composed_functions
+  _determine_printf_cmd
 }
 
 _get_composure_dir ()
@@ -50,12 +51,21 @@ _letterpress ()
     return
   fi
 
-  printf "%-*s%s\n" "$leftwidth" "$leftcol" "$rightcol"
+  $_printf_cmd "%-*s%s\n" "$leftwidth" "$leftcol" "$rightcol"
+}
+
+_determine_printf_cmd() {
+  if [ -z "$_printf_cmd" ]; then
+    _printf_cmd=printf
+    # prefer GNU gprintf if available
+    [ -x "$(which gprintf 2>/dev/null)" ] && _printf_cmd=gprintf
+    export _printf_cmd
+  fi
 }
 
 _longest_function_name_length ()
 {
-   _typeset_functions | awk 'BEGIN{ maxlength=0 }
+  echo "$1" | awk 'BEGIN{ maxlength=0 }
   {
   for(i=1;i<=NF;i++)
     if (length($i)>maxlength)
@@ -165,14 +175,25 @@ _transcribe ()
 
 _typeset_functions ()
 {
-  typeset f
-  for f in "$(_get_composure_dir)"/*.inc; do
-    # Without nullglob, we'll get back the glob
-    [[ -f "$f" ]] || continue
+  # unfortunately, there does not seem to be a easy, portable way to list just the
+  # names of the defined shell functions...
 
-    f="${f##*/}"
-    f="${f%.inc}"
-    echo "$f"
+  case "$(_shell)" in
+    sh|bash)
+      typeset -F | awk '{print $3}'
+      ;;
+    *)
+      # trim everything following '()' in ksh/zsh
+      typeset +f | sed 's/().*$//'
+      ;;
+  esac
+}
+
+_typeset_functions_about ()
+{
+  typeset f
+  for f in $(_typeset_functions); do
+    typeset -f -- "$f" | grep -qE "^about[[:space:]]|[[:space:]]about[[:space:]]" && echo -- "$f"
   done
 }
 
@@ -180,7 +201,7 @@ _shell () {
   # here's a hack I modified from a StackOverflow post:
   # get the ps listing for the current process ($$), and print the last column (CMD)
   # stripping any leading hyphens shells sometimes throw in there
-  typeset this=$(ps -p $$ | tail -1 | awk '{print $4}' | sed 's/^-*//')
+  typeset this=$(ps -p $$ | tail -1 | awk '{print $NF}' | sed 's/^-*//')
   echo "${this##*/}"  # e.g. /bin/bash => bash
 }
 
@@ -319,9 +340,10 @@ glossary ()
   group 'composure'
 
   typeset targetgroup=${1:-}
-  typeset maxwidth=$(_longest_function_name_length | awk '{print $1 + 5}')
+  typeset functionlist="$(_typeset_functions_about)"
+  typeset maxwidth=$(_longest_function_name_length "$functionlist" | awk '{print $1 + 5}')
 
-  for func in $(_typeset_functions); do
+  for func in $(echo $functionlist); do
 
     if [ "X${targetgroup}X" != "XX" ]; then
       typeset group="$(typeset -f -- $func | metafor group)"
