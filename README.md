@@ -1,6 +1,4 @@
-[![Stories in Ready](https://badge.waffle.io/voku/dotfiles.svg?label=ready&title=Ready)](http://waffle.io/voku/dotfiles)
-
-# dotfiles for bash / zsh
+# dotfiles for Bash / ZSH / Git Bash (Windows) / Cygwin (Windows)
 
 ![Screenshot of my shell prompt](http://suckup.de/wp-content/uploads/2014/06/bash_prompt.png)
 
@@ -12,7 +10,17 @@
 You can clone the repository wherever you want. (I like to keep it in `~/Projects/dotfiles`, with `~/dotfiles` as a symlink.) The bootstrapper script will pull in the latest version and copy the files to your home folder.
 
 ```bash
-cd ~ ; git clone https://github.com/voku/dotfiles.git; cd dotfiles; ./firstInstall.sh ; ./ bootstrap.sh
+# get the code
+cd ~ ; git clone https://github.com/voku/dotfiles.git; cd dotfiles
+
+# only for Debian based e.g. Ubuntu, Lubuntu, Kubuntu etc.
+./firstInstallDebianBased.sh
+
+# only for Cygwin (Windows)
+./firstInstallCygwin.sh
+
+# copy the dotfiles into your home directory
+./bootstrap.sh
 ```
 
 To update, `cd` into your local `dotfiles` repository and then:
@@ -31,7 +39,8 @@ My `~/.config_dotfiles` looks something like this:
 #!/bin/bash
 
 CONFIG_DEFAULT_USER="lars"
-CONFIG_ZSH_PLUGINS="(git bower composer ruby bundler gem)"
+CONFIG_ZSH_PLUGINS="(git zsh-completions zsh-syntax-highlighting)"
+CONFIG_BASH_PLUGINS="(git)"
 CONFIG_ZSH_THEME="voku"
 CONFIG_BASH_THEME="voku"
 CONFIG_CHARSET_UTF8=true
@@ -49,13 +58,13 @@ My `~/.extra` looks something like this:
 
 GIT_AUTHOR_NAME="Lars Moelleken"
 GIT_COMMITTER_NAME="$GIT_AUTHOR_NAME"
-git config --global user.name "$GIT_AUTHOR_NAME"
+git config --file=$HOME/.gitconfig.extra user.name "$GIT_AUTHOR_NAME"
 
 GIT_AUTHOR_EMAIL="lars@moelleken.org"
 GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"
-git config --global user.email "$GIT_AUTHOR_EMAIL"
+git config --file=$HOME/.gitconfig.extra user.email "$GIT_AUTHOR_EMAIL"
 
-git config --global push.default simple
+git config --file=$HOME/.gitconfig.extra push.default simple
 ```
 
 You could also use `~/.extra` to override settings, functions and aliases from my dotfiles repository. It’s probably better to [fork this repository](https://github.com/voku/dotfiles/fork) instead, though.

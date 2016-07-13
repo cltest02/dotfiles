@@ -118,10 +118,16 @@ search_quality()
     # debug
     #echo "$uc < $MIN_UNIQUE_COLORS"
 
-    if [ ".png" = ${src_ext:(-4)} ]; then
+    if [ ".gif" = ${src_ext:(-4)} ]; then
+      gifsicle --colors 256 -O2 $src -o $tmpfile
+      return
+    elif [ ".png" = ${src_ext:(-4)} ]; then
       cp -p $src $tmpfile
       use=$(do_png "$src" "$tmpfile" "$quality")
-      echo "use:$use"
+
+      # debug
+      #echo "use:$use"
+
       cp -p $use $tmpfile
       return
     elif [ ".jpeg" = ${src_ext:(-5)} ] || [ ".jpg" = ${src_ext:(-4)} ]; then
@@ -145,17 +151,17 @@ search_quality()
     return 1
   fi
 
-  local qmin=75
+  local qmin=30
   local qmax=100
   local q=""
   local cmppct=""
   local cmpthreshold=""
   # binary search for lowest quality where compare < $cmpthreshold
-  while [ $qmax -gt $((qmin+2)) ]; do
+  while [ $qmax -gt $((qmin+10)) ]; do
     q=$(((qmax+qmin-1)/2))
 
     # debug
-    #echo "debug: " $qmax " - " $qmin
+    #echo "debug: " $qmax " - " $qmin " - " $q
 
     if [ ".jpeg" = ${src_ext:(-5)} ] || [ ".jpg" = ${src_ext:(-4)} ]; then
       convert $src TGA:- |
@@ -170,7 +176,9 @@ search_quality()
 
     cmpthreshold=$cmppct;
 
-    if [[ $( printf '%.0f' $(echo "${cmpthreshold}" | bc -l)) -eq 1 ]]; then
+    echo "foo: " $cmpthreshold
+
+    if [[ $( LC_ALL=C printf '%.0f' $(echo "${cmpthreshold}" | bc -l)) -eq 1 ]]; then
       qmin=$q
     else
       qmax=$q

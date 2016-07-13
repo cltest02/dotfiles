@@ -36,6 +36,13 @@ cd()
 }
 
 # -------------------------------------------------------------------
+# cdo: cd into the previous (old) working directory
+cdo()
+{
+  cd $OLDPWD
+}
+
+# -------------------------------------------------------------------
 # lc: Convert the parameters or STDIN to lowercase.
 lc()
 {
@@ -73,7 +80,7 @@ repo()
     echo "Not a git repository or no remote.origin.url is set."
   else
     local gitbranch=$(git rev-parse --abbrev-ref HEAD)
-    local giturl="http:${giturl}"
+    local giturl="https:${giturl}"
 
     if [[ $gitbranch != "master" ]]; then
       if echo "${giturl}" | grep -i "bitbucket" > /dev/null ; then
@@ -136,7 +143,7 @@ wtfis()
     if [ $ret -eq 0 ]; then
       # Try to get the physical path. This works for hashes and
       # "normal" binaries.
-      local path_tmp=$(${type_command} "$cmd" 2> /dev/null)
+      local path_tmp=$(${type_command} "$cmd" 2>/dev/null)
 
       if [ $? -ne 0 ] || ! test -x "$path_tmp"; then
         # Show the output from "type" without ANSI escapes.
@@ -167,7 +174,7 @@ wtfis()
             # help, if available. Note that this does not
             # guarantee anything useful, though. Look at the
             # output for "help set", for instance.
-            help "$cmd" 2> /dev/null | {
+            help "$cmd" 2>/dev/null | {
               local buf line
               read -r line
               while read -r line; do
@@ -744,15 +751,15 @@ targz()
   tar -cvf "${tmpFile}" --exclude=".DS_Store" "${@}" || return 1
 
   size=$(
-    stat -f"%z" "${tmpFile}" 2> /dev/null; # OS X `stat`
-    stat -c"%s" "${tmpFile}" 2> /dev/null # GNU `stat`
+    stat -f"%z" "${tmpFile}" 2>/dev/null; # OS X `stat`
+    stat -c"%s" "${tmpFile}" 2>/dev/null # GNU `stat`
   )
 
-  if (( size < 52428800 )) && hash zopfli 2> /dev/null; then
+  if (( size < 52428800 )) && hash zopfli 2>/dev/null; then
     # the .tar file is smaller than 50 MB and Zopfli is available; use it
     cmd="zopfli"
   else
-    if hash pigz 2> /dev/null; then
+    if hash pigz 2>/dev/null; then
       cmd="pigz"
     else
       cmd="gzip"
@@ -901,12 +908,23 @@ dataurl()
 # gitio: create a git.io short URL
 gitio()
 {
-  if [ -z "${1}" -o -z "${2}" ]; then
-    echo "Usage: \`gitio slug url\`"
+  if [ -z "${1}" ]; then
+    echo "Usage: \`gitio github-url-or-shortcut\`"
     return 1
   fi
 
-  curl -i http://git.io/ -F "url=${2}" -F "code=${1}"
+  local url
+  local code
+
+  if [[ "$1" =~ "https:" ]]; then
+    url=$1
+  else
+    url="https://github.com/${1}"
+  fi
+
+  code=$(curl_post -k https://git.io/create -F "url=${url}")
+
+  echo https://git.io/${code}
 }
 
 # -------------------------------------------------------------------
@@ -1141,6 +1159,22 @@ note_show()
 }
 
 # -------------------------------------------------------------------
+# print_all_colors: show all printable colors in the shell
+function print_all_colors()
+{
+  # credit to http://askubuntu.com/a/279014
+  for x in 0 1 4 5 7 8; do
+    for i in `seq 30 37`; do
+      for a in `seq 40 47`; do
+        echo -ne "\e[$x;$i;$a""m\\\e[$x;$i;$a""m\e[0;37;40m "
+      done
+      echo ""
+    done
+  done
+  echo ""
+}
+
+# -------------------------------------------------------------------
 # tail with search highlight
 #
 # usage: t /var/log/Xorg.0.log [kHz]
@@ -1276,7 +1310,7 @@ o()
 # small enough for one screen.
 tre()
 {
-  tree -aC -I '.git|node_modules|bower_components' --dirsfirst "$@" | less -FRNX
+  tree -aC -I '.git|node_modules|bower_components|.Spotlight-V100|.TemporaryItems|.DocumentRevisions-V100|.fseventsd' --dirsfirst "$@" | less -FRNX;
 }
 
 #-------------------------------------------------------------------
@@ -1360,12 +1394,12 @@ __git_prompt()
   # Check if the current directory is in a Git repository.
   if [[ $(git rev-parse --is-inside-work-tree &>/dev/null; echo "${?}") == "0" ]]; then
 
-    #the following is to too slow on cygwin/mingw. especially for large repositoryies
-    if [[ $SYSTEM_TYPE != "CYGWIN" && $SYSTEM_TYPE != "MINGS" ]]; then
-      # check if the current directory is in .git before running git checks
-      if [[ "$(git rev-parse --is-inside-git-dir 2> /dev/null)" == "false" ]]; then
+    # The following is to too slow on cygwin/mingw. especially for large repositoryies.
+    if [[ $SYSTEM_TYPE != "CYGWIN" && $SYSTEM_TYPE != "MINGW" ]]; then
+      # Check if the current directory is in .git before running git checks.
+      if [[ "$(git rev-parse --is-inside-git-dir 2>/dev/null)" == "false" ]]; then
 
-        #create a copy of the index to avoid conflicts with parallel git commands, e.g. git rebase
+        # Create a copy of the index to avoid conflicts with parallel git commands, e.g. git rebase.
         __GIT_INDEX_FILE_ORIG="$GIT_INDEX_FILE"
         __GIT_DIR="$(git rev-parse --git-dir)"
         if [[ -z "$GIT_INDEX_FILE" ]]; then
@@ -1380,7 +1414,7 @@ __git_prompt()
         # Ensure the copied index is up to date.
         git update-index --really-refresh -q &> /dev/null;
         # Check if we are ahead or behind our tracking branch (https://gist.github.com/HowlingMind/996093).
-        local git_status="$(LANG=C LANGUAGE=C git status 2> /dev/null)";
+        local git_status="$(LANG=C LANGUAGE=C git status 2>/dev/null)";
 
         local remote_pattern="Your branch is (ahead|behind).*by ([[:digit:]]*) commit"
 
@@ -1407,7 +1441,7 @@ __git_prompt()
         fi
 
         # Check for uncommitted changes in the index.
-        if ! $(git diff --quiet --ignore-submodules --cached); then
+        if ! $(git diff --quiet --no-ext-diff --ignore-submodules --cached); then
           s+="+"
         fi
 
@@ -1430,7 +1464,7 @@ __git_prompt()
         s=$(echo "${s}" | sed 's/ *$//')
 
         export GIT_INDEX_FILE="$__GIT_INDEX_FILE_ORIG"
-        #rm the temporary index
+        # "rm" the temporary index.
         rm "$__GIT_INDEX_PROMPT" 2>/dev/null
       fi
     else
@@ -1444,10 +1478,11 @@ __git_prompt()
     fi
 
     # Get the short symbolic ref.
+    #
     # If HEAD isn’t a symbolic ref, get the short SHA for the latest commit
     # Otherwise, just give up.
-    branchName="$({ git symbolic-ref --quiet HEAD 2> /dev/null || \
-      git rev-parse --short HEAD 2> /dev/null || \
+    branchName="$({ LANG=C LANGUAGE=C git symbolic-ref --quiet HEAD 2>/dev/null || \
+      git rev-parse --short HEAD 2>/dev/null || \
       echo '(unknown)'; } | sed 's/^refs\/heads\///')";
 
     [[ -n "${s}" ]] && s=" [${s}]"
@@ -1462,19 +1497,11 @@ __git_prompt()
 # svn_branch: helper for PS1
 __svn_branch()
 {
-  __svn_url | sed -e 's#^'"$(__svn_repository_root)"'##g' | awk '{print " ("$1")" }'
+  local svn_info=$(svn info 2>/dev/null)
+
+  echo $svn_info \
+    | sed -ne 's#^URL: ##p' \
+    | sed -e 's#^'"$(echo $svn_info | sed -ne 's#^Repository Root: ##p')"'##g' \
+    | awk '{print " ("$1")" }'
 }
 
-# -------------------------------------------------------------------
-# svn_url: helper for PS1
-__svn_url()
-{
-  svn info 2>/dev/null | sed -ne 's#^URL: ##p'
-}
-
-# -------------------------------------------------------------------
-# svn_repository_root: helper for PS1
-__svn_repository_root()
-{
-  svn info 2>/dev/null | sed -ne 's#^Repository Root: ##p'
-}

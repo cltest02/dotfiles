@@ -45,6 +45,8 @@ aptitude install \
   tmux \
   build-essential \
   autoconf \
+  make \
+  cmake \
   mktemp \
   dialog \
   `# unzip, unrar etc.` \
@@ -144,16 +146,20 @@ aptitude install \
   ucspi-tcp \
   xpdf \
   sqlite3 \
-  locales \
-  sysstat \
-  htop \
-  tcpdump \
   perl \
   python \
   python-pip \
   python-dev \
   `# install python-pygments for json print` \
   python-pygments
+
+# try zsh?
+read -p "Do you want to use the zsh-shell? (y/n) " -n 1 yesOrNo
+echo
+if [[ $yesOrNo =~ ^[Yy]$ ]]; then
+  sudo aptitude install zsh
+  chsh -s $(which zsh)
+fi
 
 #
 # fixing nodejs for ubuntu
@@ -212,7 +218,7 @@ ln -s /usr/bin/nodejs /usr/bin/node
 
 
 #
-# only for webworker
+# for webworker
 #
 
 ask_install "install webworker tools"
@@ -237,11 +243,12 @@ if [[ $? -eq 1 ]]; then
 
   npm update -g
 
-  npm install bower -g
-  npm install grunt-cli -g
-  npm install grunt-init -g
-  npm install yo -g
-  npm install svgo -g
+  npm install -g diff-so-fancy
+  npm install -g bower
+  npm install -g grunt-cli
+  npm install -g grunt-init
+  npm install -g yo
+  npm install -g svgo
 
   echo "install php-5-extensions ..."
 

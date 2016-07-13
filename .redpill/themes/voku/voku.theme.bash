@@ -27,7 +27,7 @@ prompt_command()
   fi
 
   local isCygwinMings=false
-  [[ $SYSTEM_TYPE=="CYGWIN" || $SYSTEM_TYPE=="MINGS" ]] && isCygwinMings=true
+  [[ $SYSTEM_TYPE=="CYGWIN" || $SYSTEM_TYPE=="MINGW" ]] && isCygwinMings=true
 
   if [[ "$(tty)" == /dev/pts/* ]] || $isCygwinMings; then
     if [[ -n $remote ]] && [[ $COLORTERM = gnome-* && $TERM = xterm ]] && infocmp gnome-256color >/dev/null 2>&1; then
@@ -39,10 +39,6 @@ prompt_command()
     fi
   fi
 
-  local scm=""
-  if command -v git > /dev/null 2>&1; then
-    scm+="\$(__git_prompt)"
-  fi
   if command -v svn > /dev/null 2>&1; then
     scm+="\$(__svn_branch)"
   fi

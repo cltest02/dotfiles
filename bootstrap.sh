@@ -120,7 +120,7 @@ dryRun()
   if which rsync >/dev/null 2>&1; then
 	  rsync --exclude-from .IGNORE -avhni --no-perms . ~/
   else
-    diff -r . ~/
+    LC_ALL=C diff -w -B -r . ~/ | grep -v '^Only in'
   fi
 	source ~/.bash_profile
 }
