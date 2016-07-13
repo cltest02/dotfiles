@@ -23,7 +23,7 @@ White=              189, 195, 199
 
 BoldAsFont=no
 #Font=DejaVu Sans Mono
-#FontHeight=11
+FontHeight=10
 #FontSmoothing=full
 
 Term=xterm-256color
