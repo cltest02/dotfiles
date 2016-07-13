@@ -1469,6 +1469,12 @@ __git_prompt()
       fi
     else
       s="-";
+      if [[ $(git config --get core.autocrlf) != "true" ]]; then
+        s+=" CRLF";
+      fi
+      if [[ $(git config --get core.filemode) != "false" ]]; then
+        s+=" FILEMODE";
+      fi
     fi
 
     # Get the short symbolic ref.

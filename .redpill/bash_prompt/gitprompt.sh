@@ -26,6 +26,9 @@ function echoc() {
 
 function get_theme() {
   local CUSTOM_THEME_FILE="${HOME}/.git-prompt-colors.sh"
+  if [[ ! (-z ${GIT_PROMPT_THEME_FILE} ) ]]; then
+    CUSTOM_THEME_FILE=$GIT_PROMPT_THEME_FILE
+  fi
   local DEFAULT_THEME_FILE="${__GIT_PROMPT_DIR}/themes/Default.bgptheme"
 
   if [[ -z ${GIT_PROMPT_THEME} ]]; then
@@ -434,6 +437,20 @@ function replaceSymbols() {
   echo ${VALUE2//_PREHASH_/${GIT_PROMPT_SYMBOLS_PREHASH}}
 }
 
+function createPrivateIndex {
+  # Create a copy of the index to avoid conflicts with parallel git commands, e.g. git rebase.
+  local __GIT_INDEX_FILE
+  local __GIT_INDEX_PRIVATE
+  if [[ -z "$GIT_INDEX_FILE" ]]; then
+    __GIT_INDEX_FILE="$(git rev-parse --git-dir)/index"
+  else
+    __GIT_INDEX_FILE="$GIT_INDEX_FILE"
+  fi
+  __GIT_INDEX_PRIVATE="/tmp/git-index-private$$"
+  cp "$__GIT_INDEX_FILE" "$__GIT_INDEX_PRIVATE" 2>/dev/null
+  echo "$__GIT_INDEX_PRIVATE"
+}
+
 function updatePrompt() {
   local LAST_COMMAND_INDICATOR
   local PROMPT_LEADING_SPACE
@@ -452,6 +469,11 @@ function updatePrompt() {
   else
     export __GIT_PROMPT_SHOW_UNTRACKED_FILES=${GIT_PROMPT_SHOW_UNTRACKED_FILES}
   fi
+
+  local GIT_INDEX_PRIVATE="$(createPrivateIndex)"
+  #important to define GIT_INDEX_FILE as local: This way it only affects this function (and below) - even with the export afterwards
+  local GIT_INDEX_FILE
+  export GIT_INDEX_FILE="$GIT_INDEX_PRIVATE"
 
   local -a git_status_fields
   git_status_fields=($("$__GIT_STATUS_CMD" 2>/dev/null))
@@ -525,6 +547,7 @@ function updatePrompt() {
   fi
 
   PS1="${NEW_PROMPT//_LAST_COMMAND_INDICATOR_/${LAST_COMMAND_INDICATOR}${ResetColor}}"
+  rm "$GIT_INDEX_PRIVATE" 2>/dev/null
 }
 
 # Helper function that returns virtual env information to be set in prompt

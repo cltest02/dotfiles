@@ -416,7 +416,7 @@ elif [[ "$SYSTEM_TYPE" == "MINGW" || "$SYSTEM_TYPE" == "CYGWIN" ]]; then
 fi
 
 # Trim new lines and copy to clipboard
-alias c="tr -d '\n' | putclip"
+alias pc="putclip"
 
 # ring the terminal bell, and put a badge on Terminal.app’s Dock icon
 # (useful when executing time-consuming commands)
