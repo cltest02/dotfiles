@@ -2,7 +2,7 @@
 /*           FLAT UI             */
 /*********************************/
 ForegroundColour=   236, 240, 241
-BackgroundColour=   24,   24,  24
+BackgroundColour=    0,    0,   0
 CursorColour=       211,  84,   0
 BoldBlack=          52,   73,  94
 Black=              44,   62,  80
@@ -22,20 +22,20 @@ BoldWhite=          236, 240, 241
 White=              189, 195, 199
 
 BoldAsFont=no
-Font=DejaVu Sans Mono
-FontHeight=11
-FontSmoothing=full
+#Font=DejaVu Sans Mono
+#FontHeight=11
+#FontSmoothing=full
 
 Term=xterm-256color
 Transparency=off
 CursorType=block
 #Locale=en_US
 Charset=UTF-8
-RightClickAction=paste
-Columns=172
-Rows=53
-BoldAsColour=no
+#RightClickAction=paste
+#Columns=172
+#Rows=53
+BoldAsColour=yes
 AllowBlinking=yes
-ZoomShortcuts=no
+#ZoomShortcuts=no
 CursorBlinks=yes
 
