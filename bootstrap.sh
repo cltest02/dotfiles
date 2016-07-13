@@ -46,7 +46,7 @@ doIt()
   # copy dotfiles
   OLDMASK=$(umask); umask 0077; git config --global -l | LANG=C sort > .oldgit$$.tmp; umask $OLDMASK
   if which rsync >/dev/null 2>&1; then
-    rsync --exclude-from .IGNORE -avhi --no-perms . ~/
+    rsync --exclude-from .IGNORE -avhiE --no-perms . ~/
   else
 
     ignore=""
@@ -118,7 +118,7 @@ doIt()
 dryRun()
 {
   if which rsync >/dev/null 2>&1; then
-	  rsync --exclude-from .IGNORE -avhni --no-perms . ~/
+	  rsync --exclude-from .IGNORE -avhniE --no-perms . ~/
   else
     LC_ALL=C diff -w -B -r . ~/ | grep -v '^Only in'
   fi
