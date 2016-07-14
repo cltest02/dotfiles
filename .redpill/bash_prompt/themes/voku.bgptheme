@@ -39,10 +39,6 @@ override_git_prompt_colors() {
     fi
   fi
 
-  if command -v svn > /dev/null 2>&1; then
-    scm+="\$(__svn_branch)"
-  fi
-
   # Terminal title
   local TITLE=""
   # echo title sequence only for pseudo terminals
