@@ -1385,6 +1385,23 @@ shellShockCheck()
 }
 
 # -------------------------------------------------------------------
+# callback for bash-git-prompt
+prompt_callback()
+{
+  if [[ $SYSTEM_TYPE == "CYGWIN" || $SYSTEM_TYPE == "MINGW" ]]; then
+    if [[ $(git config --get core.autocrlf) != "true" ]]; then
+      s=" CRLF";
+    fi
+    if [[ $(git config --get core.filemode) != "false" ]]; then
+      s+=" FILEMODE";
+    fi
+    if [[ -n $s ]]; then
+      echo "${COLOR_RED}${s}${COLOR_NO_COLOUR}";
+    fi
+  fi
+}
+
+# -------------------------------------------------------------------
 # git_prompt for PS1
 __git_prompt()
 {
