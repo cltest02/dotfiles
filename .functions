@@ -1396,7 +1396,7 @@ prompt_callback()
       s+=" FILEMODE";
     fi
     if [[ -n $s ]]; then
-      echo "${COLOR_RED}${s}${COLOR_NO_COLOUR}";
+      echo "\[${COLOR_RED}\]${s}\[${COLOR_NO_COLOUR}\]";
     fi
   fi
 }
