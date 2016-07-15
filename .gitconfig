@@ -447,5 +447,8 @@
 [hub]
   protocol = https
 
+[init]
+  templatedir = ~/.git-templates
+
 [include]
   path = .gitconfig.extra
