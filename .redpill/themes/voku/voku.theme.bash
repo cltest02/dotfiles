@@ -39,8 +39,9 @@ prompt_command()
     fi
   fi
 
+  local scm
   if command -v svn > /dev/null 2>&1; then
-    scm+="\$(__svn_branch)"
+    scm="\$(__svn_branch)"
   fi
 
   # Terminal title
