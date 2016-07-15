@@ -6,15 +6,13 @@
 #Based on http://www.dvratil.cz/2015/12/git-trick-628-automatically-set-commit-author-based-on-repo-url/
 
 function warn {
-  echo -e "\n$1 Email and author not initialized!"
-  echo -e "You can define them manually in the local config or run\n\n    git config --local user.disable true\n\nto get rid of this warning."
+  echo -e "\n$1 Email and author not initialized in local config!"
 }
 
 email="$(git config --local user.email)"
 name="$(git config --local user.name)"
-disable="$(git config --local user.disable)"
 
-if [[ -n $email || -n $name || $disable == "true" ]]; then
+if [[ $1 != "0000000000000000000000000000000000000000" || -n $email || -n $name ]]; then
   exit 0
 fi
 
@@ -39,8 +37,7 @@ case "\$url" in
   *//github.com/*   ) email=""; name="";;
 esac
 INPUT
-  echo -e "\nMissing file ~/.git-clone-init. Template created..."
-  echo -e "Edit this file and run \n\n    git checkout\n\nfrom within the cloned repository."
+  warn "\nMissing file ~/.git-clone-init. Template created..."
   exit 0
 fi
 . ~/.git-clone-init
@@ -53,4 +50,4 @@ fi
 git config --local user.email "$email"
 git config --local user.name "$name"
 
-echo "Identitiy set to $name <$email>"
+echo -e "\nIdentity set to $name <$email>"
