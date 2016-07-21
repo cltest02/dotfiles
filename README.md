@@ -67,7 +67,7 @@ git config --file=$HOME/.gitconfig.extra user.email "$GIT_AUTHOR_EMAIL"
 git config --file=$HOME/.gitconfig.extra push.default simple
 ```
 
-You could also use `~/.extra` to override settings, functions and aliases from my dotfiles repository. It’s probably better to [fork this repository](https://github.com/voku/dotfiles/fork) instead, though.
+You could also use `~/.extra` to override settings, functions and aliases from my dotfiles repository. It’s probably better to [fork this repository](https://github.com/voku/dotfiles/fork) instead, though. And you can use `~/.vimrc.extra` to edit the vim settings without touching the main configuration.
 
 
 ## Screenshot
