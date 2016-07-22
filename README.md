@@ -1,5 +1,7 @@
 # dotfiles for Bash / ZSH / Git Bash (Windows) / Cygwin (Windows)
 
+--> [Screenshots & Screencasts](https://github.com/voku/dotfiles/wiki/Images)
+
 ## Installation
 
 ### Using Git and the bootstrap script
