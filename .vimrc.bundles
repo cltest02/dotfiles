@@ -1,10 +1,10 @@
 
-" The next three lines ensure that the ~/.vim/bundle/ system works
+" The next three lines ensure that the ~/.vim/bundle/ system works.
 filetype off
 set rtp+=~/.vim/bundle/vundle
 call vundle#rc()
 
-" Add an UnBundle command {
+" Add an UnBundle command.
 function! UnBundle(arg, ...)
   let bundle = vundle#config#init_bundle(a:arg, a:000)
   call filter(g:bundles, 'v:val["name_spec"] != "' . a:arg . '"')
@@ -18,15 +18,24 @@ com! -nargs=+         UnBundle
 Bundle "scrooloose/nerdtree"
 Bundle 'jistr/vim-nerdtree-tabs'
 
-" open a NERDTree automatically when vim starts up if no files were specified
+let NERDTreeShowHidden=1
+
+" Open a NERDTree automatically when vim starts up if no files were specified.
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
-" close vim and NERDTree if no file is open and we try to close vim
+" Close vim and NERDTree if no file is open and we try to close vim.
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 
-" toggle the NERDTree e.g. with ",-"
+" Toggle the NERDTree e.g. with ",-".
 nnoremap <leader>- :NERDTreeToggle<CR>
+
+" ----------------------------------------
+
+Bundle 'sjl/gundo.vim'
+
+" Toggle the history-menu with "<F5>".
+nnoremap <F5> :GundoToggle<CR>
 
 " ----------------------------------------
 
@@ -57,7 +66,7 @@ let g:ctrlp_use_caching = 1
 let g:ctrlp_lazy_update = 350
 let g:ctrlp_clear_cache_on_exit = 0
 let g:ctrlp_max_files = 0
-" If ag is available use it as filename list generator instead of 'find'
+" If ag is available use it as filename list generator instead of 'find'.
 if executable("ag")
   set grepprg=ag\ --nogroup\ --nocolor
   let g:ctrlp_user_command = 'ag %s -i --nocolor --nogroup --ignore ''*vagrant'' --ignore ''.git'' --ignore ''.DS_Store'' --ignore ''node_modules'' --hidden -g ""'
@@ -165,7 +174,7 @@ Bundle 'flazz/vim-colorschemes'
 
 " ----------------------------------------
 
-"Bundle 'tpope/vim-fugitive'
+Bundle 'tpope/vim-fugitive'
 
 " ----------------------------------------
 
@@ -368,11 +377,11 @@ endif
 Bundle 'vim-airline/vim-airline'
 Bundle 'vim-airline/vim-airline-themes'
 
-let g:airline_theme = 'molokai'
+"let g:airline_theme = 'molokai'
 
-let g:airline_powerline_fonts = 1
+let g:airline_powerline_fonts = 0
 let g:airline#extensions#tmuxline#enabled = 0
-let g:airline#extensions#bufferline#enabled = 0
+let g:airline#extensions#bufferline#enabled = 1
 let g:airline#extensions#syntastic#enabled    = 1
 let g:airline#extensions#hunks#non_zero_only = 1
 let g:airline#extensions#tabline#enabled = 1

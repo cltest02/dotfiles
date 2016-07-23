@@ -124,10 +124,19 @@ try
 catch
 endtry
 
-" Use UTF-8 without BOM.
-scriptencoding utf-8 nobomb
-set termencoding=utf-8 nobomb
-set encoding=utf-8 nobomb
+" Set encoding.
+if has('multi_byte')
+  scriptencoding utf-8
+  set encoding=utf-8
+  set fileencodings=utf-8,cp932,sjis,utf-16le,euc-jp
+
+  if has("win32") || has("win64")
+    set termencoding=gbk
+  endif
+  if has("linux") || has("unix")
+    set termencoding=utf-8
+  endif
+endif
 
 " None word dividers.
 set isk+=_,$,@,%,#,-
@@ -200,7 +209,7 @@ set completeopt=longest,menuone
 
 " Ignore compiled files.
 set wildignore=*.o,*~,*.pyc
-if has("win16") || has("win32")
+if has("win32") || has("win64")
   set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
 else
   set wildignore+=.git\*,.hg\*,.svn\*
@@ -238,7 +247,7 @@ if exists("+incsearch")
   set incsearch
 endif
 
-if has("win16") || has("win32")
+if has("win32") || has("win64")
   " Turn off lazy redraw for Windows.
   set nolazyredraw
 else
@@ -527,9 +536,6 @@ map <leader>cd :cd %:p:h<cr>:pwd<cr>
 
 " Always show the status line.
 set laststatus=2
-
-" Format the status line.
-set statusline=[%n]\ %<%f%m%r\ %w\ %y\ \ <%{&fileformat}>\ %{\"[\".(&fenc==\"\"?&enc:&fenc).((exists(\"+bomb\")\ &&\ &bomb)?\",B\":\"\").\"]\ \"}%=[%b\ 0x%02B]\ [%o]\ %l,%c%V\/%L\ \ %P
 
 " Show current mode in the status line.
 if exists("+showmode")
