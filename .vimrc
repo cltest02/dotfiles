@@ -516,8 +516,8 @@ map <leader>bd :Bclose<cr>
 map <leader>ba :1,1000 bd!<cr>
 
 " Useful mappings for managing tabs.
-nnoremap <S-Left> :tabprevious<cr>
-nnoremap <S-Right> :tabnext<cr>
+nnoremap <C-S-Left> :tabprevious<cr>
+nnoremap <C-S-Right> :tabnext<cr>
 map <leader>tn :tabnew<cr>
 map <leader>to :tabonly<cr>
 map <leader>tc :tabclose<cr>
