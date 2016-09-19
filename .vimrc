@@ -734,10 +734,10 @@ map <S-F7> :cp<CR>
 map <A-F7> :copen<CR>
 
 " emacs movement keybindings in insert mode
-imap <C-a> <C-o>0
-imap <C-e> <C-o>$
-map <C-e> $
-map <C-a> 0
+"imap <C-a> <C-o>0
+"imap <C-e> <C-o>$
+"map <C-e> $
+"map <C-a> 0
 
 " stop opening man pages
 nmap K <nop>
