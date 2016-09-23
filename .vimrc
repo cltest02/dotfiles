@@ -236,7 +236,8 @@ if exists("+incsearch")
 endif
 
 " Don't redraw while executing macros (good performance config)
-set lazyredraw
+" disabled: https://github.com/voku/dotfiles/issues/22#issuecomment-234516390
+" set lazyredraw
 
 " For regular expressions turn magic on
 set magic
