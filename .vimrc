@@ -32,6 +32,22 @@
 " => General
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+" Simulate ALT-<key> by mapping escape sequences to key combination. This is
+" required for terminals which do not send ALT combinations in 8-bit. This
+" applies also to cygwin's mintty.
+"
+" See http://stackoverflow.com/questions/6778961/alt-key-shortcuts-not-working-on-gnome-terminal-with-vim/10216459#10216459
+"
+let c='a'
+while c <= 'z'
+  exec "set <A-".c.">=\e".c
+  exec "imap \e".c." <A-".c.">"
+  let c = nr2char(1+char2nr(c))
+endw
+
+" Timeout to distinguish e.g. <A-k> from 'ESC <timeout> k'
+set ttimeout ttimeoutlen=25
+
 " Make Vim more useful.
 set nocompatible
 
@@ -247,13 +263,11 @@ if exists("+incsearch")
   set incsearch
 endif
 
-if has("win32") || has("win64")
-  " Turn off lazy redraw for Windows.
-  set nolazyredraw
-else
-  " Don't redraw while executing macros (good performance config).
-  set lazyredraw
-endif
+" Don't redraw while executing macros (good performance config)
+"
+" disabled: https://github.com/voku/dotfiles/issues/22#issuecomment-234516390
+"
+" set lazyredraw
 
 " For regular expressions turn magic on.
 set magic
@@ -654,9 +668,12 @@ vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
 vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 
 " Copy between different vim sessions.
-nmap <s-Y> :!echo “”> ~/.vim/tmp<CR><CR>:w! ~/.vim/tmp<CR>
-vmap <s-Y> :w! ~/.vim/tmp<CR>
-nmap <s-P> :r ~/.vim/tmp<CR>
+"
+" disabled: "Do not map S-P, paste before" via DrVanScott
+"
+"nmap <s-Y> :!echo “”> ~/.vim/tmp<CR><CR>:w! ~/.vim/tmp<CR>
+"vmap <s-Y> :w! ~/.vim/tmp<CR>
+"nmap <s-P> :r ~/.vim/tmp<CR>
 
 if has("mac") || has("macunix")
   nmap <D-j> <M-j>
@@ -671,10 +688,13 @@ map <S-F7> :cp<CR>
 map <A-F7> :copen<CR>
 
 " Emacs movement keybindings in insert mode.
-imap <C-a> <C-o>0
-imap <C-e> <C-o>$
-map <C-e> $
-map <C-a> 0
+"
+" disabled: "Do not map C-a. killer feature in normal/input mode" via DrVanScott
+"
+"imap <C-a> <C-o>0
+"imap <C-e> <C-o>$
+"map <C-e> $
+"map <C-a> 0
 
 " Stop opening man pages.
 nmap K <nop>
