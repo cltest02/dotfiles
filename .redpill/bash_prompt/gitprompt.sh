@@ -331,7 +331,7 @@ function setGitPrompt() {
 
   git_prompt_config
 
-  if [[ ! -e "$repo" ]]; then
+  if [[ ! -e "$repo" ]] || [[ "$GIT_PROMPT_DISABLE" = 1 ]]; then
     PS1="$EMPTY_PROMPT"
     return
   fi
@@ -447,7 +447,7 @@ function createPrivateIndex {
     __GIT_INDEX_FILE="$GIT_INDEX_FILE"
   fi
   __GIT_INDEX_PRIVATE="/tmp/git-index-private$$"
-  cp "$__GIT_INDEX_FILE" "$__GIT_INDEX_PRIVATE" 2>/dev/null
+  command cp "$__GIT_INDEX_FILE" "$__GIT_INDEX_PRIVATE" 2>/dev/null
   echo "$__GIT_INDEX_PRIVATE"
 }
 
@@ -468,6 +468,12 @@ function updatePrompt() {
     export __GIT_PROMPT_SHOW_UNTRACKED_FILES=all
   else
     export __GIT_PROMPT_SHOW_UNTRACKED_FILES=${GIT_PROMPT_SHOW_UNTRACKED_FILES}
+  fi
+
+  if [ -z "${GIT_PROMPT_SHOW_CHANGED_FILES_COUNT}" ]; then
+    export __GIT_PROMPT_SHOW_CHANGED_FILES_COUNT=1
+  else
+    export __GIT_PROMPT_SHOW_CHANGED_FILES_COUNT=${GIT_PROMPT_SHOW_CHANGED_FILES_COUNT}
   fi
 
   local GIT_INDEX_PRIVATE="$(createPrivateIndex)"
@@ -513,7 +519,7 @@ function updatePrompt() {
         v="\$GIT_$1 $2"
       fi
       if eval "test $v" ; then
-        if [[ $# -lt 2 || "$3" != '-' ]]; then
+        if [[ $# -lt 2 || "$3" != '-' ]] && [[ "x$__GIT_PROMPT_SHOW_CHANGED_FILES_COUNT" == "x1" || "x$1" == "xREMOTE" ]]; then
           __add_status "\$GIT_PROMPT_$1\$GIT_$1\$ResetColor"
         else
           __add_status "\$GIT_PROMPT_$1\$ResetColor"
@@ -547,7 +553,7 @@ function updatePrompt() {
   fi
 
   PS1="${NEW_PROMPT//_LAST_COMMAND_INDICATOR_/${LAST_COMMAND_INDICATOR}${ResetColor}}"
-  rm "$GIT_INDEX_PRIVATE" 2>/dev/null
+  command rm "$GIT_INDEX_PRIVATE" 2>/dev/null
 }
 
 # Helper function that returns virtual env information to be set in prompt
@@ -587,6 +593,16 @@ function gp_set_window_title {
 }
 
 function prompt_callback_default {
+  return
+}
+
+# toggle gitprompt
+function git_prompt_toggle() {
+  if [[ "$GIT_PROMPT_DISABLE" = 1 ]]; then
+    GIT_PROMPT_DISABLE=0
+  else
+    GIT_PROMPT_DISABLE=1
+  fi
   return
 }
 
