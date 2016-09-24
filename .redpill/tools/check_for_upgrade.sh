@@ -12,7 +12,7 @@ _update_zsh_update()
 
 _upgrade_zsh()
 {
-  env ZSH=$ZSH /bin/sh $ZSH/tools/upgrade.sh
+  env ZSH=$ZSH sh $ZSH/tools/upgrade.sh
   # update the zsh file
   _update_zsh_update
 }

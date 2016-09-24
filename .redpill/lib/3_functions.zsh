@@ -11,12 +11,12 @@ zsh_stats()
 
 uninstall_oh_my_zsh()
 {
-  env ZSH=$ZSH /bin/sh $ZSH/tools/uninstall.sh
+  env ZSH=$ZSH sh $ZSH/tools/uninstall.sh
 }
 
 upgrade_oh_my_zsh()
 {
-  env ZSH=$ZSH /bin/sh $ZSH/tools/upgrade.sh
+  env ZSH=$ZSH sh $ZSH/tools/upgrade.sh
 }
 
 take()
@@ -26,19 +26,28 @@ take()
 
 open_command()
 {
+  emulate -L zsh
+  setopt shwordsplit
+
   local open_cmd
 
   # define the open command
   case "$OSTYPE" in
-    darwin*)  open_cmd="open" ;;
-    cygwin*)  open_cmd="cygstart" ;;
-    linux*)   open_cmd="xdg-open" ;;
+    darwin*)  open_cmd='open' ;;
+    cygwin*)  open_cmd='cygstart' ;;
+    linux*)   open_cmd='xdg-open' ;;
+    msys*)    open_cmd='start ""' ;;
     *)        echo "Platform $OSTYPE not supported"
               return 1
               ;;
   esac
 
-  nohup $open_cmd "$@" &>/dev/null
+  # don't use nohup on OSX
+  if [[ "$OSTYPE" == darwin* ]]; then
+    $open_cmd "$@" &>/dev/null
+  else
+    nohup $open_cmd "$@" &>/dev/null
+  fi
 }
 
 #
@@ -120,7 +129,7 @@ env_default() {
 # Returns nonzero if encoding failed.
 #
 # Usage:
-#  omz_urlencode [-r] [-m] <string>
+#  omz_urlencode [-r] [-m] [-P] <string>
 #
 #    -r causes reserved characters (;/?:@&=+$,) to be escaped
 #

@@ -1292,6 +1292,8 @@ o()
 {
   local openCommand=""
 
+  // TODO: use "open_command()" from "dotfiles\.redpill\lib\3_functions.zsh" for ZSH
+
   if xdg-open --version /dev/null > /dev/null 2>&1; then
     openCommand=xdg-open
   elif open --version /dev/null > /dev/null 2>&1; then
