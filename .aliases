@@ -427,6 +427,11 @@ alias badge="tput bel"
 # | Other                                                                      |
 # ------------------------------------------------------------------------------
 
+# Language aliases
+alias rb='ruby'
+alias py='python'
+alias ipy='ipython'
+
 # decimal to hexadecimal value
 alias dec2hex='printf "%x\n" $1'
 
