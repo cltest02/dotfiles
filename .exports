@@ -123,6 +123,11 @@ export HISTCONTROL=$HISTCONTROL${HISTCONTROL+:}ignoredups
 # make some commands not show up in history
 export HISTIGNORE=${HISTIGNORE:-"shutdown*:halt*:poweroff*:hibernate*:rm -rf*"}
 
+# ignorespace	| don't save lines which begin with a <space> character
+# ignoredups	| don't save lines matching the previous history entry
+# ignoreboth	| use both 'ignorespace' and 'ignoredups'
+# erasedups	  | eliminate duplicates across the whole history
+
 # add the date to the historylog
 #
 # Keep track of the time the commands were executed.
