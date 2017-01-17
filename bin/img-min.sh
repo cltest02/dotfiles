@@ -20,6 +20,7 @@
 #   jpegoptim
 #   libjpeg-progs
 #   mozjpeg
+#   guetzli
 #
 # References:
 #   1. "Optimization of JPEG (JPG) images: good quality and small size", Retrieved May 23 2011, http://www.ampsoft.net/webdesign-l/jpeg-compression.html
@@ -142,8 +143,12 @@ search_quality()
 
   if [ $quality ]; then
     if [ ".jpeg" = ${src_ext:(-5)} ] || [ ".jpg" = ${src_ext:(-4)} ]; then
-      convert $src TGA:- |
-        cjpeg -quality $quality -sample 1x1 -outfile $tmpfile -targa
+      if command -v guetzli; then
+        guetzli --quality $quality $src $tmpfile
+      else 
+        convert $src TGA:- |
+          cjpeg -quality $quality -sample 1x1 -outfile $tmpfile -targa
+      fi
     else
       convert -quality $quality $src $tmpfile
     fi
