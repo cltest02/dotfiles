@@ -726,9 +726,24 @@ mkf()
 }
 
 # -------------------------------------------------------------------
+# rand_int: use "urandom" to get random int values
+#
+# usage: rand_int 8 --> e.g.: 32245321
+rand_int()
+{
+  if [ $1 ]; then
+    local length=$1
+  else
+    local length=16
+  fi
+
+  tr -dc 0-9 < /dev/urandom  | head -c${1:-${length}}
+}
+
+# -------------------------------------------------------------------
 # passwdgen: a password generator
 #
-# usage: passwdgen 8
+# usage: passwdgen 8 --> e.g.: f4lwka_2f
 passwdgen()
 {
   if [ $1 ]; then
