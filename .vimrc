@@ -247,13 +247,11 @@ if exists("+incsearch")
   set incsearch
 endif
 
-if has("win32") || has("win64")
-  " Turn off lazy redraw for Windows.
-  set nolazyredraw
-else
-  " Don't redraw while executing macros (good performance config).
-  set lazyredraw
-endif
+" Don't redraw while executing macros (good performance config)
+"
+" disabled: https://github.com/voku/dotfiles/issues/22#issuecomment-234516390
+"
+" set lazyredraw
 
 " For regular expressions turn magic on.
 set magic
@@ -580,6 +578,12 @@ if has("autocmd")
   " css - preprocessor
   au BufRead,BufNewFile *.less,*.scss,*.sass       set filetype=css syntax=css
 
+  " gnuplot
+  au BufRead,BufNewFile *.plt                      set filetype=gnuplot
+
+  " C++
+  au BufRead,BufNewFile *.cpp                      set filetype=cpp
+
   " markdown
   au BufRead,BufNewFile *.md,*.markdown,*.ronn     set filetype=markdown
 
@@ -613,8 +617,16 @@ if has("autocmd")
   " allow tabs on makefiles
   au FileType make                   setlocal noexpandtab
   au FileType go                     setlocal noexpandtab
-endif
 
+
+  " set makeprg(depends on filetype) if makefile is not exist
+  if !filereadable('makefile') && !filereadable('Makefile')
+    au FileType c                    setlocal makeprg=gcc\ %\ -o\ %<
+    au FileType cpp                  setlocal makeprg=g++\ %\ -o\ %<
+    au FileType sh                   setlocal makeprg=bash\ -n\ %
+    au FileType php                  setlocal makeprg=php\ -l\ %
+  endif
+endif
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Editing mappings
@@ -648,39 +660,44 @@ nmap <Leader>h :TOhtml<CR>:w<cr>:!open %<CR>:q<CR>
 map <Leader>a ggVG
 
 " Move a line of text using ALT+[jk] or Comamnd+[jk] on mac.
-nmap <M-j> mz:m+<cr>`z
-nmap <M-k> mz:m-2<cr>`z
-vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
-vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
+nmap <c-s-Down> mz:m+<cr>`z
+nmap <c-s-Up>   mz:m-2<cr>`z
+vmap <c-s-Down> :m'>+<cr>`<my`>mzgv`yo`z
+vmap <c-s-Up>   :m'<-2<cr>`>my`<mzgv`yo`z
 
 " Copy between different vim sessions.
-nmap <s-Y> :!echo “”> ~/.vim/tmp<CR><CR>:w! ~/.vim/tmp<CR>
-vmap <s-Y> :w! ~/.vim/tmp<CR>
-nmap <s-P> :r ~/.vim/tmp<CR>
+"
+" disabled: "Do not map S-P, paste before" via DrVanScott
+"
+"nmap <s-Y> :!echo “”> ~/.vim/tmp<CR><CR>:w! ~/.vim/tmp<CR>
+"vmap <s-Y> :w! ~/.vim/tmp<CR>
+"nmap <s-P> :r ~/.vim/tmp<CR>
 
 if has("mac") || has("macunix")
-  nmap <D-j> <M-j>
-  nmap <D-k> <M-k>
-  vmap <D-j> <M-j>
-  vmap <D-k> <M-k>
+  nmap <D-j> <c-s-Down>
+  nmap <D-k> <c-s-Up>
+  vmap <D-j> <c-s-Down>
+  vmap <D-k> <c-s-Up>
 endif
 
-" Quickfix mappings.
-map <F7>  :cn<CR>
-map <S-F7> :cp<CR>
-map <A-F7> :copen<CR>
+" map F7 to syntax-check
+map <F7> :make <CR>
 
 " Emacs movement keybindings in insert mode.
-imap <C-a> <C-o>0
-imap <C-e> <C-o>$
-map <C-e> $
-map <C-a> 0
+"
+" disabled: "Do not map C-a. killer feature in normal/input mode" via DrVanScott
+"
+"imap <C-a> <C-o>0
+"imap <C-e> <C-o>$
+"map <C-e> $
+"map <C-a> 0
 
 " Stop opening man pages.
 nmap K <nop>
 
 inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
 
+" strip whitespace (,sw)
 noremap <leader>sw :call StripWhitespace()<CR>
 " save a file as root (,W)
 noremap <leader>W :w !sudo tee % > /dev/null<CR>
