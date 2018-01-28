@@ -586,6 +586,13 @@ os-info()
 }
 
 # -------------------------------------------------------------------
+# command_exists: check if a command exists
+command_exists()
+{
+    return type "$1" &> /dev/null ;
+}
+
+# -------------------------------------------------------------------
 # stripspace: strip unnecessary whitespace from file
 stripspace()
 {
@@ -1327,7 +1334,7 @@ o()
     open_command='cygstart'
   elif [[ $SYSTEM_TYPE == "MINGW" ]]; then
     # MinGW
-    open_command='start ""' 
+    open_command='start ""'
   fi
 
   if [ $# -eq 0 ]; then
@@ -1335,7 +1342,7 @@ o()
   else
     open_command_path="$@"
   fi
-  
+
   # don't use nohup on OSX
   if [[ "$SYSTEM_TYPE" == "OSX" ]]; then
     $open_command $open_command_path &>/dev/null

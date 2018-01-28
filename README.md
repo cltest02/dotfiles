@@ -55,6 +55,8 @@ My `~/.extra` looks something like this:
 ```bash
 #!/bin/bash
 
+DOTFILESSRCDIR="/home/lmoelleken/dotfiles/"
+
 GIT_AUTHOR_NAME="Lars Moelleken"
 GIT_COMMITTER_NAME="$GIT_AUTHOR_NAME"
 git config --file=$HOME/.gitconfig.extra user.name "$GIT_AUTHOR_NAME"
