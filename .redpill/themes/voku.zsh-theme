@@ -10,7 +10,7 @@ setup_prompt()
   [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ] && remote=1
 
   # set the user-color
-  local user_color="%{\$(print -P ${COLOR_LIGHT_GREEN})%}"     # user's color
+  local user_color="%{$(print -P ${COLOR_LIGHT_GREEN})%}"     # user's color
   [ $UID -eq 0 ] && user_color="%{$fg[red]%}"                 # root's color
 
   # set the user
@@ -21,7 +21,7 @@ setup_prompt()
 
   # set the hostname inside SSH session
   local host=""
-  [ -n "$remote" ] && host="%{\$(print -P ${COLOR_LIGHT_GREEN})%}${ICON_FOR_AT}%M"
+  [ -n "$remote" ] && host="%{$(print -P ${COLOR_LIGHT_GREEN})%}${ICON_FOR_AT}%M"
 
   # set extra ":" after user || host
   local userOrHostExtra=""
@@ -38,10 +38,10 @@ setup_prompt()
   fi
 
 	# Format prompt
-	PROMPT="%(?.%{$fg[green]%}${ICON_FOR_TRUE}.%{$fg[red]%}${ICON_FOR_FALSE}[%?]) ${user_color}${user}${host}${userOrHostExtra}%{\$(print -P ${COLOR_LIGHT_BLUE})%}%~% %{\$(print -P ${COLOR_LIGHT_RED})%}${ICON_FOR_ARROW_RIGHT}%{$reset_color%} "
+	PROMPT="%(?.%{$fg[green]%}${ICON_FOR_TRUE}.%{$fg[red]%}${ICON_FOR_FALSE}[%?]) ${user_color}${user}${host}${userOrHostExtra}%{$(print -P ${COLOR_LIGHT_BLUE})%}%~% %{$(print -P ${COLOR_LIGHT_RED})%}${ICON_FOR_ARROW_RIGHT}%{$reset_color%} "
 	PROMPT2="%{$fg[red]%}${ICON_FOR_ARROW_RIGHT}%{$reset_color%}"
 
-  RPROMPT='\$(git_super_status)%{\$(print -P ${COLOR_LIGHT_PURPLE})%}\$(__svn_branch)%{$reset_color%}'
+  RPROMPT='$(git_super_status)%{$(print -P ${COLOR_LIGHT_PURPLE})%}$(__svn_branch)%{$reset_color%}'
 
 	export PROMPT PROMPT2 RPROMPT
 }
