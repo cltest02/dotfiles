@@ -104,6 +104,10 @@
   # diff
   d = diff                          # diff unstaged changes
   dc = diff --cached                # diff staged changes
+  da = diff HEAD                # diff unstaged and staged changes
+
+  # Show all conflicted files
+  diff-conflicted-files = diff --name-only --diff-filter=U
 
   # Show the diff between the latest commit and the current state
   diff-to-latest-commit = "!git diff-index --quiet HEAD -- || clear; git --no-pager diff --patch-with-stat"
@@ -156,6 +160,7 @@
   short = log --pretty=format:\"%h %cr %cn %Cgreen%s%Creset\"
   simple = log --pretty=format:\" * %s\"
   shortnocolor = log --pretty=format:\"%h %cr %cn %s\"
+  filelog = log -u # show changes to a file
 
   # Pretty log of commits. Supports options of git log
   # https://www.kernel.org/pub/software/scm/git/docs/git-log.html#_pretty_formats
@@ -212,13 +217,13 @@
   # grep alias
   search = grep
 
-  # find a String in the Entire Git History
+  # find a string in the entire git history
   search-git-history = "!r() { git rev-list --all | xargs git grep -F $1; }; r"
 
   # reset
   unstage = reset HEAD              # remove files from index (tracking)
   uncommit = reset --soft HEAD^     # go back before last commit, with files in uncommitted state
-  filelog = log -u                  # show changes to a file
+
   mt = mergetool                    # fire up the merge tool
 
   # View the current working tree status using the short format
