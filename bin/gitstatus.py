@@ -92,14 +92,14 @@ else:
         behind = len(behead) - ahead
 
         sao = symbols["ahead of"]
-        remote = ''
+        remote = '0'
         if behind:
             remote += '{s}{n}'.format(s=symbols['behind'], n=behind)
 
         if ahead:
             remote += '{s}{n}'.format(s=symbols['ahead of'], n=ahead)
     else:
-        remote = ""
+        remote = '0'
 
 out = '\n'.join([
 	branch,
