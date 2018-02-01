@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 # -*- coding: UTF-8 -*-
 # gitstatus.sh -- produce the current git repo status on STDOUT
 # Functionally equivalent to 'gitstatus.py', but written in bash (not python).
@@ -9,14 +9,14 @@
 count_lines() { echo "$1" | egrep -c "^$2" ; }
 all_lines() { echo "$1" | grep -v "^$" | wc -l ; }
 
-if [ -z "${__GIT_PROMPT_DIR}" ]; then
+if [ -z "${__GIT_PROMPT_DIR_BASH}" ]; then
   SOURCE="${BASH_SOURCE[0]}"
   while [ -h "${SOURCE}" ]; do
     DIR="$( cd -P "$( dirname "${SOURCE}" )" && pwd )"
     SOURCE="$(readlink "${SOURCE}")"
     [[ $SOURCE != /* ]] && SOURCE="${DIR}/${SOURCE}"
   done
-  __GIT_PROMPT_DIR="$( cd -P "$( dirname "${SOURCE}" )" && pwd )"
+  __GIT_PROMPT_DIR_BASH="$( cd -P "$( dirname "${SOURCE}" )" && pwd )"
 fi
 
 gitsym=$( git symbolic-ref HEAD 2>/dev/null )
