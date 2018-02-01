@@ -94,9 +94,13 @@ else:
         sao = symbols["ahead of"]
         remote = '0'
         if behind:
+            if remote == '0':
+                remote = ''
             remote += '{s}{n}'.format(s=symbols['behind'], n=behind)
 
         if ahead:
+            if remote == '0':
+                remote = ''
             remote += '{s}{n}'.format(s=symbols['ahead of'], n=ahead)
     else:
         remote = '0'
