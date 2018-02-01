@@ -90,8 +90,6 @@ git_super_status() {
     STATUS="$STATUS%{${reset_color}%}$ZSH_THEME_GIT_PROMPT_SUFFIX"
 
     echo "$STATUS"
-  else
-    echo "zsh_prompt: error"
   fi
 }
 
