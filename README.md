@@ -35,7 +35,7 @@ If `~/.config_dotfiles` does not exists, the "bootstrap.sh"-script will create a
 My `~/.config_dotfiles` looks something like this:
 
 ```bash
-#!/bin/bash
+#!/bin/sh
 
 CONFIG_DEFAULT_USER="lars"
 CONFIG_ZSH_PLUGINS="(git zsh-completions zsh-syntax-highlighting)"
@@ -53,9 +53,9 @@ If `~/.extra` exists, it will be sourced along with the other files. You can use
 My `~/.extra` looks something like this:
 
 ```bash
-#!/bin/bash
+#!/bin/sh
 
-DOTFILESSRCDIR="/home/lmoelleken/dotfiles/"
+export DOTFILESSRCDIR="/home/lmoelleken/dotfiles/"
 
 GIT_AUTHOR_NAME="Lars Moelleken"
 GIT_COMMITTER_NAME="$GIT_AUTHOR_NAME"
