@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-. ../.functions
+. ./../.functions
 
 function testLowerCase() {
   local test_string="ABC_abc_ÖÄÜ_öäü_!\"§";
