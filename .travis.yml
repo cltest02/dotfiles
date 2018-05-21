@@ -1,0 +1,11 @@
+language: bash
+
+os:
+  - linux
+
+before_script:
+  - apt-get install shunit2 bash zsh
+
+script:
+  - bash tests/functions-tests.sh
+  - zsh tests/functions-tests.sh

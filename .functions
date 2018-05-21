@@ -47,9 +47,11 @@ cdo()
 lc()
 {
   if [ $# -eq 0 ]; then
-    tr '[:upper:]' '[:lower:]'
+    python -c 'import sys; print sys.stdin.read().decode("utf-8").lower()'
   else
-    tr '[:upper:]' '[:lower:]' <<< "$@"
+    for i in "$@"; do
+        echo $i | python -c 'import sys; print sys.stdin.read().decode("utf-8").lower()'
+    done
   fi
 }
 
@@ -58,9 +60,11 @@ lc()
 uc()
 {
   if [ $# -eq 0 ]; then
-    tr '[:lower:]' '[:upper:]'
+    python -c 'import sys; print sys.stdin.read().decode("utf-8").upper()'
   else
-    tr '[:lower:]' '[:upper:]' <<< "$@"
+    for i in "$@"; do
+        echo $i | python -c 'import sys; print sys.stdin.read().decode("utf-8").upper()'
+    done
   fi
 }
 
