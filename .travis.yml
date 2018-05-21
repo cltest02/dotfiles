@@ -5,6 +5,7 @@ os:
 
 before_script:
   - sudo apt-get install shunit2 bash zsh
+  - ./bootstrap.sh -f
 
 script:
   - bash tests/functions-tests.sh
