@@ -126,14 +126,14 @@ doIt()
 dryRun()
 {
   if which rsync >/dev/null 2>&1; then
-	  rsync --exclude-from .IGNORE -avhniE --no-perms . ~/
+    rsync --exclude-from .IGNORE -avhniE --no-perms . ~/
   else
     LC_ALL=C diff -w -B -r . ~/ | grep -v '^Only in'
   fi
 }
 
 if [[ "$FORCE" == "1" ]]; then
-	doIt
+  doIt
 else
   echo "Executing dry run..."
   echo
