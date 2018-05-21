@@ -4,7 +4,7 @@ os:
   - linux
 
 before_script:
-  - apt-get install shunit2 bash zsh
+  - sudo apt-get install shunit2 bash zsh
 
 script:
   - bash tests/functions-tests.sh
