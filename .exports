@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+export DIR_DOTFILES=$(pwd);
+
 # make vim the default editor
 export PAGER=${PAGER:-"less"}
 

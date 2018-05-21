@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source ../.functions
+source $DIR_DOTFILES/.functions
 
 function testLowerCase() {
   local test_string="ABC_abc_ÖÄÜ_öäü_!\"§";
