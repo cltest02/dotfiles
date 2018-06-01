@@ -8,5 +8,5 @@ before_script:
   - ./bootstrap.sh -f
 
 script:
-  - bash tests/functions-tests.sh
-  - zsh tests/functions-tests.sh
+  - bash .redpill/tests/functions-tests.sh
+  - zsh .redpill/tests/functions-tests.sh
