@@ -343,6 +343,8 @@
   # patch easier to read.
   compactionHeuristic = true
 
+  renamelimit = 9999
+
   color = auto
 
   # Tells git to detect renames. If set to any boolean value,
