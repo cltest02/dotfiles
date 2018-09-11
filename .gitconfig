@@ -109,6 +109,9 @@
   # Show the diff between the latest commit and the current state
   diff-to-latest-commit = "!git diff-index --quiet HEAD -- || clear; git --no-pager diff --patch-with-stat"
 
+  # Show a commit-hash diff between two branches
+  diff-commit-hash-to-branch = "!git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative $1"
+
   # `git diff-to-x-commit $number` shows the diff between the state `$number` revisions ago and the current state
   diff-to-x-commit = "!d() { git diff --patch-with-stat HEAD~$1; }; git diff-index --quiet HEAD -- || clear; d"
 
