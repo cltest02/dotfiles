@@ -773,7 +773,7 @@ targz()
   local tmpFile="${@%/}.tar";
   tar -cvf "${tmpFile}" --exclude=".DS_Store" "${@}" || return 1;
 
-  size=$(
+  local size=$(
     stat -f"%z" "${tmpFile}" 2> /dev/null; # OS X `stat`
     stat -c"%s" "${tmpFile}" 2> /dev/null;  # GNU `stat`
   );
@@ -794,7 +794,7 @@ targz()
   "${cmd}" -v "${tmpFile}" || return 1;
   [ -f "${tmpFile}" ] && rm "${tmpFile}";
 
-  zippedSize=$(
+  local zippedSize=$(
   	stat -f"%z" "${tmpFile}.gz" 2> /dev/null; # OS X `stat`
   	stat -c"%s" "${tmpFile}.gz" 2> /dev/null; # GNU `stat`
   );
