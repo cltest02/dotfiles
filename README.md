@@ -1,4 +1,6 @@
-# dotfiles for Bash / ZSH / Git Bash (Windows) / Cygwin (Windows) / Bash on Ubuntu on Windows
+# :bookmark_tabs:  .dotfiles 
+
+... for Bash / ZSH / Git Bash (Windows) / Cygwin (Windows) / Bash on Ubuntu on Windows
 
 --> [Screenshots & Screencasts](https://github.com/voku/dotfiles/wiki/Images)
 
