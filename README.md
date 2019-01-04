@@ -72,6 +72,14 @@ git config --file=$HOME/.gitconfig.extra push.default simple
 
 You could also use `~/.extra` to override settings, functions and aliases from my dotfiles repository. It’s probably better to [fork this repository](https://github.com/voku/dotfiles/fork) instead, though. And you can use `~/.vimrc.extra` to edit the vim settings without touching the main configuration.
 
+## Run the tests
+
+e.g.:
+```bash
+bash .redpill/tests/functions-tests.sh
+zsh .redpill/tests/functions-tests.sh
+```
+
 ## Feedback
 
 Suggestions/improvements
