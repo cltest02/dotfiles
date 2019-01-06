@@ -1318,7 +1318,10 @@ o()
 {
   local open_command=""
 
-  if gnome-open --version /dev/null > /dev/null 2>&1; then
+  if [[ $SYSTEM_TYPE == "Win10_Linux" ]]; then
+    # Windows using the Linux subsystem
+    alias open='explorer.exe'
+  elif gnome-open --version /dev/null > /dev/null 2>&1; then
     # GNOME
     open_command='gnome-open'
   elif exo-open --version /dev/null > /dev/null 2>&1; then
@@ -1334,10 +1337,10 @@ o()
     # Mac OS
     open_command='open'
   elif cygstart --version /dev/null > /dev/null 2>&1; then
-    # Cygwin
+    # Windows using Cygwin
     open_command='cygstart'
   elif [[ $SYSTEM_TYPE == "MINGW" ]]; then
-    # MinGW
+    # Windows using MinGW
     open_command='start ""'
   fi
 
