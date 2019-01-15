@@ -168,6 +168,9 @@
   # https://www.kernel.org/pub/software/scm/git/docs/git-log.html#_pretty_formats
   log-pretty = log --graph --decorate --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an - %aE>%Creset' --abbrev-commit
 
+  # Pretty log of commits from origin/master
+  log-origin-master = log --decorate --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an - %aE>%Creset' --abbrev-commit --no-merges origin/master
+
   # last commit
   last = log -1 HEAD
 
