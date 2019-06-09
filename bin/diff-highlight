@@ -1,4 +1,10 @@
 #!/usr/bin/perl
+#
+# This code was generated from git code repository: https://raw.githubusercontent.com/git/git/6804ba3a58ff2999533af28ca5af3901e30fd1f2/contrib/diff-highlight/DiffHighlight.pm
+# (https://github.com/git/git/tree/master/contrib/diff-highlight)
+#
+# License: GPL v2 https://raw.githubusercontent.com/git/git/703601d6780c32d33dadf19b2b367f2f79e1e34c/COPYING
+#
 package DiffHighlight;
 
 use 5.008;
