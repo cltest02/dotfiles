@@ -1190,7 +1190,7 @@ note_show()
 
 # -------------------------------------------------------------------
 # print_all_colors: show all printable colors in the shell
-function print_all_colors()
+print_all_colors()
 {
   # credit to http://askubuntu.com/a/279014
   for x in 0 1 4 5 7 8; do
@@ -1365,7 +1365,7 @@ o()
 # small enough for one screen.
 tre()
 {
-  tree -aC -I '.git|node_modules|bower_components|.Spotlight-V100|.TemporaryItems|.DocumentRevisions-V100|.fseventsd' --dirsfirst "$@" | less -FRNX;
+  tree -haC -I '.git|node_modules|bower_components|.Spotlight-V100|.TemporaryItems|.DocumentRevisions-V100|.fseventsd' --dirsfirst "$@" | less -FRNX;
 }
 
 #-------------------------------------------------------------------
