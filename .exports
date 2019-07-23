@@ -96,7 +96,7 @@ if [ -d "$HOME/bin" ]; then
 fi
 
 if which ruby >/dev/null 2>&1 && which gem >/dev/null 2>&1; then
-  PATH="$PATH:$(ruby -rubygems -e 'puts Gem.user_dir')/bin"
+  PATH="$PATH:$(ruby -rrubygems -e 'puts Gem.user_dir')/bin"
 fi
 
 export PATH="/usr/local/bin:/usr/sbin:/sbin:/usr/local/sbin:$PATH"
